@@ -145,14 +145,14 @@
               <h1>Add Product</h1>
               <div class="alert">Product saved</div>
               <form action="" id="product-form">
-                <label for="name">Product Name:</label>
-                <input type="text" id="name" name="name" required />
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" name="productName" required />
 
-                <label for="price">Price:</label>
-                <input type="number" id="price" name="price" required />
+                <label for="productPrice">Price:</label>
+                <input type="number" id="price" name="productPrice" required />
 
-                <label for="type">Product Type:</label>
-                <select id="type" name="type">
+                <label for="productType">Product Type:</label>
+                <select id="productType" name="productType" required>
                   <option
                     class="product-option"
                     value=""
@@ -162,20 +162,20 @@
                   >
                     Choose your product type
                   </option>
-                  <option>Physics lab instrument</option>
-                  <option>Chemistry lab instrument</option>
-                  <option>Biology lab instrument</option>
+                  <option value="Physics lab instrument">Physics lab instrument</option>
+                  <option value="Chemistry lab instrument">Chemistry lab instrument</option>
+                  <option value="Biology lab instrument">Biology lab instrument</option>
                 </select>
 
-                <label for="description">Description:</label>
+                <label for="productDesc">Description:</label>
                 <textarea
-                  id="description"
-                  name="description"
+                  id="productDesc"
+                  name="productDesc"
                   required
                 ></textarea>
 
-                <label for="image">Product Image:</label>
-                <input type="file" id="image" name="image" required />
+                <label for="productImage">Product Image:</label>
+                <input type="file" id="productImage" name="productImage" accept="image/*" required />
 
                 <button type="submit">Add Product</button>
               </form>
@@ -383,12 +383,7 @@
     <script src="assets/js/script.js"></script>
 
     <!-- script for admin page -->
-    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
-    <script src="assets/js/admin.js"></script>
+    <script src="assets/js/admin.js" type="module"></script>
     <script>
       function showSection(sectionId) {
         // Hide all sections
