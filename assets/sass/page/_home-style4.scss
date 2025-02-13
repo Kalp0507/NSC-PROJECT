@@ -1,0 +1,202 @@
+/*======================================
+ 7. Home-style-4 
+ =======================================*/
+
+ /* 7.1 wpo-about-area-s4  */
+
+ .wpo-about-area-s4,
+ .wpo-about-area-s5{
+	 background: $black-bg-color;
+	 position: relative;
+
+	 .wpo-about-img .wpo-about-img-wrap .wpo-about-item{
+		 background: linear-gradient(145deg, $black-bg-color-s2, $black-bg-color-s3);
+
+		.wpo-about-top .wpo-about-info{
+			h2{
+	          color: $white;
+			}
+			span{
+				color: $black-section-text-color;
+			}
+
+		} 
+		.wpo-about-content{
+			p{
+				color: $black-section-text-color;
+			}
+		}
+	}
+
+	 .wpo-about-text{
+		 .wpo-about-title{
+			 h2{
+			   color: $white;
+			 }
+		} 
+		h5{
+			color: $cyan2;
+		}
+		p,
+		.btns ul li.video-text a{
+			color: $black-section-text-color;
+		}
+	 }
+ }
+
+  /* 7.2 wpo-features-area-s2  */
+
+  .wpo-features-area-s2,
+  .wpo-features-area-s3 {
+     background: $black-bg-color;
+	 padding-top: 1px;
+
+	 .wpo-features-item{
+		 border-color: $border-color-dark;
+
+		 .wpo-features-text{
+			 h2{
+				 color: $white;
+			 }
+			 p{
+				 color: $black-section-text-color;
+			 }
+		 } 
+	 }
+  }
+
+  /* 7.3 wpo-service-area-s2  */
+
+  .wpo-service-area-s2 {
+     background: $black-bg-color;
+
+	 .wpo-service-item{
+		box-shadow: #1c1e22 10px 10px 19px, #262a2e -10px -10px 19px;
+		 background: linear-gradient(145deg, $black-bg-color-s2, $black-bg-color-s3);
+
+		 .wpo-features-text{
+			 h2{
+				 color: $white;
+			 }
+			 p{
+				 color: $black-section-text-color;
+			 }
+		 } 
+		 .icon {
+			 background: #292e32;
+		 }
+		 h2{
+			 a{
+				 color: $white;
+			 }
+		 }
+
+		 p{
+			 color: $black-section-text-color;
+		 }
+	 }
+  }
+
+
+/* 7.4 wpo-skill-section-s2  */
+
+.wpo-skill-section-s2{
+	background: $black-bg-color;
+
+	.wpo-section-title-s2{
+		h2{
+			color: $white;
+		}
+	}
+
+	.wpo-skill-progress{
+		p {
+		  color: $black-section-text-color;
+		}
+
+		.wpo-progress-single{
+			h5{
+				color: $white;
+			}
+			.progress {
+               background: #333a42;
+			}
+		} 
+		.progress-number{
+			color: $white;
+		}
+	} 
+
+	.wpo-fun-fact-section{
+       background: $black-bg-color;
+	   border-color: $border-color-dark;
+
+	   .wpo-fun-fact-grids .grid{
+		   &::after{
+	          background-color: $border-color-dark;
+		   }
+
+		   h3{
+			   color: $white;
+		   }
+		   p{
+			   color: $black-section-text-color;
+		   }
+	   }
+	}
+}
+
+/* 7.5 wpo-project-area-s3  */
+
+.wpo-project-area-s3{
+  background: $black-bg-color;
+
+  &:before{
+	  display: none;
+  }
+}
+
+/* 7.6 wpo-testimonial-area-s3  */
+
+.wpo-testimonial-area-s3{
+  background: $black-bg-color;
+}
+
+/* 7.7 wpo-blog-section-s3 */
+
+.wpo-blog-section-s3{
+    background: $black-bg-color-s2;
+
+    .wpo-blog-item{
+		.wpo-blog-img .thumb {
+		   background: $black-bg-color-s2;
+   
+		   ul{
+			   li{
+				   color: $black-section-text-color;
+				   a{
+					   color: $black-section-text-color;
+				   }
+			   }
+		   }
+	   }
+
+	   .wpo-blog-content{
+		 h2{
+			 a{
+				 color: $white;
+			 }
+		 }
+
+		 p{
+			 color: $black-section-text-color;
+		 }
+	   }
+	}
+}
+
+/* 7.8 wpo-subscribe-section-s2*/
+
+.wpo-subscribe-section-s2{
+    background: $black-bg-color-s2;
+}

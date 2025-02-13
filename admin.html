@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="wpOceans" />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="assets/images/logo/Niharika logo44.png"
+    />
+    <title>
+      NSC - Niharika Scientific CenterNSC - Niharika Scientific Center
+    </title>
+    <link href="assets/css/themify-icons.css" rel="stylesheet" />
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="assets/css/flaticon.css" rel="stylesheet" />
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/magnific-popup.css" rel="stylesheet" />
+    <link href="assets/css/animate.css" rel="stylesheet" />
+    <link href="assets/css/owl.carousel.css" rel="stylesheet" />
+    <link href="assets/css/owl.theme.css" rel="stylesheet" />
+    <link href="assets/css/slick.css" rel="stylesheet" />
+    <link href="assets/css/slick-theme.css" rel="stylesheet" />
+    <link href="assets/css/swiper.min.css" rel="stylesheet" />
+    <link href="assets/css/nice-select.css" rel="stylesheet" />
+    <link href="assets/css/owl.transitions.css" rel="stylesheet" />
+    <link href="assets/css/jquery.fancybox.css" rel="stylesheet" />
+    <link href="assets/css/odometer-theme-default.css" rel="stylesheet" />
+    <link href="assets/sass/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- start page-wrapper -->
+    <div class="page-wrapper">
+      <!-- start preloader -->
+      <div class="preloader">
+        <div class="vertical-centered-box">
+          <div class="content">
+            <div class="loader-circle"></div>
+            <div class="loader-line-mask">
+              <div class="loader-line"></div>
+            </div>
+            <img
+              src="assets/images/logo/Niharika logo44.png"
+              alt="NSC logo"
+              width="80px"
+              height="80px"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- end preloader -->
+      <!-- Start header -->
+      <header id="header">
+        <div class="wpo-site-header wpo-header-style-4">
+          <nav class="navigation navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+              <div class="row align-items-center">
+                <div class="col-lg-4 col-md-3 col-3 d-lg-none dl-block">
+                  <div class="mobail-menu">
+                    <button type="button" class="navbar-toggler open-btn">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar first-angle"></span>
+                      <span class="icon-bar middle-angle"></span>
+                      <span class="icon-bar last-angle"></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-6">
+                  <div class="navbar-header" style="padding-bottom: 10px">
+                    <a class="navbar-brand logo" href="index.html"
+                      ><img
+                        src="assets/images/logo/Niharika logo44.png"
+                        alt="logo img"
+                        width="60px"
+                        height="60px"
+                    /></a>
+                  </div>
+                </div>
+                <div class="col-lg-8 col-md-1 col-1">
+                  <div class="navbar-wrap">
+                    <div
+                      id="navbar"
+                      class="collapse navbar-collapse navigation-holder"
+                    >
+                      <button class="menu-close">
+                        <i class="ti-close"></i>
+                      </button>
+                    </div>
+                    <!-- end of nav-collapse -->
+                  </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-2">
+                  <div class="header-right">
+                    <div class="get-btn">
+                      <a class="theme-btn" id="logoutBtn" href="index.html"
+                        >Logout</a
+                      >
+                    </div>
+                    <div class="header-search-form-wrapper">
+                      <div class="cart-search-contact">
+                        <button class="search-toggle-btn">
+                          <i class="fi flaticon-search"></i>
+                        </button>
+                        <div class="header-search-form">
+                          <form>
+                            <div>
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Search here..."
+                              />
+                              <button type="submit">
+                                <i class="fi flaticon-search"></i>
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end of container -->
+          </nav>
+        </div>
+      </header>
+
+      <!-- Start content -->
+      <div id="admin-content-container">
+        <div class="admin-sidebar">
+          <ul>
+            <li onclick="showSection('add-products')">Add Products</li>
+            <li onclick="showSection('all-products')">All Products</li>
+            <li onclick="showSection('dealer-inquiries')">Dealer Inquiries</li>
+            <li onclick="showSection('cart-inquiries')">Cart Inquiries</li>
+          </ul>
+        </div>
+        <div class="admin-content">
+          <section id="add-products" class="admin-section">
+            <div class="product-form-container">
+              <h1>Add Product</h1>
+              <div class="alert">Product saved</div>
+              <form action="" id="product-form">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required />
+
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" required />
+
+                <label for="type">Product Type:</label>
+                <select id="type" name="type">
+                  <option
+                    class="product-option"
+                    value=""
+                    selected
+                    disabled
+                    hidden
+                  >
+                    Choose your product type
+                  </option>
+                  <option>Physics lab instrument</option>
+                  <option>Chemistry lab instrument</option>
+                  <option>Biology lab instrument</option>
+                </select>
+
+                <label for="description">Description:</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  required
+                ></textarea>
+
+                <label for="image">Product Image:</label>
+                <input type="file" id="image" name="image" required />
+
+                <button type="submit">Add Product</button>
+              </form>
+            </div>
+          </section>
+          <section
+            id="all-products"
+            class="admin-section"
+            style="display: none"
+          >
+            <h1>All Products</h1>
+            <div class="product-list">List of all products...</div>
+          </section>
+
+          <section
+            id="dealer-inquiries"
+            class="admin-section"
+            style="display: none"
+          >
+            <h1>Dealer Inquiries</h1>
+            <div class="inquiry-list">
+              Dealer inquiries will be shown here...
+            </div>
+          </section>
+
+          <section
+            id="cart-inquiries"
+            class="admin-section"
+            style="display: none"
+          >
+            <h1>Cart Inquiries</h1>
+            <div class="cart-list">
+              Cart inquiries will be displayed here...
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- start of wpo-site-footer-section -->
+      <footer class="wpo-site-footer">
+        <div class="wpo-upper-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
+                <div class="widget about-widget">
+                  <div class="logo widget-title">
+                    <a class="logo" href="index.html"
+                      ><img
+                        src="assets/images/logo/Niharika logo44.png"
+                        alt=""
+                        width="80px"
+                        height="80px"
+                    /></a>
+                  </div>
+                  <p>
+                    Blandit ipsum arcu donec auctor a, turpis vitae. Egestas
+                    pretium euenim non euoeu dignissim nulla nunc quisque
+                  </p>
+                  <ul>
+                    <li>
+                      <a href="#">
+                        <i class="ti-facebook"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="ti-twitter-alt"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="ti-instagram"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="ti-google"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
+                <div class="widget link-widget">
+                  <div class="widget-title">
+                    <h3>Our Services</h3>
+                  </div>
+                  <ul>
+                    <li>
+                      <a href="service-single.html">Mechanical Engineering</a>
+                    </li>
+                    <li>
+                      <a href="service-single.html">Petroleum Refinery</a>
+                    </li>
+                    <li><a href="service-single.html">Power & Engergy</a></li>
+                    <li>
+                      <a href="service-single.html">Electrical & Power </a>
+                    </li>
+                    <li>
+                      <a href="service-single.html">Industrial Construction</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
+                <div class="widget wpo-service-link-widget">
+                  <div class="widget-title">
+                    <h3>Contact Us</h3>
+                  </div>
+                  <div class="contact-ft">
+                    <ul>
+                      <li>
+                        <i class="fi flaticon-location"></i>68D, Belsion Town
+                        2365 <br />
+                        Fna city, LH 3656, USA
+                      </li>
+                      <li>
+                        <i class="fi flaticon-telephone"></i>+ 8 (123) 123 456
+                        789 <br />
+                        + 8 (123) 123 456 789
+                      </li>
+                      <li>
+                        <i class="fi flaticon-email"></i>indudus@gmail.com
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
+                <div class="widget instagram">
+                  <div class="widget-title">
+                    <h3>Our Gellery</h3>
+                  </div>
+                  <ul class="d-flex">
+                    <li>
+                      <a href="project-single.html"
+                        ><img src="assets/images/instragram/1.jpg" alt=""
+                      /></a>
+                    </li>
+                    <li>
+                      <a href="project-single.html"
+                        ><img src="assets/images/instragram/2.jpg" alt=""
+                      /></a>
+                    </li>
+                    <li>
+                      <a href="project-single.html"
+                        ><img src="assets/images/instragram/3.jpg" alt=""
+                      /></a>
+                    </li>
+                    <li>
+                      <a href="project-single.html"
+                        ><img src="assets/images/instragram/4.jpg" alt=""
+                      /></a>
+                    </li>
+                    <li>
+                      <a href="project-single.html"
+                        ><img src="assets/images/instragram/5.jpg" alt=""
+                      /></a>
+                    </li>
+                    <li>
+                      <a href="project-single.html"
+                        ><img src="assets/images/instragram/6.jpg" alt=""
+                      /></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end container -->
+        </div>
+        <div class="wpo-lower-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col col-xs-12">
+                <ul>
+                  <li>
+                    &copy; 2022 Indudus Template. Design By
+                    <a href="index.html">wpOceans</a>. All Rights Reserved.
+                  </li>
+                  <li>
+                    <a href="#">Terms of use |</a>
+                    <a href="#">Privacy Environmental Policy</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- end of wpo-site-footer-section -->
+    </div>
+    <!-- end of page-wrapper -->
+
+    <!-- All JavaScript files
+    ================================================== -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <!-- Plugins for this template -->
+    <script src="assets/js/modernizr.custom.js"></script>
+    <script src="assets/js/jquery.dlmenu.js"></script>
+    <script src="assets/js/jquery-plugin-collection.js"></script>
+    <!-- Custom script for this template -->
+    <script src="assets/js/script.js"></script>
+
+    <!-- script for admin page -->
+    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="assets/js/admin.js"></script>
+    <script>
+      function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.admin-section').forEach((section) => {
+          section.style.display = 'none';
+        });
+
+        // Show the selected section
+        document.getElementById(sectionId).style.display = 'block';
+      }
+    </script>
+  </body>
+</html>

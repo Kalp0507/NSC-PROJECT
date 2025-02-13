@@ -1,0 +1,106 @@
+  /* 6.4 wpo-pricing-section */
+
+  .wpo-pricing-section,
+  .wpo-pricing-section-s2{
+      .wpo-pricing-wrap{
+          .wpo-pricing-item{
+              box-shadow: 0px 2px 16.8px 3.2px rgba(0, 38, 66, 0.08);
+  
+              @media(max-width:991px){
+                 margin-bottom: 30px;
+              }
+  
+              .wpo-pricing-top{
+                  padding: 30px;
+                  text-align: center;
+                  padding-top: 0;
+                  padding-bottom: 0;
+  
+                  .pricing-thumb{
+                      display: inline-block;
+                      padding:3px 30px 5px;
+                      background: $theme-primary-color;
+                      border-bottom-left-radius: 10px;
+                      border-bottom-right-radius: 10px;
+  
+                      span{
+                          text-transform: uppercase;
+                          color: $white;
+                      }
+                  }
+  
+  
+                  .wpo-pricing-text{
+                      margin-top: 30px;
+  
+                      h2{
+                          color: $dark-gray;
+                          font-size: 40px;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          margin-bottom: 15px;
+                          font-weight: 700;
+                          
+                          span{
+                              font-weight: 500;
+                              color: $text-color;
+                              font-size: 16px;
+                              text-transform: uppercase;
+                          }
+                      }
+  
+                      p{
+                          padding-bottom: 30px;
+                          max-width: 282px;
+                          margin: 0 auto;
+                          border-bottom:1px solid $theme-primary-color;
+                      }
+                  }
+              }
+  
+              .wpo-pricing-bottom{
+                  padding: 40px;
+                  padding-top: 35px;
+                  text-align: center;
+                  .wpo-pricing-bottom-text{
+                      ul{
+                          list-style: none;
+  
+                          li{
+                              color: $text-light-color;
+                              padding-bottom: 15px;
+                          }
+                      }
+  
+                      a{
+                          font-size: 16px;
+                          color: $theme-primary-color;
+                          font-weight: 500;
+                          display: inline-block;
+                          margin-top: 20px;
+                          position: relative;
+                          padding: 10px 25px;
+                          border: 1px solid $theme-primary-color;
+  
+                          &:hover{
+                              background: $theme-primary-color;
+                              color: $white;
+  
+                              &:before{
+                                  background-color: $theme-primary-color;
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+          .col{
+              &:last-child{
+                  .wpo-pricing-item{
+                      margin-bottom: 0;
+                  }
+              }
+          }
+      }
+  }

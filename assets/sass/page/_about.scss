@@ -1,0 +1,53 @@
+/*==========================================
+9. wpo-about-section
+===========================================*/
+
+// 9.1 wpo-fun-fact-section-s2
+
+.wpo-fun-fact-section-s2{
+    text-align: center;
+    background: url(../images/funfact.jpg) no-repeat center center;
+    position: relative;
+    background-size: cover;
+    z-index: 1;
+    background-attachment: fixed;
+    padding: 100px 0;
+    margin-top: 0;
+
+
+    &:before{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: $dark-gray;
+        content: "";
+        z-index: -1;
+        opacity: .75;
+    }
+
+    .wpo-fun-fact-grids{
+        .grid{
+
+            &:after{
+               display: none;
+            }
+            h3{
+                font-size: 80px;
+                color: $white;
+                margin-bottom: 0;
+
+                @media(max-width:991px){
+                   font-size: 40px;
+                }
+            }
+    
+            h3 + p {
+                color: $white;
+                margin-bottom: 0;
+            }
+        }
+    }
+
+}
