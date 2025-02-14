@@ -766,31 +766,31 @@
   if ($('#contact-form-main').length) {
     $('#contact-form-main').validate({
       rules: {
-        name: {
+        person_name: {
           required: true,
           minlength: 2,
         },
 
-        email: 'required',
+        company_email: 'required',
 
         phone: 'required',
 
-        address: 'required',
+        company_address: 'required',
 
         country: 'required',
-        business: 'required',
+        // business: 'required',
         inquiry: 'required',
 
         // service: 'required',
       },
 
       messages: {
-        name: 'Please enter your name',
-        email: 'Please enter your email address',
-        phone: 'Please enter your phone number',
-        country: 'Please enter your country name',
-        address: 'Please enter your adress',
-        business: 'Please enter your business details',
+        // person_name: 'Please enter your name',
+        // company_email: 'Please enter your email address',
+        // phone: 'Please enter your phone number',
+        // country: 'Please enter your country name',
+        // company_address: 'Please enter your adress',
+        // business: 'Please enter your business details',
         inquiry: 'Please enter your inquiry in detail',
         // service: 'Please select your contact service',
       },
