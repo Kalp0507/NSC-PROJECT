@@ -208,6 +208,126 @@
       <!-- end page-title -->
 
       <div class="shop-page-container">
+        <!-- Mobile Dropdown -->
+        <div class="mobile-dropdown">
+          <button class="dropdown-button">
+            <span class="selected-category">Physics Lab Equipments</span>
+          </button>
+          <div class="dropdown-content">
+            <ul class="sidebar-list">
+              <li
+                id="physics-lab-mobile"
+                onclick="showSection('physics-lab-section')"
+              >
+                Physics Lab Equipments
+              </li>
+              <li
+                id="biology-lab-mobile"
+                onclick="showSection('biology-lab-section')"
+              >
+                Biology Lab Equipments
+              </li>
+              <li
+                id="chemistry-lab-mobile"
+                onclick="showSection('chemistry-lab-section')"
+              >
+                Chemistry Lab Equipments
+              </li>
+              <li
+                id="microscopes-mobile"
+                onclick="showSection('microscope-section')"
+              >
+                Microscopes
+              </li>
+              <li
+                id="educational-charts-mobile"
+                onclick="showSection('education-section')"
+              >
+                Educational Charts
+              </li>
+              <li
+                id="mechanical-lab-mobile"
+                onclick="showSection('mechanical-lab-section')"
+              >
+                Mechanical Engineering Lab Equipments
+              </li>
+              <li
+                id="civil-lab-mobile"
+                onclick="showSection('civil-lab-section')"
+              >
+                Surveying & Civil Engineering Equipments
+              </li>
+              <li
+                id="anatomical-models-mobile"
+                onclick="showSection('anatomical-section')"
+              >
+                Anatomical Models
+              </li>
+              <li
+                id="abdos-plasticware-mobile"
+                onclick="showSection('abdos-section')"
+              >
+                ABDOS Lab Plasticware
+              </li>
+              <li
+                id="pharmacy-equipments-mobile"
+                onclick="showSection('pharmacy-section')"
+              >
+                Pharmacy Equipments
+              </li>
+              <li
+                id="biotech-medical-mobile"
+                onclick="showSection('biotech-section')"
+              >
+                Bio-Technology & Medical Test Equipments
+              </li>
+              <li
+                id="borosilicate-glassware-mobile"
+                onclick="showSection('borosilicate-section')"
+              >
+                Borosilicate Glassware
+              </li>
+              <li
+                id="nursing-products-mobile"
+                onclick="showSection('nursing-section')"
+              >
+                Nursing Products (ANM/GNM)
+              </li>
+              <li
+                id="polylab-plasticware-mobile"
+                onclick="showSection('polylab-section')"
+              >
+                Polylab Plasticware
+              </li>
+              <li
+                id="prepared-slides-mobile"
+                onclick="showSection('prepared-section')"
+              >
+                Prepared Slides
+              </li>
+              <li
+                id="lab-instruments-mobile"
+                onclick="showSection('instruments-section')"
+              >
+                Laboratory Instruments
+              </li>
+              <li
+                id="soda-glassware-mobile"
+                onclick="showSection('soda-section')"
+              >
+                Soda Glassware
+              </li>
+              <li
+                id="electronic-apparatus-mobile"
+                onclick="showSection('electronic-section')"
+              >
+                Electronic Apparatus
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Desktop Sidebar -->
         <section class="shop-sidebar-section">
           <ul class="sidebar-list">
             <li id="physics-lab" onclick="showSection('physics-lab-section')">
@@ -1062,16 +1182,72 @@
       window.addEventListener('load', setShopSectionHeight);
       window.addEventListener('resize', setShopSectionHeight);
 
-      // code for sidebar options
+      // // code for sidebar options
+      // function showSection(sectionId) {
+      //   // Hide all sections
+      //   document.querySelectorAll('.shop-category').forEach((section) => {
+      //     section.style.display = 'none';
+      //   });
+
+      //   // Show the selected section
+      //   document.getElementById(sectionId).style.display = 'block';
+      // }
+      // Handle dropdown toggle
+      const dropdownButton = document.querySelector('.dropdown-button');
+      const dropdownContent = document.querySelector('.dropdown-content');
+      const selectedCategory = document.querySelector('.selected-category');
+
+      dropdownButton.addEventListener('click', () => {
+        dropdownButton.classList.toggle('active');
+        dropdownContent.classList.toggle('show');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (event) => {
+        if (!event.target.closest('.mobile-dropdown')) {
+          dropdownContent.classList.remove('show');
+          dropdownButton.classList.remove('active');
+        }
+      });
+
+      // Show section function
       function showSection(sectionId) {
         // Hide all sections
-        document.querySelectorAll('.shop-category').forEach((section) => {
+        const sections = document.querySelectorAll('.shop-category');
+        sections.forEach((section) => {
           section.style.display = 'none';
         });
 
-        // Show the selected section
-        document.getElementById(sectionId).style.display = 'block';
+        // Show selected section
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+          selectedSection.style.display = 'block';
+        }
+
+        // Update active states
+        const sidebarItems = document.querySelectorAll('.sidebar-list li');
+        sidebarItems.forEach((item) => {
+          item.classList.remove('active');
+        });
+
+        // Update selected category text in dropdown
+        const clickedItem = document.querySelector(
+          `[onclick="showSection('${sectionId}')"]`
+        );
+        if (clickedItem) {
+          clickedItem.classList.add('active');
+          selectedCategory.textContent = clickedItem.textContent;
+        }
+
+        // Close dropdown on mobile
+        dropdownContent.classList.remove('show');
+        dropdownButton.classList.remove('active');
       }
+
+      // Initialize first section
+      document.addEventListener('DOMContentLoaded', () => {
+        showSection('physics-lab-section');
+      });
     </script>
   </body>
 </html>

@@ -5076,7 +5076,7 @@ wpo-hero-slider-s4
 }
 .wpo-site-footer .wpo-lower-footer ul li a:hover,
 .wpo-site-footer-s2 .wpo-lower-footer ul li a:hover {
-  color: rgb(0, 41, 127);
+  color: rgb(29, 93, 233);
 }
 @media (max-width: 991px) {
   .wpo-site-footer .wpo-lower-footer ul li,
@@ -6514,7 +6514,8 @@ wpo-hero-slider-s4
 }
 .partners-section .partners-slider .owl-item img,
 .partners-section-s2 .partners-slider .owl-item img {
-  width: unset;
+  width: 90px;
+  color: #414347;
 }
 .partners-section .partners-slider .owl-nav,
 .partners-section-s2 .partners-slider .owl-nav {
@@ -9209,14 +9210,18 @@ wpo-hero-slider-s4
   flex-direction: row;
   width: 100%;
 }
-
+@media (min-width: 546px) {
+  .shop-sidebar-section {
+    width: 260px;
+  }
+}
 .shop-sidebar-section {
-  width: 250px;
+  height: 200vh;
   background-color: grey;
   color: white;
   padding: 20px;
-  flex-shrink: 0; /* Prevents sidebar from shrinking */
-  height: 200vh;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
 }
 
 .wpo-shop-section {
@@ -9230,6 +9235,78 @@ wpo-hero-slider-s4
   overflow-y: auto;
 }
 
+.mobile-dropdown {
+  display: none;
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.dropdown-button {
+  width: 100%;
+  padding: 12px 20px;
+  background: grey;
+  color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dropdown-button:hover {
+  color: #002642;
+}
+
+.dropdown-button::after {
+  content: '▼';
+  font-size: 12px;
+  transition: transform 0.3s;
+}
+
+.dropdown-button.active::after {
+  transform: rotate(180deg);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: grey;
+  color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-top: 4px;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+/* Responsive styles */
+@media (max-width: 545px) {
+  .shop-page-container {
+    flex-direction: column;
+    min-height: 200vh;
+  }
+
+  .shop-sidebar-section {
+    display: none;
+  }
+
+  .mobile-dropdown {
+    display: block;
+  }
+
+  .wpo-shop-section {
+    padding: 20px;
+  }
+}
 /* ---- Product Grid Styling ---- */
 .wpo-shop-section .shop-grids {
   display: flex;
