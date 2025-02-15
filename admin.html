@@ -135,7 +135,9 @@
           <ul>
             <li onclick="showSection('add-products')">Add Products</li>
             <li onclick="showSection('all-products')">All Products</li>
-            <li onclick="showSection('dealer-inquiries')">Dealer Inquiries</li>
+            <li onclick="showSection('dealer-inquiries')">
+              Dealer Inquiries/ Contact us
+            </li>
             <li onclick="showSection('cart-inquiries')">Cart Inquiries</li>
           </ul>
         </div>
@@ -146,7 +148,12 @@
               <div class="alert">Product saved</div>
               <form action="" id="product-form">
                 <label for="productName">Product Name:</label>
-                <input type="text" id="productName" name="productName" required />
+                <input
+                  type="text"
+                  id="productName"
+                  name="productName"
+                  required
+                />
 
                 <label for="productPrice">Price:</label>
                 <input type="number" id="price" name="productPrice" required />
@@ -162,9 +169,48 @@
                   >
                     Choose your product type
                   </option>
-                  <option value="Physics lab instrument">Physics lab instrument</option>
-                  <option value="Chemistry lab instrument">Chemistry lab instrument</option>
-                  <option value="Biology lab instrument">Biology lab instrument</option>
+                  <option value="Physics Lab Equipment">
+                    Physics Lab Equipment
+                  </option>
+                  <option value="Chemistry Lab Equipment">
+                    Chemistry Lab Equipment
+                  </option>
+                  <option value="Biology Lab Equipment">
+                    Biology Lab Equipment
+                  </option>
+                  <option value="Microscopes">Microscopes</option>
+                  <option value="Educational Charts">Educational Charts</option>
+                  <option value="Mechanical Engineering Lab Equipment">
+                    Mechanical Engineering Lab Equipment
+                  </option>
+                  <option value="Surveying & Civil Engineering Equipment">
+                    Surveying & Civil Engineering Equipment
+                  </option>
+                  <option value="Anatomical Models">Anatomical Models</option>
+                  <option value="ABDOS Lab Plasticware">
+                    ABDOS Lab Plasticware
+                  </option>
+                  <option value="Pharmacy Equipment">Pharmacy Equipment</option>
+                  <option value="Bio-Technology & Medical Test Equipment">
+                    Bio-Technology & Medical Test Equipment
+                  </option>
+                  <option value="Borosilicate Glassware">
+                    Borosilicate Glassware
+                  </option>
+                  <option value="Nursing Products (ANM/GNM)">
+                    Nursing Products (ANM/GNM)
+                  </option>
+                  <option value="Polylab Plasticware">
+                    Polylab Plasticware
+                  </option>
+                  <option value="Prepared Slides">Prepared Slides</option>
+                  <option value="Laboratory Instruments">
+                    Laboratory Instruments
+                  </option>
+                  <option value="Soda Glassware">Soda Glassware</option>
+                  <option value="Electronic Apparatus">
+                    Electronic Apparatus
+                  </option>
                 </select>
 
                 <label for="productDesc">Description:</label>
@@ -175,7 +221,13 @@
                 ></textarea>
 
                 <label for="productImage">Product Image:</label>
-                <input type="file" id="productImage" name="productImage" accept="image/*" required />
+                <input
+                  type="file"
+                  id="productImage"
+                  name="productImage"
+                  accept="image/*"
+                  required
+                />
 
                 <button type="submit">Add Product</button>
               </form>
@@ -231,161 +283,6 @@
           </section>
         </div>
       </div>
-
-      <!-- start of wpo-site-footer-section -->
-      <footer class="wpo-site-footer">
-        <div class="wpo-upper-footer">
-          <div class="container">
-            <div class="row">
-              <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
-                <div class="widget about-widget">
-                  <div class="logo widget-title">
-                    <a class="logo" href="index.html"
-                      ><img
-                        src="assets/images/logo/Niharika logo44.png"
-                        alt=""
-                        width="80px"
-                        height="80px"
-                    /></a>
-                  </div>
-                  <p>
-                    Blandit ipsum arcu donec auctor a, turpis vitae. Egestas
-                    pretium euenim non euoeu dignissim nulla nunc quisque
-                  </p>
-                  <ul>
-                    <li>
-                      <a href="#">
-                        <i class="ti-facebook"></i>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i class="ti-twitter-alt"></i>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i class="ti-instagram"></i>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i class="ti-google"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
-                <div class="widget link-widget">
-                  <div class="widget-title">
-                    <h3>Our Services</h3>
-                  </div>
-                  <ul>
-                    <li>
-                      <a href="service-single.html">Mechanical Engineering</a>
-                    </li>
-                    <li>
-                      <a href="service-single.html">Petroleum Refinery</a>
-                    </li>
-                    <li><a href="service-single.html">Power & Engergy</a></li>
-                    <li>
-                      <a href="service-single.html">Electrical & Power </a>
-                    </li>
-                    <li>
-                      <a href="service-single.html">Industrial Construction</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
-                <div class="widget wpo-service-link-widget">
-                  <div class="widget-title">
-                    <h3>Contact Us</h3>
-                  </div>
-                  <div class="contact-ft">
-                    <ul>
-                      <li>
-                        <i class="fi flaticon-location"></i>68D, Belsion Town
-                        2365 <br />
-                        Fna city, LH 3656, USA
-                      </li>
-                      <li>
-                        <i class="fi flaticon-telephone"></i>+ 8 (123) 123 456
-                        789 <br />
-                        + 8 (123) 123 456 789
-                      </li>
-                      <li>
-                        <i class="fi flaticon-email"></i>indudus@gmail.com
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
-                <div class="widget instagram">
-                  <div class="widget-title">
-                    <h3>Our Gellery</h3>
-                  </div>
-                  <ul class="d-flex">
-                    <li>
-                      <a href="project-single.html"
-                        ><img src="assets/images/instragram/1.jpg" alt=""
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="project-single.html"
-                        ><img src="assets/images/instragram/2.jpg" alt=""
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="project-single.html"
-                        ><img src="assets/images/instragram/3.jpg" alt=""
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="project-single.html"
-                        ><img src="assets/images/instragram/4.jpg" alt=""
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="project-single.html"
-                        ><img src="assets/images/instragram/5.jpg" alt=""
-                      /></a>
-                    </li>
-                    <li>
-                      <a href="project-single.html"
-                        ><img src="assets/images/instragram/6.jpg" alt=""
-                      /></a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- end container -->
-        </div>
-        <div class="wpo-lower-footer">
-          <div class="container">
-            <div class="row">
-              <div class="col col-xs-12">
-                <ul>
-                  <li>
-                    &copy; 2022 Indudus Template. Design By
-                    <a href="index.html">wpOceans</a>. All Rights Reserved.
-                  </li>
-                  <li>
-                    <a href="#">Terms of use |</a>
-                    <a href="#">Privacy Environmental Policy</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-      <!-- end of wpo-site-footer-section -->
     </div>
     <!-- end of page-wrapper -->
 

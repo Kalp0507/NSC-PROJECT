@@ -12009,3 +12009,9 @@ textarea:focus {
     flex-direction: column;
   }
 }
+
+/* gallery */
+.wpo-gallery-item img {
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
