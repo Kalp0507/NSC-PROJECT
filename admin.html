@@ -132,7 +132,7 @@
       <!-- Start content -->
       <div id="admin-content-container">
         <div class="admin-sidebar">
-          <ul>
+          <ul id="adminSectionList">
             <li onclick="showSection('add-products')">Add Products</li>
             <li onclick="showSection('all-products')">All Products</li>
             <li onclick="showSection('dealer-inquiries')">
@@ -156,7 +156,7 @@
                 />
 
                 <label for="productPrice">Price:</label>
-                <input type="number" id="price" name="productPrice" required />
+                <input type="number" id="productPrice" name="productPrice" required />
 
                 <label for="productType">Product Type:</label>
                 <select id="productType" name="productType" required>
@@ -308,6 +308,7 @@
 
         // Show the selected section
         document.getElementById(sectionId).style.display = 'block';
+
       }
     </script>
   </body>
