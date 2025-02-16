@@ -110,8 +110,8 @@
     $('.caupon-wrap.s2').toggleClass('coupon-2');
   });
 
-  // toggle3
-  $('#toggle3').on('click', function () {
+  // is_address2
+  $('#is_address2').on('click', function () {
     $('#open3').slideToggle();
     $('.caupon-wrap.s2').toggleClass('coupon-2');
   });
