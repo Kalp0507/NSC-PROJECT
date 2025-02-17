@@ -133,12 +133,12 @@
       <div id="admin-content-container">
         <div class="admin-sidebar">
           <ul id="adminSectionList">
-            <li onclick="showSection('add-products')">Add Products</li>
-            <li onclick="showSection('all-products')">All Products</li>
-            <li onclick="showSection('dealer-inquiries')">
+            <li onclick="showSection1('add-products')">Add Products</li>
+            <li onclick="showSection1('all-products')">All Products</li>
+            <li onclick="showSection1('dealer-inquiries')">
               Dealer Inquiries/ Contact us
             </li>
-            <li onclick="showSection('cart-inquiries')">Cart Inquiries</li>
+            <li onclick="showSection1('cart-inquiries')">Cart Inquiries</li>
           </ul>
         </div>
         <div class="admin-content">
@@ -156,7 +156,12 @@
                 />
 
                 <label for="productPrice">Price:</label>
-                <input type="number" id="productPrice" name="productPrice" required />
+                <input
+                  type="number"
+                  id="productPrice"
+                  name="productPrice"
+                  required
+                />
 
                 <label for="productType">Product Type:</label>
                 <select id="productType" name="productType" required>
@@ -239,27 +244,488 @@
             style="display: none"
           >
             <h1>All Products</h1>
-            <div class="product-list">
-              <div class="product-list-item">
-                <div class="product-list-content">
-                  <div class="product-img">
-                    <img src="" alt="" />
-                  </div>
-                  <div class="product-desc">
-                    <p><span>Name:</span></p>
-                    <p><span>Price:</span></p>
-                    <p><span>Type:</span></p>
-                    <p><span>Description:</span></p>
-                  </div>
-                </div>
-                <div class="product-buttons">
-                  <button>Edit</button>
-                  <button>Delete</button>
+            <div class="admin-product-dropdown">
+              <div class="mobile-dropdown2">
+                <button class="dropdown-button">
+                  <span class="selected-category">Physics Lab Equipment</span>
+                </button>
+                <div class="dropdown-content">
+                  <ul class="sidebar-list">
+                    <li
+                      id="physics-lab-mobile"
+                      onclick="showSection('physics-lab-section')"
+                    >
+                      Physics Lab Equipment
+                    </li>
+                    <li
+                      id="biology-lab-mobile"
+                      onclick="showSection('biology-lab-section')"
+                    >
+                      Biology Lab Equipment
+                    </li>
+                    <li
+                      id="chemistry-lab-mobile"
+                      onclick="showSection('chemistry-lab-section')"
+                    >
+                      Chemistry Lab Equipment
+                    </li>
+                    <li
+                      id="microscopes-mobile"
+                      onclick="showSection('microscope-section')"
+                    >
+                      Microscopes
+                    </li>
+                    <li
+                      id="educational-charts-mobile"
+                      onclick="showSection('education-section')"
+                    >
+                      Educational Charts
+                    </li>
+                    <li
+                      id="mechanical-lab-mobile"
+                      onclick="showSection('mechanical-lab-section')"
+                    >
+                      Mechanical Engineering Lab Equipment
+                    </li>
+                    <li
+                      id="civil-lab-mobile"
+                      onclick="showSection('civil-lab-section')"
+                    >
+                      Surveying & Civil Engineering Equipment
+                    </li>
+                    <li
+                      id="anatomical-models-mobile"
+                      onclick="showSection('anatomical-section')"
+                    >
+                      Anatomical Models
+                    </li>
+                    <li
+                      id="abdos-plasticware-mobile"
+                      onclick="showSection('abdos-section')"
+                    >
+                      ABDOS Lab Plasticware
+                    </li>
+                    <li
+                      id="pharmacy-equipment-mobile"
+                      onclick="showSection('pharmacy-section')"
+                    >
+                      Pharmacy Equipment
+                    </li>
+                    <li
+                      id="biotech-medical-mobile"
+                      onclick="showSection('biotech-section')"
+                    >
+                      Bio-Technology & Medical Test Equipment
+                    </li>
+                    <li
+                      id="borosilicate-glassware-mobile"
+                      onclick="showSection('borosilicate-section')"
+                    >
+                      Borosilicate Glassware
+                    </li>
+                    <li
+                      id="nursing-products-mobile"
+                      onclick="showSection('nursing-section')"
+                    >
+                      Nursing Products (ANM/GNM)
+                    </li>
+                    <li
+                      id="polylab-plasticware-mobile"
+                      onclick="showSection('polylab-section')"
+                    >
+                      Polylab Plasticware
+                    </li>
+                    <li
+                      id="prepared-slides-mobile"
+                      onclick="showSection('prepared-section')"
+                    >
+                      Prepared Slides
+                    </li>
+                    <li
+                      id="lab-instruments-mobile"
+                      onclick="showSection('instruments-section')"
+                    >
+                      Laboratory Instruments
+                    </li>
+                    <li
+                      id="soda-glassware-mobile"
+                      onclick="showSection('soda-section')"
+                    >
+                      Soda Glassware
+                    </li>
+                    <li
+                      id="electronic-apparatus-mobile"
+                      onclick="showSection('electronic-section')"
+                    >
+                      Electronic Apparatus
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
+            <div class="product-list">
+              <section id="physics-lab-section" class="product-category">
+                <h2>Physics Lab Equipment</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="chemistry-lab-section" class="product-category">
+                <h2>Chemistry Lab Equipment</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="biology-lab-section" class="product-category">
+                <h2>Biology Lab Equipment</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="microscope-section" class="product-category">
+                <h2>Microscopes</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="education-section" class="product-category">
+                <h2>Educational Charts</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="mechanical-lab-section" class="product-category">
+                <h2>Mechanical Engineering Lab Equipment</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="civil-lab-section" class="product-category">
+                <h2>Surveying and Civil Engineering lab Equipment</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="anatomical-section" class="product-category">
+                <h2>Anatomical Models</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="abdos-section" class="product-category">
+                <h2>ABDOS Lab Plasticware</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="pharmacy-section" class="product-category">
+                <h2>Pharmacy Equipment</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="biotech-section" class="product-category">
+                <h2>Bio-Technology and Medical test Equipment</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="borosilicate-section" class="product-category">
+                <h2>Borosilicate Glassware</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="nursing-section" class="product-category">
+                <h2>Nursing Products (ANM/GNM)</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="polylab-section" class="product-category">
+                <h2>Polylab Plasticware</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="prepared-section" class="product-category">
+                <h2>Prepared Slides</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="instruments-section" class="product-category">
+                <h2>Laboratory Instruments</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="soda-section" class="product-category">
+                <h2>Soda Glassware</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+              <section id="electronic-section" class="product-category">
+                <h2>Electronic Apparatus</h2>
+                <div class="product-list-item">
+                  <div class="product-list-content">
+                    <div class="product-img">
+                      <img src="" alt="" />
+                    </div>
+                    <div class="product-desc">
+                      <p><span>Name:</span></p>
+                      <p><span>Price:</span></p>
+                      <p><span>Type:</span></p>
+                      <p><span>Description:</span></p>
+                    </div>
+                  </div>
+                  <div class="product-buttons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                </div>
+              </section>
+            </div>
           </section>
-
           <section
             id="dealer-inquiries"
             class="admin-section"
@@ -270,7 +736,6 @@
               Dealer inquiries will be shown here...
             </div>
           </section>
-
           <section
             id="cart-inquiries"
             class="admin-section"
@@ -300,7 +765,7 @@
     <!-- script for admin page -->
     <script src="assets/js/admin.js" type="module"></script>
     <script>
-      function showSection(sectionId) {
+      function showSection1(sectionId) {
         // Hide all sections
         document.querySelectorAll('.admin-section').forEach((section) => {
           section.style.display = 'none';
@@ -308,8 +773,64 @@
 
         // Show the selected section
         document.getElementById(sectionId).style.display = 'block';
-
       }
+    </script>
+    <script>
+      const dropdownButton = document.querySelector('.dropdown-button');
+      const dropdownContent = document.querySelector('.dropdown-content');
+      const selectedCategory = document.querySelector('.selected-category');
+
+      dropdownButton.addEventListener('click', () => {
+        dropdownButton.classList.toggle('active');
+        dropdownContent.classList.toggle('show');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (event) => {
+        if (!event.target.closest('.mobile-dropdown2')) {
+          dropdownContent.classList.remove('show');
+          dropdownButton.classList.remove('active');
+        }
+      });
+
+      // Show section function
+      function showSection(sectionId) {
+        // Hide all sections
+        const sections = document.querySelectorAll('.product-category');
+        sections.forEach((section) => {
+          section.style.display = 'none';
+        });
+
+        // Show selected section
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+          selectedSection.style.display = 'block';
+        }
+
+        // Update active states
+        const sidebarItems = document.querySelectorAll('.sidebar-list li');
+        sidebarItems.forEach((item) => {
+          item.classList.remove('active');
+        });
+
+        // Update selected category text in dropdown
+        const clickedItem = document.querySelector(
+          `[onclick="showSection('${sectionId}')"]`
+        );
+        if (clickedItem) {
+          clickedItem.classList.add('active');
+          selectedCategory.textContent = clickedItem.textContent;
+        }
+
+        // Close dropdown on mobile
+        dropdownContent.classList.remove('show');
+        dropdownButton.classList.remove('active');
+      }
+
+      // Initialize first section
+      document.addEventListener('DOMContentLoaded', () => {
+        showSection('physics-lab-section');
+      });
     </script>
   </body>
 </html>

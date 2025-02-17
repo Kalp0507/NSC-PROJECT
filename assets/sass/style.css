@@ -11812,6 +11812,10 @@ wpo-hero-slider-s4
   padding: 20px;
   margin: auto;
 }
+#all-products {
+  height: 200vh;
+  overflow: scroll;
+}
 
 .product-form-container {
   background: #fff;
@@ -11840,7 +11844,9 @@ wpo-hero-slider-s4
   text-align: left;
   color: #444;
 }
-
+.product-form-container {
+  margin: auto;
+}
 .admin-section .product-form-container input,
 textarea {
   width: 100%;
@@ -12014,4 +12020,14 @@ textarea:focus {
 .wpo-gallery-item img {
   border-radius: 5px;
   margin-bottom: 20px;
+}
+
+.mobile-dropdown2 {
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.shop-grids .product-list {
+  width: 100px;
 }

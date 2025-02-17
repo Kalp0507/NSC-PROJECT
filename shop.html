@@ -421,6 +421,7 @@
               <div class="row">
                 <div class="col col-xs-12">
                   <div class="shop-grids clearfix">
+                    <div id="product-list"></div>
                     <div class="grid">
                       <div class="img-holder">
                         <img src="assets/images/shop/ammeter dc (1).jpg" alt />
@@ -1168,6 +1169,7 @@
     <script src="assets/js/jquery-plugin-collection.js"></script>
     <!-- Custom script for this template -->
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/admin.js"></script>
 
     <script>
       function setShopSectionHeight() {
@@ -1178,21 +1180,9 @@
         shopSection.style.height = sidebar.offsetHeight + 'px';
       }
 
-      // Run on load and on window resize
       window.addEventListener('load', setShopSectionHeight);
       window.addEventListener('resize', setShopSectionHeight);
 
-      // // code for sidebar options
-      // function showSection(sectionId) {
-      //   // Hide all sections
-      //   document.querySelectorAll('.shop-category').forEach((section) => {
-      //     section.style.display = 'none';
-      //   });
-
-      //   // Show the selected section
-      //   document.getElementById(sectionId).style.display = 'block';
-      // }
-      // Handle dropdown toggle
       const dropdownButton = document.querySelector('.dropdown-button');
       const dropdownContent = document.querySelector('.dropdown-content');
       const selectedCategory = document.querySelector('.selected-category');
@@ -1249,35 +1239,49 @@
         showSection('physics-lab-section');
       });
 
+      // fuction to show products.........................................................................
+      function showProducts(allProducts) {
+        let selectedType = document.getElementById('physics-lab-section').value; // get type to sort products from html
 
-      // function showProducts(allProducts) {
-      //   let selectedType; // get type to sort products from html 
+        const filteredProducts = allProducts.filter(
+          (item) => item.type === selectedType
+        );
 
-      //   const filteredProducts = allProducts.filter(item => item.type === selectedType)
+        // function to print these filtered product
+        function print() {
+          // logic => where to print?
+          const productContainer =
+            document.getElementsByClassName('sidebar-list').innerHTML;
+          productContainer.innerHTML = '';
+          filteredProducts.forEach((item) => {
+            const productCard = `
+            <div class="product-card" pid="${item.pid}">
+              <h3>${item.name}</h3>
+              <button id="addToCart" pid="${item.pid}" class="add-to-cart">
+                Add to Cart
+              </button>
+            </div>
+          `;
+            productContainer.innerHTML += productCard;
+          });
+          // design of product card....
+          // <div className="">
+          //   . . .
+          //   <button id="addToCart" pid={item.pid} className="">
+          //     Add to cart
+          //   </button>
+          //   .
+          // </div>;
+        }
+        print();
+      }
+      // add event to save clicked product in cart on add-to-cart button click
+      function addToCart(pid) {
+        let cart = [];
 
-      //   // function to print these filtered product 
-      //     function print() {
-      //       // logic => where to print?
-
-      //       // design of product card....
-      //       <div className="">
-      //         .
-      //         .
-      //         .
-      //         <button id='addToCart' pid={item.pid} className="">Add to cart</button>
-      //         .
-      //       </div>
-      //     }
-
-      // }
-      // // add event to save clicked product in cart on add-to-cart button click
-      // function addToCart(pid){
-      //   let cart = [];
-
-      //   // allProducts has all products with product id (pid)
-      //   cart.push(allProduct.filter(item=> item.pid === pid))
-      // }
-
+        // allProducts has all products with product id (pid)
+        cart.push(allProduct.filter((item) => item.pid === pid));
+      }
     </script>
   </body>
 </html>
