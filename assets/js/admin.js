@@ -1,15 +1,39 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore,initializeFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
+// old unpaid
 const firebaseConfig = {
+  apiKey: "AIzaSyDdBer8FpN4VBvyFaGXuuZWPsgnov7Yb9Q",
+  authDomain: "nsc-project-95e23.firebaseapp.com",
+  databaseURL: "https://nsc-project-95e23-default-rtdb.firebaseio.com",
+  projectId: "nsc-project-95e23",
+  storageBucket: "nsc-project-95e23.firebasestorage.app",
+  messagingSenderId: "96525728452",
+  appId: "1:96525728452:web:018809632318722637e791"
+};
+
+// new paid
+const firebaseConfig1 = {
   apiKey: "AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI",
   authDomain: "nsc-project-b2648.firebaseapp.com",
   projectId: "nsc-project-b2648",
-  storageBucket: "nsc-project-b2648.appspot.com",
+  storageBucket: "nsc-project-b2648.firebasestorage.com",
   messagingSenderId: "208868373512",
   appId: "1:208868373512:web:b4b1c9922dcd9ef8e2cdbd",
   measurementId: "G-7TXJZD0N70"
+};
+
+// new unpaid
+const firebaseConfig2 = {
+  apiKey: "AIzaSyCoPer3AlsOUO2zVmym11TRbsGTwRTe90k",
+  authDomain: "fir-8dbaa.firebaseapp.com",
+  projectId: "fir-8dbaa",
+  storageBucket: "fir-8dbaa.firebasestorage.app",
+  messagingSenderId: "362967685119",
+  appId: "1:362967685119:web:5d8e2b0814a25ef64cf9ca",
+  measurementId: "G-B1KDG3MCP4"
 };
 
 // Initialize Firebase
@@ -34,72 +58,6 @@ console.log("Storage Initialized:", storage);
 
 // // reference to the storage service
 // const storage = firebase.storage();
-
-// let productFormDB = firebase.database().ref('NSC-products');
-// document.getElementById('product-form').addEventListener('submit', submitForm);
-
-// function submitForm(e) {
-//   e.preventDefault();
-
-//   let name = getElementVal('name');
-//   let price = getElementVal('price');
-//   let type = getElementVal('type');
-//   let description = getElementVal('description');
-//   let image = getElementVal('image');
-
-//   saveProducts(name, price, type, description, image);
-//   // enable alert
-//   document.querySelector('.alert').style.display = 'block';
-
-//   setTimeout(() => {
-//     document.querySelector('.alert').style.display = 'none';
-//   }, 3000);
-
-//   // reset form
-//   document.getElementById('product-form').reset();
-// }
-
-// const getElementVal = (id) => {
-//   return document.getElementById(id).value;
-// };
-
-// const saveProducts = (name, price, type, description, image) => {
-//   let newProductForm = productFormDB.push();
-//   newProductForm.set({
-//     name: name,
-//     price: price,
-//     type: type,
-//     description: description,
-//     image: image,
-//   });
-// };
-
-// // code to show products on website
-// let ProductList = document.getElementById('ProductList');
-
-// // Listen for new product entries
-// productFormDB.on('child_added', (data) => {
-//   let productData = data.val();
-//   let li = document.createElement('li');
-//   li.id = data.key;
-//   li.innerHTML = listTemplate(productData);
-//   ProductList.appendChild(li);
-// });
-
-// // Function to generate product display template
-// function listTemplate({ name, price, type, description, imageUrl }) {
-//   return `
-//     <div class="product-card">
-//       <img src="${imageUrl}" alt="${name}" class="product-image">
-//       <div class="product-info">
-//         <h3>${name}</h3>
-//         <p><strong>Price:</strong> ${price}</p>
-//         <p><strong>Type:</strong> ${type}</p>
-//         <p><strong>Description:</strong> ${description}</p>
-//       </div>
-//     </div>
-//   `;
-// }
 
 // ----------------------------------------------------------
 // for login page
@@ -173,7 +131,7 @@ $(document).ready(function () {
 
     try {
       // Store Inquiry Data in Firestore
-      const docRef = await addDoc(collection(db, "deal-inquiries"), {
+      const docRef = await addDoc(collection(db, "NSC-inquiries"), {
         company_name: company_name,
         person_name: person_name,
         company_email: company_email,
@@ -202,6 +160,67 @@ $(document).ready(function () {
   $('#checkoutForm').submit(async function (e) {
     e.preventDefault();
 
+    // First addrss
+    const fname1 = $("#fname1").val().trim();
+    const lname1 = $("#lname1").val().trim();
+    const country1 = $("#country1").val();
+    const city1 = $("#city1").val().trim();
+    const address1 = $("#address1").val().trim();
+    const post1 = $("#post1").val().trim();
+    const email1 = $("#email1").val().trim();
+    const phone1 = $("#phone1").val().trim();
+
+    const is_address2 = $("#is_address2").prop('checked');
+    const order_note = $("#order_note").val().trim();
+
+
+    // Second addrss
+    const fname2 = $("#fname2").val().trim();
+    const lname2 = $("#lname2").val().trim();
+    const country2 = $("#country2").val();
+    const city2 = $("#city2").val().trim();
+    const address2 = $("#address2").val().trim();
+    const post2 = $("#post2").val().trim();
+    const email2 = $("#email2").val().trim();
+    const phone2 = $("#phone2").val().trim();
+
+    // products in cart
+    const products = [];
+
+    try {
+      const docRef = await addDoc(collection(db, "NSC-cartInquiries"), {
+        first_address: {
+          fname1: fname1,
+          lname1: lname1,
+          country1: country1,
+          city1: city1,
+          address1: address1,
+          post1: post1,
+          email1: email1,
+          phone1: phone1,
+        },
+        is_address2: is_address2,
+        order_note: order_note,
+        second_address: is_address2 ? {
+          fname2: fname2,
+          lname2: lname2,
+          country2: country2,
+          city2: city2,
+          address2: address2,
+          post2: post2,
+          email2: email2,
+          phone2: phone2,
+        } : {},
+        cart: products,
+        createdAt: new Date(),
+      });
+
+      alert("Cart-inquiry added successfully! ID: " + docRef.id);
+      $("#checkoutForm")[0].reset(); // Reset form
+
+    } catch (error) {
+      console.log('Error in adding cart-inquiry:', error);
+    }
   })
 })
 
@@ -244,7 +263,7 @@ $(document).ready(function () {
       // console.log(imageUrl);
 
       // Step 3: Store Product Data in Firestore
-      const docRef = await addDoc(collection(db, "products"), {
+      const docRef = await addDoc(collection(db, "NSC-products"), {
         name: name,
         price: price,
         description: description,
@@ -287,13 +306,16 @@ listItems.forEach(element => {
 
 //Fetching all products
 async function getAllProducts() {
+  console.log('fetching all products')
   try {
-    const prodRef = collection(db, "products");
+    const prodRef = collection(db, "NSC-products");
     const q = query(prodRef);
     const snapshot = await getDocs(q);
 
-    snapshot.forEach(doc => allProducts.push(doc.data()))
+    snapshot.forEach(doc => allProducts.push({ ...doc.data(), pid: doc.id }))
     console.log(allProducts)
+
+
   } catch (error) {
     console.log("Error fetching products: ", error)
   }
@@ -301,9 +323,9 @@ async function getAllProducts() {
 
 //fetching dealer inquiries
 async function getDealerInquiries() {
-  console.log('get dealer inquiries')
+  console.log('fetching dealer inquiries')
   try {
-    const prodRef = collection(db, "deal-inquiries");
+    const prodRef = collection(db, "NSC-inquiries");
     const q = query(prodRef);
     const snapshot = await getDocs(q);
 
@@ -316,5 +338,15 @@ async function getDealerInquiries() {
 
 //fetching cart inquiries
 async function getCartInquiries() {
-  console.log('get cart inquiries')
+  console.log('fetching cart inquiries')
+  try {
+    const cartInqRef = collection(db, "NSC-cartInquiries");
+    const q = query(cartInqRef);
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach(doc => cartInquries.push(doc.data()))
+    console.log(cartInquries)
+  } catch (error) {
+    console.log('Error fetching dealer inquries: ', error);
+  }
 }
