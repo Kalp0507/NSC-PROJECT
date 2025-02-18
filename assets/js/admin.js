@@ -40,7 +40,6 @@ const firebaseConfig2 = {
 let app;
 try {
   app = initializeApp(firebaseConfig);
-  console.log("Firebase initialized");
 } catch (error) {
   console.error("Firebase initialization error:", error);
 }
@@ -49,15 +48,66 @@ try {
 let db;
 try {
   db = getFirestore(app, { experimentalForceLongPolling: true });
-  console.log(" Firestore initialized", db);
 } catch (error) {
   console.error(" Firestore initialization error:", error);
 }
 const storage = getStorage(app);
-console.log("Storage Initialized:", storage);
 
 // // reference to the storage service
 // const storage = firebase.storage();
+
+// ----------------------------------------------------------
+// open funcitons
+// ----------------------------------------------------------
+
+
+const allProducts = [];
+const dealerInquries = [];
+const cartInquries = [];
+
+//Fetching all products
+async function getAllProducts() {
+  console.log('fetching all products')
+  try {
+    const prodRef = collection(db, "NSC-products");
+    const q = query(prodRef);
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach(doc => allProducts.push({ ...doc.data(), pid: doc.id }))
+  } catch (error) {
+    console.log("Error fetching products: ", error)
+  }
+}
+
+//fetching cart inquiries
+async function getCartInquiries() {
+  console.log('fetching cart inquiries')
+  try {
+    const cartInqRef = collection(db, "NSC-cartInquiries");
+    const q = query(cartInqRef);
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach(doc => cartInquries.push(doc.data()))
+    console.log(cartInquries)
+  } catch (error) {
+    console.log('Error fetching dealer inquries: ', error);
+  }
+}
+
+//fetching dealer inquiries
+async function getDealerInquiries() {
+  console.log('fetching dealer inquiries')
+  try {
+    const prodRef = collection(db, "NSC-inquiries");
+    const q = query(prodRef);
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach(doc => dealerInquries.push(doc.data()))
+    console.log(dealerInquries)
+  } catch (error) {
+    console.log('Error fetching dealer inquries: ', error);
+  }
+}
 
 // ----------------------------------------------------------
 // for login page
@@ -227,6 +277,125 @@ $(document).ready(function () {
 
 
 // ----------------------------------------------------------
+// for me
+// ----------------------------------------------------------
+{/* <div class="shop-grids clearfix">
+  <div div class="grid" >
+      <div class="img-holder">
+        <img src="assets/images/shop/ammeter dc (1).jpg" alt />
+      </div>
+      <div class="details">
+        <h3><a href="shop-single.html">Ammeter DC</a></h3>
+        <div class="add-to-cart">
+          <a href="#"
+            >Add to cart <i class="ti-shopping-cart"></i
+          ></a>
+        </div>
+      </div>
+  </div >
+</div > */}
+
+
+  
+
+// ----------------------------------------------------------
+// for shop page
+// ----------------------------------------------------------
+$(document).ready(async function () {
+  const ul = document.getElementById("typeListDesktop");
+  const desktopListItems = [...ul.getElementsByTagName("li")];
+  const defaultType = "physics-lab";
+
+  await getAllProducts();
+  
+  console.log(allProducts)
+
+  showProducts(defaultType)
+  // Adding event listener for each sidebar item
+  desktopListItems.forEach((element) => {
+    element.addEventListener("click", () => {
+      const selectedTypeId = element.getAttribute("id");
+      showProducts(selectedTypeId);
+    });
+  });
+
+
+  // Function to display filtered products
+  function showProducts(selectedTypeId) {
+    // Filter products based on the selected type
+    const filteredProducts = allProducts.filter((item) => {
+      const typeToIdMapping = {
+        "physics-lab": "Physics Lab Equipment",
+        "biology-lab": "Biology Lab Equipment",
+        "chemistry-lab": "Chemistry Lab Equipment",
+        "microscopes": "Microscopes",
+        "educational-charts": "Educational Charts",
+        "mechanical-lab": "Mechanical Engineering Lab Equipment",
+        "civil-lab": "Surveying & Civil Engineering Equipment",
+        "anatomical-models": "Anatomical Models",
+        "abdos-plasticware": "Anatomical Models",
+        "pharmacy-equipment": "Pharmacy Equipment",
+        "biotech-medical": "Bio-Technology & Medical Test Equipment",
+        "borosilicate-glassware": "Borosilicate Glassware",
+        "nursing-products": "Nursing Products (ANM/GNM)",
+        "polylab-plasticware": "Polylab Plasticware",
+        "prepared-slides": "Prepared Slides",
+        "lab-instruments": "Laboratory Instruments",
+        "soda-glassware": "Soda Glassware",
+        "electronic-apparatus": "Electronic Apparatus",
+      };
+      
+      // Match product type with selected type
+      return item.type.toLowerCase() === typeToIdMapping[selectedTypeId].toLowerCase();
+    });
+    console.log(filteredProducts)
+
+    // Print the filtered products to the container
+    print(filteredProducts);
+  }
+
+  // Function to print the filtered products to the HTML container
+  function print(filteredProducts) {
+    const productContainer = document.getElementById("productContainer");
+    productContainer.innerHTML = ""; // Clear the previous products
+
+    // Loop through filtered products and create product cards
+    filteredProducts.forEach((item) => {
+      const productCard = `
+        <div class="product-card" pid="${item.pid}">
+          <h3>${item.name}</h3>
+          <button id="addToCart" pid="${item.pid}" class="add-to-cart">
+            Add to Cart
+          </button>
+        </div>
+      `;
+      productContainer.innerHTML += productCard;
+    });
+
+    // Add event listeners to "Add to Cart" buttons
+    const cartButtons = document.querySelectorAll(".add-to-cart");
+    cartButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const pid = button.getAttribute("pid");
+        console.log(pid)
+        addToCart(pid);
+      });
+    });
+  }
+
+  // Function to add products to cart
+  function addToCart(pid) {
+    let cart = [];
+
+    // allProducts has all products with product id (pid)
+    const selectedProduct = allProducts.find((item) => item.pid === pid);
+    cart.push({...selectedProduct, quantity: 1});
+    console.log(`Product added to cart: `, cart);
+  }
+});
+
+
+// ----------------------------------------------------------
 // for admin page
 // ----------------------------------------------------------
 
@@ -282,14 +451,7 @@ $(document).ready(function () {
 })
 
 const ul = document.getElementById('adminSectionList')
-console.log(ul)
 const listItems = [...ul.getElementsByTagName("li")];
-
-
-const allProducts = [];
-const dealerInquries = [];
-const cartInquries = [];
-
 
 // calling respective function on section change
 listItems.forEach(element => {
@@ -303,50 +465,3 @@ listItems.forEach(element => {
     }
   });
 });
-
-//Fetching all products
-async function getAllProducts() {
-  console.log('fetching all products')
-  try {
-    const prodRef = collection(db, "NSC-products");
-    const q = query(prodRef);
-    const snapshot = await getDocs(q);
-
-    snapshot.forEach(doc => allProducts.push({ ...doc.data(), pid: doc.id }))
-    console.log(allProducts)
-
-
-  } catch (error) {
-    console.log("Error fetching products: ", error)
-  }
-}
-
-//fetching dealer inquiries
-async function getDealerInquiries() {
-  console.log('fetching dealer inquiries')
-  try {
-    const prodRef = collection(db, "NSC-inquiries");
-    const q = query(prodRef);
-    const snapshot = await getDocs(q);
-
-    snapshot.forEach(doc => dealerInquries.push(doc.data()))
-    console.log(dealerInquries)
-  } catch (error) {
-    console.log('Error fetching dealer inquries: ', error);
-  }
-}
-
-//fetching cart inquiries
-async function getCartInquiries() {
-  console.log('fetching cart inquiries')
-  try {
-    const cartInqRef = collection(db, "NSC-cartInquiries");
-    const q = query(cartInqRef);
-    const snapshot = await getDocs(q);
-
-    snapshot.forEach(doc => cartInquries.push(doc.data()))
-    console.log(cartInquries)
-  } catch (error) {
-    console.log('Error fetching dealer inquries: ', error);
-  }
-}

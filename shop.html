@@ -214,112 +214,94 @@
             <span class="selected-category">Physics Lab Equipment</span>
           </button>
           <div class="dropdown-content">
-            <ul class="sidebar-list">
+            <ul class="sidebar-list" id="typeList">
               <li
                 id="physics-lab-mobile"
-                onclick="showSection('physics-lab-section')"
               >
                 Physics Lab Equipment
               </li>
               <li
                 id="biology-lab-mobile"
-                onclick="showSection('biology-lab-section')"
               >
                 Biology Lab Equipment
               </li>
               <li
                 id="chemistry-lab-mobile"
-                onclick="showSection('chemistry-lab-section')"
               >
                 Chemistry Lab Equipment
               </li>
               <li
                 id="microscopes-mobile"
-                onclick="showSection('microscope-section')"
               >
                 Microscopes
               </li>
               <li
                 id="educational-charts-mobile"
-                onclick="showSection('education-section')"
               >
                 Educational Charts
               </li>
               <li
                 id="mechanical-lab-mobile"
-                onclick="showSection('mechanical-lab-section')"
               >
                 Mechanical Engineering Lab Equipment
               </li>
               <li
                 id="civil-lab-mobile"
-                onclick="showSection('civil-lab-section')"
               >
                 Surveying & Civil Engineering Equipment
               </li>
               <li
                 id="anatomical-models-mobile"
-                onclick="showSection('anatomical-section')"
               >
                 Anatomical Models
               </li>
               <li
                 id="abdos-plasticware-mobile"
-                onclick="showSection('abdos-section')"
               >
                 ABDOS Lab Plasticware
               </li>
               <li
                 id="pharmacy-equipment-mobile"
-                onclick="showSection('pharmacy-section')"
               >
                 Pharmacy Equipment
               </li>
               <li
                 id="biotech-medical-mobile"
-                onclick="showSection('biotech-section')"
               >
                 Bio-Technology & Medical Test Equipment
               </li>
               <li
                 id="borosilicate-glassware-mobile"
-                onclick="showSection('borosilicate-section')"
               >
                 Borosilicate Glassware
               </li>
               <li
                 id="nursing-products-mobile"
-                onclick="showSection('nursing-section')"
               >
                 Nursing Products (ANM/GNM)
               </li>
               <li
                 id="polylab-plasticware-mobile"
-                onclick="showSection('polylab-section')"
               >
                 Polylab Plasticware
               </li>
               <li
                 id="prepared-slides-mobile"
-                onclick="showSection('prepared-section')"
               >
                 Prepared Slides
               </li>
               <li
                 id="lab-instruments-mobile"
-                onclick="showSection('instruments-section')"
               >
                 Laboratory Instruments
               </li>
               <li
                 id="soda-glassware-mobile"
-                onclick="showSection('soda-section')"
               >
                 Soda Glassware
               </li>
               <li
                 id="electronic-apparatus-mobile"
-                onclick="showSection('electronic-section')"
               >
                 Electronic Apparatus
               </li>
@@ -329,85 +311,76 @@
 
         <!-- Desktop Sidebar -->
         <section class="shop-sidebar-section">
-          <ul class="sidebar-list">
-            <li id="physics-lab" onclick="showSection('physics-lab-section')">
+          <ul class="sidebar-list" id="typeListDesktop">
+            <li id="physics-lab" >
               Physics Lab Equipment
             </li>
-            <li id="biology-lab" onclick="showSection('biology-lab-section')">
+            <li id="biology-lab" >
               Biology Lab Equipment
             </li>
             <li
               id="chemistry-lab"
-              onclick="showSection('chemistry-lab-section')"
             >
               Chemistry Lab Equipment
             </li>
-            <li id="microscopes" onclick="showSection('microscope-section')">
+            <li id="microscopes" >
               Microscopes
             </li>
             <li
               id="educational-charts"
-              onclick="showSection('education-section')"
             >
               Educational Charts
             </li>
             <li
               id="mechanical-lab"
-              onclick="showSection('mechanical-lab-section')"
             >
               Mechanical Engineering Lab Equipment
             </li>
-            <li id="civil-lab" onclick="showSection('civil-lab-section')">
+            <li id="civil-lab" >
               Surveying & Civil Engineering Equipment
             </li>
             <li
               id="anatomical-models"
-              onclick="showSection('anatomical-section')"
             >
               Anatomical Models
             </li>
-            <li id="abdos-plasticware" onclick="showSection('abdos-section')">
+            <li id="abdos-plasticware" >
               ABDOS Lab Plasticware
             </li>
             <li
               id="pharmacy-equipment"
-              onclick="showSection('pharmacy-section')"
             >
               Pharmacy Equipment
             </li>
-            <li id="biotech-medical" onclick="showSection('biotech-section')">
+            <li id="biotech-medical" >
               Bio-Technology & Medical Test Equipment
             </li>
             <li
               id="borosilicate-glassware"
-              onclick="showSection('borosilicate-section')"
             >
               Borosilicate Glassware
             </li>
-            <li id="nursing-products" onclick="showSection('nursing-section')">
+            <li id="nursing-products" >
               Nursing Products (ANM/GNM)
             </li>
             <li
               id="polylab-plasticware"
-              onclick="showSection('polylab-section')"
             >
               Polylab Plasticware
             </li>
-            <li id="prepared-slides" onclick="showSection('prepared-section')">
+            <li id="prepared-slides">
               Prepared Slides
             </li>
             <li
               id="lab-instruments"
-              onclick="showSection('instruments-section')"
             >
               Laboratory Instruments
             </li>
-            <li id="soda-glassware" onclick="showSection('soda-section')">
+            <li id="soda-glassware" >
               Soda Glassware
             </li>
             <li
               id="electronic-apparatus"
-              onclick="showSection('electronic-section')"
             >
               Electronic Apparatus
             </li>
@@ -415,587 +388,8 @@
         </section>
         <!-- start wpo-shop-section -->
         <section class="wpo-shop-section section-padding">
-          <div class="container">
-            <div id="physics-lab-section" class="shop-category">
-              <h2>Physics Lab Equipment</h2>
-              <div class="row">
-                <div class="col col-xs-12">
-                  <div class="shop-grids clearfix">
-                    <div id="product-list"></div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img src="assets/images/shop/ammeter dc (1).jpg" alt />
-                      </div>
-                      <div class="details">
-                        <h3><a href="shop-single.html">Ammeter DC</a></h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img src="assets/images/shop/AC-Ammeter (1).jpg" alt />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html">Ammeter AC</a>
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Ammeter EDM 80 DC (1).jpg"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html">Ammeter EDM 80 DC</a>
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/ammeter EDM 80 AC.png"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html">Ammeter EDM 80 AC</a>
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Aneroid Barometer Demonstration with pump (1).jpg"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html"
-                            >Aneroid Barometer Demonstration with pump</a
-                          >
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Astronomical Telescope.avif"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html"
-                            >Astronomical Telescope imported superior quality</a
-                          >
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img src="assets/images/shop/Bar Magnet.jpg" alt />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html">Bar Magnet 2" and 4"</a>
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Bob with hook ( Brass) Dia. 18mm (1).jpg"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html"
-                            >Bob with hook (Brass) Dia. 18mm</a
-                          >
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Battery 6 volt (1).jpg"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html">Battery 6 volt</a>
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Bob set of 6 metals Dia 18mm (1).jpg"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html"
-                            >Bob set of 6 metals Dia 18mm</a
-                          >
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/boyles-law-apparatus-ANA15B (1).jpg"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html">Boyle's law apparatus</a>
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Brass wire 100gm (1).jpg"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html">Brass wire 100gm</a>
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Carbon rod with terminal (1).jpg"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html"
-                            >Carbon rod with terminal</a
-                          >
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="grid">
-                      <div class="img-holder">
-                        <img
-                          src="assets/images/shop/Astronomical Telescope.avif"
-                          alt
-                        />
-                      </div>
-                      <div class="details">
-                        <h3>
-                          <a href="shop-single.html"
-                            >Astronomical Telescope imported superior quality</a
-                          >
-                        </h3>
-                        <div class="add-to-cart">
-                          <a href="#"
-                            >Add to cart <i class="ti-shopping-cart"></i
-                          ></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="pagination-wrapper pagination-wrapper-center">
-                    <ul class="pg-pagination">
-                      <li>
-                        <a href="#" aria-label="Previous">
-                          <i class="ti-angle-left"></i>
-                        </a>
-                      </li>
-                      <li class="active"><a href="#">1</a></li>
-                      <li><a href="#">2</a></li>
-                      <li><a href="#">3</a></li>
-                      <li>
-                        <a href="#" aria-label="Next">
-                          <i class="ti-angle-right"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="biology-lab-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Biology Lab Equipment</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="chemistry-lab-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Chemistry Lab Equipment</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="microscope-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Microscopes</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="education-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Educational Charts</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="mechanical-lab-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Mechanical Engineering Lab Equipment</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="civil-lab-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Surveying & Civil Engineering Equipment</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="anatomical-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Anatomical Models</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="abdos-section" class="shop-category" style="display: none">
-              <h2>ABDOS Lab Plasticware</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="pharmacy-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Pharmacy Equipment</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="biotech-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Bio-Technology & Medical Test Equipment</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="borosilicate-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Borosilicate Glassware</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="nursing-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Nursing Products (ANM/GNM)</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="polylab-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Polylab Plasticware</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="prepared-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Prepared Slides</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="instruments-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Laboratory Instruments</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="soda-section" class="shop-category" style="display: none">
-              <h2>Soda Glassware</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="electronic-section"
-              class="shop-category"
-              style="display: none"
-            >
-              <h2>Electronic Apparatus</h2>
-              <div class="grid">
-                <div class="img-holder">
-                  <img src="assets/images/shop/microscope.jpg" alt />
-                </div>
-                <div class="details">
-                  <h3><a href="shop-single.html">Microscope</a></h3>
-                  <div class="add-to-cart">
-                    <a href="#">Add to cart <i class="ti-shopping-cart"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="container" id="productContainer">
+            
           </div>
           <!-- end container -->
         </section>
@@ -1169,119 +563,29 @@
     <script src="assets/js/jquery-plugin-collection.js"></script>
     <!-- Custom script for this template -->
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/admin.js"></script>
+    <script src="assets/js/admin.js" type="module"></script>
 
     <script>
       function setShopSectionHeight() {
-        let sidebar = document.querySelector('.shop-sidebar-section');
-        let shopSection = document.querySelector('.wpo-shop-section');
+        let sidebar = document.querySelector(".shop-sidebar-section");
+        let shopSection = document.querySelector(".wpo-shop-section");
 
         // Set shop section height equal to sidebar height
-        shopSection.style.height = sidebar.offsetHeight + 'px';
+        shopSection.style.height = sidebar.offsetHeight + "px";
       }
 
-      window.addEventListener('load', setShopSectionHeight);
-      window.addEventListener('resize', setShopSectionHeight);
+      window.addEventListener("load", setShopSectionHeight);
+      window.addEventListener("resize", setShopSectionHeight);
 
-      const dropdownButton = document.querySelector('.dropdown-button');
-      const dropdownContent = document.querySelector('.dropdown-content');
-      const selectedCategory = document.querySelector('.selected-category');
+      const dropdownButton = document.querySelector(".dropdown-button");
+      const dropdownContent = document.querySelector(".dropdown-content");
+      const selectedCategory = document.querySelector(".selected-category");
 
-      dropdownButton.addEventListener('click', () => {
-        dropdownButton.classList.toggle('active');
-        dropdownContent.classList.toggle('show');
+      dropdownButton.addEventListener("click", () => {
+        dropdownButton.classList.toggle("active");
+        dropdownContent.classList.toggle("show");
       });
 
-      // Close dropdown when clicking outside
-      document.addEventListener('click', (event) => {
-        if (!event.target.closest('.mobile-dropdown')) {
-          dropdownContent.classList.remove('show');
-          dropdownButton.classList.remove('active');
-        }
-      });
-
-      // Show section function
-      function showSection(sectionId) {
-        // Hide all sections
-        const sections = document.querySelectorAll('.shop-category');
-        sections.forEach((section) => {
-          section.style.display = 'none';
-        });
-
-        // Show selected section
-        const selectedSection = document.getElementById(sectionId);
-        if (selectedSection) {
-          selectedSection.style.display = 'block';
-        }
-
-        // Update active states
-        const sidebarItems = document.querySelectorAll('.sidebar-list li');
-        sidebarItems.forEach((item) => {
-          item.classList.remove('active');
-        });
-
-        // Update selected category text in dropdown
-        const clickedItem = document.querySelector(
-          `[onclick="showSection('${sectionId}')"]`
-        );
-        if (clickedItem) {
-          clickedItem.classList.add('active');
-          selectedCategory.textContent = clickedItem.textContent;
-        }
-
-        // Close dropdown on mobile
-        dropdownContent.classList.remove('show');
-        dropdownButton.classList.remove('active');
-      }
-
-      // Initialize first section
-      document.addEventListener('DOMContentLoaded', () => {
-        showSection('physics-lab-section');
-      });
-
-      // fuction to show products.........................................................................
-      function showProducts(allProducts) {
-        let selectedType = document.getElementById('physics-lab-section').value; // get type to sort products from html
-
-        const filteredProducts = allProducts.filter(
-          (item) => item.type === selectedType
-        );
-
-        // function to print these filtered product
-        function print() {
-          // logic => where to print?
-          const productContainer =
-            document.getElementsByClassName('sidebar-list').innerHTML;
-          productContainer.innerHTML = '';
-          filteredProducts.forEach((item) => {
-            const productCard = `
-            <div class="product-card" pid="${item.pid}">
-              <h3>${item.name}</h3>
-              <button id="addToCart" pid="${item.pid}" class="add-to-cart">
-                Add to Cart
-              </button>
-            </div>
-          `;
-            productContainer.innerHTML += productCard;
-          });
-          // design of product card....
-          // <div className="">
-          //   . . .
-          //   <button id="addToCart" pid={item.pid} className="">
-          //     Add to cart
-          //   </button>
-          //   .
-          // </div>;
-        }
-        print();
-      }
-      // add event to save clicked product in cart on add-to-cart button click
-      function addToCart(pid) {
-        let cart = [];
-
-        // allProducts has all products with product id (pid)
-        cart.push(allProduct.filter((item) => item.pid === pid));
-      }
     </script>
   </body>
 </html>
