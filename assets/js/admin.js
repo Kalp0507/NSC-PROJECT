@@ -1,6 +1,6 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
 // old unpaid
@@ -64,6 +64,7 @@ const storage = getStorage(app);
 const allProducts = [];
 const dealerInquries = [];
 const cartInquries = [];
+const carts = [];
 
 //Fetching all products
 async function getAllProducts() {
@@ -74,6 +75,7 @@ async function getAllProducts() {
     const snapshot = await getDocs(q);
 
     snapshot.forEach(doc => allProducts.push({ ...doc.data(), pid: doc.id }))
+    console.log(allProducts)
   } catch (error) {
     console.log("Error fetching products: ", error)
   }
@@ -89,6 +91,8 @@ async function getCartInquiries() {
 
     snapshot.forEach(doc => cartInquries.push(doc.data()))
     console.log(cartInquries)
+
+    getAllCart();
   } catch (error) {
     console.log('Error fetching dealer inquries: ', error);
   }
@@ -109,290 +113,20 @@ async function getDealerInquiries() {
   }
 }
 
-// ----------------------------------------------------------
-// for login page
-// ----------------------------------------------------------
+async function getAllCart() {
+  console.log('fetching all carts!!')
+  try {
+    console.log('here')
+    const prodRef = collection(db, "carts");
+    const q = query(prodRef);
+    const snapshot = await getDocs(q);
 
-
-// Login Auth :
-$(document).ready(function () {
-  $("#loginForm").submit(async function (e) {
-    e.preventDefault();
-
-    let email = $("#email").val();
-    let password = $("#password").val();
-
-    try {
-      if (!db) {
-        throw new Error("Firestore database (db) is not initialized.");
-      }
-      // Firestore query using modular SDK
-      const adminRef = collection(db, "admins");
-      const q = query(adminRef, where("email", "==", email));
-      const snapshot = await getDocs(q);
-      console.log(` Retrieved Documents: ${snapshot.docs.length}`);
-      if (snapshot.docs.length === 0) {
-        alert("Admin not found!");
-        return;
-      }
-
-      snapshot.forEach(doc => {
-        let adminData = doc.data();
-
-        if (adminData.password === password) {
-          alert("Login successful!");
-          localStorage.setItem("admin", JSON.stringify(adminData));
-          window.location.href = "admin.html";
-        } else {
-          alert("Incorrect password!");
-        }
-      });
-
-    } catch (error) {
-      console.error("Error logging in:", error);
-      alert("Login failed!");
-    }
-  });
-});
-
-// ----------------------------------------------------------
-// for contact page
-// ----------------------------------------------------------
-
-// Inquiry form submission
-$(document).ready(function () {
-  $("#contact-form-main").submit(async function (e) {
-    e.preventDefault();
-
-    let company_name = $("#company_name").val().trim();
-    let person_name = $("#person_name").val().trim();
-    let company_email = $("#company_email").val().trim();
-    let phone = $("#phone").val().trim();
-    let company_address = $("#company_address").val().trim();
-    let country = $("#country").val().trim();
-    let business = $("#business").val().trim();
-    let inquiry = $("#inquiry").val().trim();
-
-    // Validate that no fields are empty
-    if (!company_name || !person_name || !company_email || !phone || !company_address || !country || !business || !inquiry) {
-      alert("All fields are required. Please fill in all fields.");
-      return;
-    }
-
-    try {
-      // Store Inquiry Data in Firestore
-      const docRef = await addDoc(collection(db, "NSC-inquiries"), {
-        company_name: company_name,
-        person_name: person_name,
-        company_email: company_email,
-        phone: phone,
-        company_address: company_address,
-        country: country,
-        business: business,
-        inquiry: inquiry,
-        createdAt: new Date(),
-      });
-      alert("Inquiry submitted successfully! ID: " + docRef.id);
-      $("#contact-form-main")[0].reset(); // Reset form
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      alert("Error submitting inquiry!");
-    }
-  });
-});
-
-// ----------------------------------------------------------
-// for checkout page
-// ----------------------------------------------------------
-
-// Posting cart receipt deatails
-$(document).ready(function () {
-  $('#checkoutForm').submit(async function (e) {
-    e.preventDefault();
-
-    // First addrss
-    const fname1 = $("#fname1").val().trim();
-    const lname1 = $("#lname1").val().trim();
-    const country1 = $("#country1").val();
-    const city1 = $("#city1").val().trim();
-    const address1 = $("#address1").val().trim();
-    const post1 = $("#post1").val().trim();
-    const email1 = $("#email1").val().trim();
-    const phone1 = $("#phone1").val().trim();
-
-    const is_address2 = $("#is_address2").prop('checked');
-    const order_note = $("#order_note").val().trim();
-
-
-    // Second addrss
-    const fname2 = $("#fname2").val().trim();
-    const lname2 = $("#lname2").val().trim();
-    const country2 = $("#country2").val();
-    const city2 = $("#city2").val().trim();
-    const address2 = $("#address2").val().trim();
-    const post2 = $("#post2").val().trim();
-    const email2 = $("#email2").val().trim();
-    const phone2 = $("#phone2").val().trim();
-
-    // products in cart
-    const products = [];
-
-    try {
-      const docRef = await addDoc(collection(db, "NSC-cartInquiries"), {
-        first_address: {
-          fname1: fname1,
-          lname1: lname1,
-          country1: country1,
-          city1: city1,
-          address1: address1,
-          post1: post1,
-          email1: email1,
-          phone1: phone1,
-        },
-        is_address2: is_address2,
-        order_note: order_note,
-        second_address: is_address2 ? {
-          fname2: fname2,
-          lname2: lname2,
-          country2: country2,
-          city2: city2,
-          address2: address2,
-          post2: post2,
-          email2: email2,
-          phone2: phone2,
-        } : {},
-        cart: products,
-        createdAt: new Date(),
-      });
-
-      alert("Cart-inquiry added successfully! ID: " + docRef.id);
-      $("#checkoutForm")[0].reset(); // Reset form
-
-    } catch (error) {
-      console.log('Error in adding cart-inquiry:', error);
-    }
-  })
-})
-
-
-
-// ----------------------------------------------------------
-// for me
-// ----------------------------------------------------------
-{/* <div class="shop-grids clearfix">
-  <div div class="grid" >
-      <div class="img-holder">
-        <img src="assets/images/shop/ammeter dc (1).jpg" alt />
-      </div>
-      <div class="details">
-        <h3><a href="shop-single.html">Ammeter DC</a></h3>
-        <div class="add-to-cart">
-          <a href="#"
-            >Add to cart <i class="ti-shopping-cart"></i
-          ></a>
-        </div>
-      </div>
-  </div >
-</div > */}
-
-
-  
-
-// ----------------------------------------------------------
-// for shop page
-// ----------------------------------------------------------
-$(document).ready(async function () {
-  const ul = document.getElementById("typeListDesktop");
-  const desktopListItems = [...ul.getElementsByTagName("li")];
-  const defaultType = "physics-lab";
-
-  await getAllProducts();
-  
-  console.log(allProducts)
-
-  showProducts(defaultType)
-  // Adding event listener for each sidebar item
-  desktopListItems.forEach((element) => {
-    element.addEventListener("click", () => {
-      const selectedTypeId = element.getAttribute("id");
-      showProducts(selectedTypeId);
-    });
-  });
-
-
-  // Function to display filtered products
-  function showProducts(selectedTypeId) {
-    // Filter products based on the selected type
-    const filteredProducts = allProducts.filter((item) => {
-      const typeToIdMapping = {
-        "physics-lab": "Physics Lab Equipment",
-        "biology-lab": "Biology Lab Equipment",
-        "chemistry-lab": "Chemistry Lab Equipment",
-        "microscopes": "Microscopes",
-        "educational-charts": "Educational Charts",
-        "mechanical-lab": "Mechanical Engineering Lab Equipment",
-        "civil-lab": "Surveying & Civil Engineering Equipment",
-        "anatomical-models": "Anatomical Models",
-        "abdos-plasticware": "Anatomical Models",
-        "pharmacy-equipment": "Pharmacy Equipment",
-        "biotech-medical": "Bio-Technology & Medical Test Equipment",
-        "borosilicate-glassware": "Borosilicate Glassware",
-        "nursing-products": "Nursing Products (ANM/GNM)",
-        "polylab-plasticware": "Polylab Plasticware",
-        "prepared-slides": "Prepared Slides",
-        "lab-instruments": "Laboratory Instruments",
-        "soda-glassware": "Soda Glassware",
-        "electronic-apparatus": "Electronic Apparatus",
-      };
-      
-      // Match product type with selected type
-      return item.type.toLowerCase() === typeToIdMapping[selectedTypeId].toLowerCase();
-    });
-    console.log(filteredProducts)
-
-    // Print the filtered products to the container
-    print(filteredProducts);
+    snapshot.forEach(doc => carts.push(doc.data()))
+    console.log(carts)
+  } catch (error) {
+    console.log('Error fetching cart:', error)
   }
-
-  // Function to print the filtered products to the HTML container
-  function print(filteredProducts) {
-    const productContainer = document.getElementById("productContainer");
-    productContainer.innerHTML = ""; // Clear the previous products
-
-    // Loop through filtered products and create product cards
-    filteredProducts.forEach((item) => {
-      const productCard = `
-        <div class="product-card" pid="${item.pid}">
-          <h3>${item.name}</h3>
-          <button id="addToCart" pid="${item.pid}" class="add-to-cart">
-            Add to Cart
-          </button>
-        </div>
-      `;
-      productContainer.innerHTML += productCard;
-    });
-
-    // Add event listeners to "Add to Cart" buttons
-    const cartButtons = document.querySelectorAll(".add-to-cart");
-    cartButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const pid = button.getAttribute("pid");
-        console.log(pid)
-        addToCart(pid);
-      });
-    });
-  }
-
-  // Function to add products to cart
-  function addToCart(pid) {
-    let cart = [];
-
-    // allProducts has all products with product id (pid)
-    const selectedProduct = allProducts.find((item) => item.pid === pid);
-    cart.push({...selectedProduct, quantity: 1});
-    console.log(`Product added to cart: `, cart);
-  }
-});
+}
 
 
 // ----------------------------------------------------------
@@ -448,20 +182,29 @@ $(document).ready(function () {
       alert("Error adding product!");
     }
   })
+  
+  const adminUL = document.getElementById('adminSectionList')
+  console.log(adminUL)
+  let listItems = [];
+  if(adminUL){
+    listItems = [...adminUL.getElementsByTagName("li")];
+  }
+  // calling respective function on section change
+  listItems.forEach(element => {
+    element.addEventListener("click", () => {
+      if (element.innerText.trim() === "All Products") {
+        getAllProducts();
+      } else if (element.innerText.trim() === "Dealer Inquiries/ Contact us") {
+        getDealerInquiries();
+      } else if (element.innerText.trim() === "Cart Inquiries") {
+        getCartInquiries();
+      }
+    });
+  });
 })
 
-const ul = document.getElementById('adminSectionList')
-const listItems = [...ul.getElementsByTagName("li")];
 
-// calling respective function on section change
-listItems.forEach(element => {
-  element.addEventListener("click", () => {
-    if (element.innerText.trim() === "All Products") {
-      getAllProducts();
-    } else if (element.innerText.trim() === "Dealer Inquiries") {
-      getDealerInquiries();
-    } else if (element.innerText.trim() === "Cart Inquiries") {
-      getCartInquiries();
-    }
-  });
-});
+
+// ----------------------------------------------------------
+// for frontend
+// ----------------------------------------------------------
