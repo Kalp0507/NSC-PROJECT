@@ -61,14 +61,11 @@ const storage = getStorage(app);
 // ----------------------------------------------------------
 
 
-const allProducts = [];
-const dealerInquries = [];
-const cartInquries = [];
-const carts = [];
 
 //Fetching all products
 async function getAllProducts() {
   console.log('fetching all products')
+  let allProducts = []
   try {
     const prodRef = collection(db, "NSC-products");
     const q = query(prodRef);
@@ -76,6 +73,7 @@ async function getAllProducts() {
 
     snapshot.forEach(doc => allProducts.push({ ...doc.data(), pid: doc.id }))
     console.log(allProducts)
+    return allProducts;
   } catch (error) {
     console.log("Error fetching products: ", error)
   }
@@ -84,30 +82,41 @@ async function getAllProducts() {
 //fetching cart inquiries
 async function getCartInquiries() {
   console.log('fetching cart inquiries')
+  let cartInquries = [];
   try {
+    let resInq = [];
     const cartInqRef = collection(db, "NSC-cartInquiries");
     const q = query(cartInqRef);
     const snapshot = await getDocs(q);
 
-    snapshot.forEach(doc => cartInquries.push(doc.data()))
-    console.log(cartInquries)
+    snapshot.forEach(doc => resInq.push(doc.data()))
+    const carts = await getAllCart();
 
-    getAllCart();
+    resInq.forEach((item)=>{
+      const cart = carts.filter((c)=>c.cartId == item.cart_id)
+      cartInquries.push({
+        cart: cart,
+        ...item
+      })
+    })
+
+    return cartInquries;
   } catch (error) {
-    console.log('Error fetching dealer inquries: ', error);
+    console.log('Error fetching cart inquries: ', error);
   }
 }
 
 //fetching dealer inquiries
 async function getDealerInquiries() {
   console.log('fetching dealer inquiries')
+  let dealerInquries = [];
   try {
     const prodRef = collection(db, "NSC-inquiries");
     const q = query(prodRef);
     const snapshot = await getDocs(q);
 
     snapshot.forEach(doc => dealerInquries.push(doc.data()))
-    console.log(dealerInquries)
+    return dealerInquries;
   } catch (error) {
     console.log('Error fetching dealer inquries: ', error);
   }
@@ -115,6 +124,7 @@ async function getDealerInquiries() {
 
 async function getAllCart() {
   console.log('fetching all carts!!')
+  let carts = [];
   try {
     console.log('here')
     const prodRef = collection(db, "carts");
@@ -123,6 +133,8 @@ async function getAllCart() {
 
     snapshot.forEach(doc => carts.push(doc.data()))
     console.log(carts)
+
+    return carts;
   } catch (error) {
     console.log('Error fetching cart:', error)
   }
@@ -182,22 +194,22 @@ $(document).ready(function () {
       alert("Error adding product!");
     }
   })
-  
+
   const adminUL = document.getElementById('adminSectionList')
   console.log(adminUL)
   let listItems = [];
-  if(adminUL){
+  if (adminUL) {
     listItems = [...adminUL.getElementsByTagName("li")];
   }
   // calling respective function on section change
   listItems.forEach(element => {
     element.addEventListener("click", () => {
       if (element.innerText.trim() === "All Products") {
-        getAllProducts();
+        showProducts();
       } else if (element.innerText.trim() === "Dealer Inquiries/ Contact us") {
-        getDealerInquiries();
+        showDealInq();
       } else if (element.innerText.trim() === "Cart Inquiries") {
-        getCartInquiries();
+        showCartInq();
       }
     });
   });
@@ -208,3 +220,87 @@ $(document).ready(function () {
 // ----------------------------------------------------------
 // for frontend
 // ----------------------------------------------------------
+
+// ----------------------------------------------------------
+// for All Products
+// ----------------------------------------------------------
+
+async function showProducts() {
+  // getting all products
+  const allProducts = await getAllProducts();
+
+  // selecting type from dropdown
+  const dropdownUL = document.getElementById('dropdown');
+
+  [...dropdownUL.getElementsByTagName("li")].forEach((element) => {
+    element.addEventListener('click', () => {
+      const filteredProducts = allProducts.filter((item) => item.type == element.innerText.trim())
+
+      printProducts(filteredProducts,element.innerText.trim());
+    })
+  })
+
+  const physicsProducts = allProducts.filter((item) => item.type.toLowerCase() == 'Physics Lab Equipment'.toLowerCase())
+
+  printProducts(physicsProducts,'Physics Lab Equipment')
+}
+
+function printProducts(products,type) {
+  console.log(products)
+  const sectionContainer = document.getElementById('all-products')
+  const typeContainer = `
+    <div id="physics-lab-section" class="product-category" style='position: relative;'>
+      <h2>${type}</h2>
+      <div class="product-list-item" id='prodContainer'>
+      </div>
+    </div>
+  `;
+
+  sectionContainer.innerHTML += typeContainer;
+
+  const prodContainer = document.getElementById('prodContainer')
+  products.forEach((item) => {
+    const productCard = `
+      <div class="product-list-content">
+      <div class="product-img">
+        <img src="" alt="" />
+      </div>
+      <div class="product-desc">
+        <p><span>Name:</span>${item.name}</p>
+        <p><span>Price:</span>${item.price}</p>
+        <p><span>Type:</span>${item.type}</p>
+        <p><span>Description:</span>${item.description}</p>
+      </div>
+    </div>
+    <div class="product-buttons">
+      <button pid='${item.pid}'>Edit</button>
+      <button pid='${item.pid}'>Delete</button>
+    </div>
+    `;
+    prodContainer.innerHTML += productCard;
+  });
+
+  console.log(sectionContainer)
+}
+
+
+// ----------------------------------------------------------
+// for Dealer inq
+// ----------------------------------------------------------
+
+async function showDealInq(){
+  const dealInq = await getDealerInquiries();
+  console.log(dealInq)
+}
+
+
+
+
+// ----------------------------------------------------------
+// for cart inq
+// ----------------------------------------------------------
+
+async function showCartInq(){
+  const cartInq = await getCartInquiries();
+  console.log(cartInq)
+}
