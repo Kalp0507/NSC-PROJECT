@@ -1,4 +1,5 @@
 // Import Firebase modules
+<<<<<<< HEAD
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import {
   getFirestore,
@@ -14,6 +15,11 @@ import {
   uploadBytes,
   getDownloadURL,
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
+=======
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+>>>>>>> 5cce09c198d9e3a0c4412d5634cb92725dd9bfa3
 
 // old unpaid
 const firebaseConfig = {
@@ -75,6 +81,7 @@ const storage = getStorage(app);
 const allProducts = [];
 const dealerInquries = [];
 const cartInquries = [];
+const carts = [];
 
 //Fetching all products
 async function getAllProducts() {
@@ -84,7 +91,12 @@ async function getAllProducts() {
     const q = query(prodRef);
     const snapshot = await getDocs(q);
 
+<<<<<<< HEAD
     snapshot.forEach((doc) => allProducts.push({ ...doc.data(), pid: doc.id }));
+=======
+    snapshot.forEach(doc => allProducts.push({ ...doc.data(), pid: doc.id }))
+    console.log(allProducts)
+>>>>>>> 5cce09c198d9e3a0c4412d5634cb92725dd9bfa3
   } catch (error) {
     console.log('Error fetching products: ', error);
   }
@@ -98,8 +110,15 @@ async function getCartInquiries() {
     const q = query(cartInqRef);
     const snapshot = await getDocs(q);
 
+<<<<<<< HEAD
     snapshot.forEach((doc) => cartInquries.push(doc.data()));
     console.log(cartInquries);
+=======
+    snapshot.forEach(doc => cartInquries.push(doc.data()))
+    console.log(cartInquries)
+
+    getAllCart();
+>>>>>>> 5cce09c198d9e3a0c4412d5634cb92725dd9bfa3
   } catch (error) {
     console.log('Error fetching dealer inquries: ', error);
   }
@@ -120,10 +139,15 @@ async function getDealerInquiries() {
   }
 }
 
-// ----------------------------------------------------------
-// for login page
-// ----------------------------------------------------------
+async function getAllCart() {
+  console.log('fetching all carts!!')
+  try {
+    console.log('here')
+    const prodRef = collection(db, "carts");
+    const q = query(prodRef);
+    const snapshot = await getDocs(q);
 
+<<<<<<< HEAD
 // Login Auth :
 $(document).ready(function () {
   $('#loginForm').submit(async function (e) {
@@ -440,6 +464,14 @@ $(document).ready(async function () {
     cartContainer.innerHTML = cartHTML;
   }
 });
+=======
+    snapshot.forEach(doc => carts.push(doc.data()))
+    console.log(carts)
+  } catch (error) {
+    console.log('Error fetching cart:', error)
+  }
+}
+>>>>>>> 5cce09c198d9e3a0c4412d5634cb92725dd9bfa3
 
 // ----------------------------------------------------------
 // for admin page
@@ -493,6 +525,7 @@ $(document).ready(function () {
       console.error('Error adding document: ', error);
       alert('Error adding product!');
     }
+<<<<<<< HEAD
   });
 });
 
@@ -511,3 +544,32 @@ listItems.forEach((element) => {
     }
   });
 });
+=======
+  })
+  
+  const adminUL = document.getElementById('adminSectionList')
+  console.log(adminUL)
+  let listItems = [];
+  if(adminUL){
+    listItems = [...adminUL.getElementsByTagName("li")];
+  }
+  // calling respective function on section change
+  listItems.forEach(element => {
+    element.addEventListener("click", () => {
+      if (element.innerText.trim() === "All Products") {
+        getAllProducts();
+      } else if (element.innerText.trim() === "Dealer Inquiries/ Contact us") {
+        getDealerInquiries();
+      } else if (element.innerText.trim() === "Cart Inquiries") {
+        getCartInquiries();
+      }
+    });
+  });
+})
+
+
+
+// ----------------------------------------------------------
+// for frontend
+// ----------------------------------------------------------
+>>>>>>> 5cce09c198d9e3a0c4412d5634cb92725dd9bfa3
