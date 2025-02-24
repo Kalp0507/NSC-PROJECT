@@ -194,9 +194,9 @@ $(document).ready(async function () {
                 });
                 await setDoc(docRef, { cartId: docRef.id }, { merge: true });
 
-                console.log('cart submitted successfully !!!!')
+                // console.log('cart submitted successfully !!!!', docRef.id)
 
-                if(button.innerHTML == 'checkout'){
+                if(button.innerHTML == 'Checkout'){
                     window.location.href = `checkout.html?id=${docRef.id}`;
                 }
                 if(button.innerHTML == 'View Cart'){

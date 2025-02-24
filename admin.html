@@ -347,8 +347,8 @@
             style="display: none"
           >
             <h1>Dealer Inquiries</h1>
-            <div class="inquiry-list">
-              Dealer inquiries will be shown here...
+            <div class="inquiry-list" id="dealContainer">
+              
             </div>
           </section>
 
@@ -359,8 +359,8 @@
             style="display: none"
           >
             <h1>Cart Inquiries</h1>
-            <div class="cart-list">
-              Cart inquiries will be displayed here...
+            <div class="cart-list" id="cartContainer">
+              
             </div>
           </section>
         </div>
@@ -378,8 +378,10 @@
     <script src="assets/js/jquery-plugin-collection.js"></script>
     <!-- Custom script for this template -->
     <script src="assets/js/script.js"></script>
-
+    
     <!-- script for admin page -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="assets/js/admin.js" type="module"></script>
     <script>
       function showSection1(sectionId) {
