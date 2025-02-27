@@ -201,19 +201,18 @@
                   name="productImage"
                   accept="image/*"
                   required
-                  />
+                />
 
                 <button type="submit">Add Product</button>
               </form>
             </div>
           </section>
 
-
           <!-- All Products -->
           <section
             id="all-products"
             class="admin-section"
-            style="display: none; overflow: visible;"
+            style="display: none; overflow: visible"
           >
             <h1>All Products</h1>
             <div class="admin-product-dropdown">
@@ -221,7 +220,10 @@
                 <button class="dropdown-button">
                   <span class="selected-category">Physics Lab Equipment</span>
                 </button>
-                <div class="dropdown-content" style="position: absolute; z-index: 1000;" >
+                <div
+                  class="dropdown-content"
+                  style="position: absolute; z-index: 1000"
+                >
                   <ul class="sidebar-list" id="dropdown">
                     <li
                       id="physics-lab-mobile"
@@ -236,8 +238,8 @@
                       Biology Lab Equipment
                     </li>
                     <li
-                    id="chemistry-lab-mobile"
-                    onclick="showSection('chemistry-lab-section')"
+                      id="chemistry-lab-mobile"
+                      onclick="showSection('chemistry-lab-section')"
                     >
                       Chemistry Lab Equipment
                     </li>
@@ -334,11 +336,23 @@
                   </ul>
                 </div>
               </div>
-            </div >
+            </div>
             <!-- Show products here -->
-              
+            <div id="product-list-table">
+              <table class="product-list">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Edit/Delete</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </section>
-          
 
           <!-- Dealer Inq -->
           <section
@@ -347,9 +361,7 @@
             style="display: none"
           >
             <h1>Dealer Inquiries</h1>
-            <div class="inquiry-list" id="dealContainer">
-              
-            </div>
+            <div class="inquiry-list" id="dealContainer"></div>
           </section>
 
           <!-- Cart Inq -->
@@ -359,9 +371,7 @@
             style="display: none"
           >
             <h1>Cart Inquiries</h1>
-            <div class="cart-list" id="cartContainer">
-              
-            </div>
+            <div class="cart-list" id="cartContainer"></div>
           </section>
         </div>
       </div>
@@ -378,7 +388,7 @@
     <script src="assets/js/jquery-plugin-collection.js"></script>
     <!-- Custom script for this template -->
     <script src="assets/js/script.js"></script>
-    
+
     <!-- script for admin page -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

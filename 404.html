@@ -129,61 +129,31 @@
                     <div class="mini-cart">
                       <button class="cart-toggle-btn">
                         <i class="fi flaticon-shopping-cart"></i>
-                        <span class="cart-count">2</span>
+                        <span class="cart-count" id="cartCount">0</span>
                       </button>
                       <div class="mini-cart-content">
                         <button class="mini-cart-close">
                           <i class="ti-close"></i>
                         </button>
                         <div class="mini-cart-items">
-                          <div class="mini-cart-item clearfix">
-                            <div class="mini-cart-item-image">
-                              <a href="shop.html"
-                                ><img
-                                  src="assets/images/shop/mini-cart/img-1.jpg"
-                                  alt
-                              /></a>
-                            </div>
-                            <div class="mini-cart-item-des">
-                              <a href="shop.html">Makita miter saw</a>
-                              <span class="mini-cart-item-price"
-                                >$20.15 x 1</span
-                              >
-                              <span class="mini-cart-item-quantity"
-                                ><a href="#"><i class="ti-close"></i></a
-                              ></span>
-                            </div>
-                          </div>
-                          <div class="mini-cart-item clearfix">
-                            <div class="mini-cart-item-image">
-                              <a href="shop.html"
-                                ><img
-                                  src="assets/images/shop/mini-cart/img-2.jpg"
-                                  alt
-                              /></a>
-                            </div>
-                            <div class="mini-cart-item-des">
-                              <a href="shop.html">Impact Drill Yato Brand</a>
-                              <span class="mini-cart-item-price"
-                                >$13.25 x 2</span
-                              >
-                              <span class="mini-cart-item-quantity"
-                                ><a href="#"><i class="ti-close"></i></a
-                              ></span>
-                            </div>
-                          </div>
+                          <div id="cart-container"></div>
                         </div>
                         <div class="mini-cart-action clearfix">
-                          <span class="mini-checkout-price"
-                            >Subtotal: <span>$215.14</span></span
-                          >
                           <div class="mini-btn">
-                            <a href="checkout.html" class="view-cart-btn s1"
-                              >Checkout</a
+                            <button
+                              class="cartSubmitbtn"
+                              id="checkoutBtn"
+                              type="button"
                             >
-                            <a href="cart.html" class="view-cart-btn"
-                              >View Cart</a
+                              Checkout
+                            </button>
+                            <button
+                              class="cartSubmitbtn"
+                              id="viewCartBtn"
+                              type="button"
                             >
+                              View Cart
+                            </button>
                           </div>
                         </div>
                       </div>

@@ -98,7 +98,7 @@
                 </div>
                 <div class="col-lg-2 col-md-2 col-2">
                   <div class="header-right">
-                    <div class="header-search-form-wrapper">
+                    <!-- <div class="header-search-form-wrapper">
                       <div class="cart-search-contact">
                         <button class="search-toggle-btn">
                           <i class="fi flaticon-search"></i>
@@ -118,66 +118,39 @@
                           </form>
                         </div>
                       </div>
-                    </div>
-                    <div class="mini-cart">
+                    </div> -->
+                    <!-- <div class="mini-cart">
                       <button class="cart-toggle-btn">
                         <i class="fi flaticon-shopping-cart"></i>
-                        <span class="cart-count">2</span>
+                        <span class="cart-count" id="cartCount">0</span>
                       </button>
                       <div class="mini-cart-content">
                         <button class="mini-cart-close">
                           <i class="ti-close"></i>
                         </button>
                         <div class="mini-cart-items">
-                          <div class="mini-cart-item clearfix">
-                            <div class="mini-cart-item-image">
-                              <a href="shop.html"
-                                ><img
-                                  src="assets/images/shop/mini-cart/img-1.jpg"
-                                  alt
-                              /></a>
-                            </div>
-                            <div class="mini-cart-item-des">
-                              <a href="shop.html">Makita miter saw</a>
-                              <span class="mini-cart-item-price"
-                                >$20.15 x 1</span
-                              >
-                              <span class="mini-cart-item-quantity"
-                                ><a href="#"><i class="ti-close"></i></a
-                              ></span>
-                            </div>
-                          </div>
-                          <div class="mini-cart-item clearfix">
-                            <div class="mini-cart-item-image">
-                              <a href="shop.html"
-                                ><img
-                                  src="assets/images/shop/mini-cart/img-2.jpg"
-                                  alt
-                              /></a>
-                            </div>
-                            <div class="mini-cart-item-des">
-                              <a href="shop.html">Impact Drill Yato Brand</a>
-                              <span class="mini-cart-item-price"
-                                >$13.25 x 2</span
-                              >
-                              <span class="mini-cart-item-quantity"
-                                ><a href="#"><i class="ti-close"></i></a
-                              ></span>
-                            </div>
-                          </div>
+                          <div id="cart-container"></div>
                         </div>
                         <div class="mini-cart-action clearfix">
                           <div class="mini-btn">
-                            <a href="checkout.html" class="view-cart-btn s1"
-                              >Checkout</a
+                            <button
+                              class="cartSubmitbtn"
+                              id="checkoutBtn"
+                              type="button"
                             >
-                            <a href="cart.html" class="view-cart-btn"
-                              >View Cart</a
+                              Checkout
+                            </button>
+                            <button
+                              class="cartSubmitbtn"
+                              id="viewCartBtn"
+                              type="button"
                             >
+                              View Cart
+                            </button>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -213,6 +186,7 @@
             <div class="cart-wrapper">
               <div class="row">
                 <div class="col-12">
+                  <!-- container for cart products -->
                   <form action="cart">
                     <table class="table-responsive cart-wrap">
                       <thead>
@@ -225,9 +199,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <!-- container for cart products -->
-                        <div id="cart-container"></div>
-                        <tr>
+                        <!-- <tr>
                           <td class="images">
                             <img src="assets/images/cart/img-1.jpg" alt="" />
                           </td>
@@ -259,145 +231,7 @@
                               </li>
                             </ul>
                           </td>
-                        </tr>
-                        <tr>
-                          <td class="images">
-                            <img src="assets/images/cart/img-2.jpg" alt="" />
-                          </td>
-                          <td class="product">
-                            <ul>
-                              <li class="first-cart">
-                                Impact Drill Yato Brand
-                              </li>
-                              <li>Brand : Yato</li>
-                              <li>Size : 5 stick</li>
-                            </ul>
-                          </td>
-                          <td class="stock">
-                            <ul class="input-style">
-                              <li class="quantity cart-plus-minus">
-                                <input type="text" value="1" />
-                              </li>
-                            </ul>
-                          </td>
-
-                          <td class="action">
-                            <ul>
-                              <li class="w-btn">
-                                <a
-                                  data-bs-toggle="tooltip"
-                                  data-bs-html="true"
-                                  title="Remove to Cart"
-                                  href="#"
-                                  ><i class="fi ti-trash"></i
-                                ></a>
-                              </li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="images">
-                            <img src="assets/images/cart/img-3.jpg" alt="" />
-                          </td>
-                          <td class="product">
-                            <ul>
-                              <li class="first-cart">
-                                Contractor Grade (MR100CG)
-                              </li>
-                              <li>Brand : Yato</li>
-                              <li>Size : XXL</li>
-                            </ul>
-                          </td>
-                          <td class="stock">
-                            <ul class="input-style">
-                              <li class="quantity cart-plus-minus">
-                                <input type="text" value="1" />
-                              </li>
-                            </ul>
-                          </td>
-
-                          <td class="action">
-                            <ul>
-                              <li class="w-btn">
-                                <a
-                                  data-bs-toggle="tooltip"
-                                  data-bs-html="true"
-                                  title="Remove to Cart"
-                                  href="#"
-                                  ><i class="fi ti-trash"></i
-                                ></a>
-                              </li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="images">
-                            <img src="assets/images/cart/img-4.jpg" alt="" />
-                          </td>
-                          <td class="product">
-                            <ul>
-                              <li class="first-cart">Cutter Grinder</li>
-                              <li>Brand : Makita</li>
-                              <li>Size : L</li>
-                            </ul>
-                          </td>
-                          <td class="stock">
-                            <ul class="input-style">
-                              <li class="quantity cart-plus-minus">
-                                <input type="text" value="1" />
-                              </li>
-                            </ul>
-                          </td>
-
-                          <td class="action">
-                            <ul>
-                              <li class="w-btn">
-                                <a
-                                  data-bs-toggle="tooltip"
-                                  data-bs-html="true"
-                                  title="Remove to Cart"
-                                  href="#"
-                                  ><i class="fi ti-trash"></i
-                                ></a>
-                              </li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="images">
-                            <img src="assets/images/cart/img-5.jpg" alt="" />
-                          </td>
-                          <td class="product">
-                            <ul>
-                              <li class="first-cart">
-                                Cut off Saw 3000W (4HP)
-                              </li>
-                              <li>Brand : Yato</li>
-                              <li>Size : M</li>
-                            </ul>
-                          </td>
-                          <td class="stock">
-                            <ul class="input-style">
-                              <li class="quantity cart-plus-minus">
-                                <input type="text" value="1" />
-                              </li>
-                            </ul>
-                          </td>
-
-                          <td class="action">
-                            <ul>
-                              <li class="w-btn">
-                                <a
-                                  data-bs-toggle="tooltip"
-                                  data-bs-html="true"
-                                  title="Remove to Cart"
-                                  href="#"
-                                  ><i class="fi ti-trash"></i
-                                ></a>
-                              </li>
-                            </ul>
-                          </td>
-                        </tr>
+                        </tr> -->
                       </tbody>
                     </table>
                   </form>
@@ -615,10 +449,10 @@
     <script src="assets/js/jquery-plugin-collection.js"></script>
     <!-- Custom script for this template -->
     <script src="assets/js/script.js"></script>
-<<<<<<< HEAD
+    <<<<<<< HEAD
     <script src="assets/js/admin.js"></script>
-=======
+    =======
     <script src="assets/js/cart.js" type="module"></script>
->>>>>>> 5cce09c198d9e3a0c4412d5634cb92725dd9bfa3
+    >>>>>>> 5cce09c198d9e3a0c4412d5634cb92725dd9bfa3
   </body>
 </html>
