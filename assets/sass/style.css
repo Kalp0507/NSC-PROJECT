@@ -11864,8 +11864,10 @@ wpo-hero-slider-s4
 }
 #all-products {
   display: flex;
+}
+#product-list-table {
   height: 200vh;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .product-form-container {
@@ -12001,13 +12003,85 @@ textarea:focus {
 /* end for Admin Section */
 
 /* All product section in admin section */
+.product-section-heading {
+  margin: 10px 0px 20px 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.product-section-heading h3 {
+  margin: 0px;
+}
+
+.download-buttons button {
+  background: rgb(0, 41, 127);
+  color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  margin-right: 5px;
+  padding: 0px 15px 0px 15px;
+}
+
+.download-buttons button:hover {
+  background: rgb(12, 60, 165);
+}
+
+#generateExcel {
+  margin-right: 10px;
+}
+
+@media (max-width: 767px) {
+  .product-section-heading {
+    flex-direction: column;
+  }
+  #generateExcel {
+    margin: 0px;
+  }
+  .download-buttons button {
+    margin: 0px;
+  }
+}
+
+.allProduct-heading {
+  display: flex;
+  justify-content: center;
+}
+
 .product-list {
   width: 100%;
 }
+.product-list thead tr th {
+  display: flex;
+  justify-content: center;
+}
+.product-list tbody tr td {
+  display: flex;
+  justify-content: center;
+}
+.product-list .s1 {
+  width: 15%;
+}
+.product-list .s2 {
+  width: 43%;
+}
+.product-list .s3 {
+  width: 12%;
+}
+
+@media (max-width: 600px) {
+  .product-list {
+    width: 800px;
+    overflow-x: scroll;
+    table-layout: fixed;
+  }
+}
+
 .product-list tr {
   width: 100%;
-  margin: 10px;
-  padding: 20px;
+  margin-bottom: 2px;
+  padding: 10px;
   border-radius: 5px;
   display: flex;
   flex-direction: row;
@@ -12016,10 +12090,10 @@ textarea:focus {
   box-shadow: 0px 4px 10px 3px rgba(21, 3, 131, 0.05);
 }
 .product-list tr td {
+  font-size: 0.8rem;
   display: flex;
   flex-direction: row;
   justify-content: left;
-  margin: 0px 10px;
 }
 
 /* .product-list-item .product-img {
