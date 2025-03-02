@@ -9,6 +9,7 @@ import {
   getDoc,
   addDoc,
   setDoc,
+  deleteDoc,
   doc,
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 import {
@@ -276,8 +277,10 @@ async function showProducts() {
 }
 
 function printProducts(products, type) {
-  console.log(products);
+  console.log('filtered',products);
   const sectionContainer = document.getElementById('product-list-table');
+  sectionContainer.innerHTML = '';
+
   const typeContainer = `
     <div id="physics-lab-section" class="product-category" style='position: relative;'>
       <div class="product-section-heading">
@@ -313,15 +316,230 @@ function printProducts(products, type) {
       <td class="s1">${item.price}</td>
       <td class="s2">${item.description}</td>
       <td class="product-buttons s3">
-        <button pid='${item.pid}'>Edit</button>
-        <button pid='${item.pid}'>Delete</button>
+        <button pid='${item.pid}' class='editProduct'>Edit</button>
+        <button pid='${item.pid}' class='deleteProduct'>Delete</button>
       </td>
     `;
     prodContainer.appendChild(productCard);
   });
 
   console.log(sectionContainer);
+
+  $(document).ready(() => {
+    const editProductBtns = document.querySelectorAll('.editProduct');
+    const deleteProductBtns = document.querySelectorAll('.deleteProduct');
+    const generateProductsReceiptBtn = document.querySelectorAll('#generateReceipt');
+    const generateProductsExcelBtn = document.querySelectorAll('#generateExcel');
+  
+    editProductBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        console.log(btn.getAttribute('pid')); // Logs the individual button clicked
+
+      });
+    });
+
+    deleteProductBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        console.log(btn.getAttribute('pid')); // Logs the individual button clicked
+        let clickedProduct = btn.getAttribute('pid');
+        deleteProduct(clickedProduct)
+      });
+    });
+
+    generateProductsReceiptBtn.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        generateProductsReceipt();
+      });
+    });
+
+    generateProductsExcelBtn.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        generateProductsExcel();
+      });
+    });
+  });
 }
+
+async function deleteProduct(id) {
+  try {
+    const docRef = doc(db, 'NSC-products', id); // Direct reference to the document by id
+    await deleteDoc(docRef); // Delete the document
+    showProducts();
+    alert('Product successfully deleted!');
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    alert('Failed to delete product. Please try again.');
+  }
+}
+
+async function generateProductsReceipt() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Logo URL or base64 data (use any logo URL or base64 image you want)
+  const logoUrl = 'https://images.unsplash.com/photo-1717328728300-a077e51e7a14?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fE4lMjBzeW1ib2x8ZW58MHx8MHx8fDA%3D';
+  const logoWidth = 50;
+  const logoHeight = 20;
+
+  // Fetching all products (assuming getAllProducts is an async function)
+  const allProducts = await getAllProducts();
+
+  // Sorting products by type
+  const sortedProducts = allProducts.reduce((acc, product) => {
+    if (!acc[product.type]) {
+      acc[product.type] = [];
+    }
+    acc[product.type].push(product);
+    return acc;
+  }, {});
+
+  // Header part (only for the first page)
+  const headerPart = () => {
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(40, 116, 166);
+    doc.text('Niharika Scientific Center', 105, 20, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
+    doc.text('An Authorized Supplier for Science and Music Equipment', 105, 30, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.text('Company Address: Janakpur, Nepal', 105, 40, { align: 'center' });
+    doc.text('Phone: 9804813946 | Email: info@niharka.com', 105, 50, { align: 'center' });
+
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(0, 0, 0);
+    doc.line(20, 55, 190, 55);
+
+    doc.setFontSize(12);
+    doc.text('Products Receipt', 105, 65, { align: 'center' });
+  };
+
+  // Add logo and header to the PDF
+  const img = new Image();
+  img.src = logoUrl;
+  img.onload = function () {
+    headerPart();
+
+    let currentY = 85; // Starting Y position for table content
+
+    // Loop through sorted products by type and create a new page for each type (without repeating the header)
+    Object.keys(sortedProducts).forEach((type, index) => {
+      if (index !== 0) {
+        doc.addPage(); // Start a new page for each type after the first
+        currentY = 20; // Reset Y position on new page without repeating the header
+      }
+
+      // Table heading for product type and total number of products
+      const totalProducts = sortedProducts[type].length;
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${type}`, 20, currentY);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Total Products: ${totalProducts}`, 160, currentY);
+
+      currentY += 10; // Move Y for the table header
+
+      // Table header (Sr. No., Name, Price, Description)
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Sr. No.', 20, currentY);
+      doc.text('Name', 40, currentY);
+      doc.text('Price', 70, currentY);  // Adjusting the position to give more room to "Description"
+      doc.text('Description', 100, currentY);  // Starting "Description" earlier for wider space
+
+      currentY += 10; // Move Y for the table content
+
+      // Iterate over each product in the current type category and print the details
+      sortedProducts[type].forEach((product, idx) => {
+        const srNo = (idx + 1).toString(); // Serial number for each product
+        const name = product.name || 'N/A';
+        const price = product.price?.toString() || 'N/A';
+        const description = product.description || 'N/A';
+
+        doc.setFont('helvetica', 'normal');
+        doc.text(srNo, 20, currentY);
+        doc.text(name, 40, currentY);
+        doc.text(price, 70, currentY);
+
+        // Wrap description if it's too long, now with a wider width
+        const descriptionText = doc.splitTextToSize(description, 90); // Widened description area
+        doc.text(descriptionText, 100, currentY);
+
+        currentY += 10; // Move Y for the next product row, adjust for wrapped text
+        const descriptionHeight = descriptionText.length * 5;
+        currentY += descriptionHeight - 10; // Account for wrapped text height
+
+        // Handle page break if needed
+        if (currentY > 280) {
+          doc.addPage();
+          currentY = 20; // Reset Y for the new page without header
+        }
+      });
+    });
+
+    // Final thank you message
+    doc.setFontSize(12);
+    doc.text('Thank you for your business!', 105, currentY + 20, { align: 'center' });
+
+    // Save the PDF
+    doc.save('products_receipt.pdf');
+  };
+
+  // Handle image loading errors
+  img.onerror = function () {
+    alert('Failed to load the logo image.');
+  };
+}
+
+async function generateProductsExcel() {
+  // Sample product data (replace with your actual product data)
+  const allProducts = await getAllProducts();
+
+  // Sort products by type
+  const sortedProducts = allProducts.reduce((acc, product) => {
+    if (!acc[product.type]) {
+      acc[product.type] = [];
+    }
+    acc[product.type].push(product);
+    return acc;
+  }, {});
+
+  // Create a new workbook
+  const workbook = XLSX.utils.book_new();
+
+  // Iterate over each product type to create a separate sheet for each
+  Object.keys(sortedProducts).forEach((type) => {
+    const products = sortedProducts[type];
+
+    // Create a sheet data with headers
+    const sheetData = [
+      ['Sr. No.', 'Name', 'Price', 'Description'], // Header row
+      ...products.map((product, idx) => [
+        idx + 1, // Sr. No.
+        product.name || 'N/A', // Product name
+        product.price?.toString() || 'N/A', // Price
+        product.description || 'N/A', // Description
+      ]),
+    ];
+
+    // Create a new worksheet from data
+    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+
+    // Add the worksheet to the workbook with the product type as sheet name
+    XLSX.utils.book_append_sheet(workbook, worksheet, type);
+  });
+
+  // Write the workbook to an Excel file and download it
+  XLSX.writeFile(workbook, 'products_receipt.xlsx');
+}
+
+
+
+
 
 // ----------------------------------------------------------
 // for Dealer inq
