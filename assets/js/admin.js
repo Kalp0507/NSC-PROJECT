@@ -277,7 +277,7 @@ async function showProducts() {
 }
 
 function printProducts(products, type) {
-  console.log('filtered',products);
+  console.log('filtered', products);
   const sectionContainer = document.getElementById('product-list-table');
   sectionContainer.innerHTML = '';
 
@@ -328,13 +328,14 @@ function printProducts(products, type) {
   $(document).ready(() => {
     const editProductBtns = document.querySelectorAll('.editProduct');
     const deleteProductBtns = document.querySelectorAll('.deleteProduct');
-    const generateProductsReceiptBtn = document.querySelectorAll('#generateReceipt');
-    const generateProductsExcelBtn = document.querySelectorAll('#generateExcel');
-  
+    const generateProductsReceiptBtn =
+      document.querySelectorAll('#generateReceipt');
+    const generateProductsExcelBtn =
+      document.querySelectorAll('#generateExcel');
+
     editProductBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         console.log(btn.getAttribute('pid')); // Logs the individual button clicked
-
       });
     });
 
@@ -342,7 +343,7 @@ function printProducts(products, type) {
       btn.addEventListener('click', () => {
         console.log(btn.getAttribute('pid')); // Logs the individual button clicked
         let clickedProduct = btn.getAttribute('pid');
-        deleteProduct(clickedProduct)
+        deleteProduct(clickedProduct);
       });
     });
 
@@ -377,7 +378,8 @@ async function generateProductsReceipt() {
   const doc = new jsPDF();
 
   // Logo URL or base64 data (use any logo URL or base64 image you want)
-  const logoUrl = 'https://images.unsplash.com/photo-1717328728300-a077e51e7a14?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fE4lMjBzeW1ib2x8ZW58MHx8MHx8fDA%3D';
+  const logoUrl =
+    'https://images.unsplash.com/photo-1717328728300-a077e51e7a14?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fE4lMjBzeW1ib2x8ZW58MHx8MHx8fDA%3D';
   const logoWidth = 50;
   const logoHeight = 20;
 
@@ -403,11 +405,18 @@ async function generateProductsReceipt() {
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(0, 0, 0);
-    doc.text('An Authorized Supplier for Science and Music Equipment', 105, 30, { align: 'center' });
+    doc.text(
+      'An Authorized Supplier for Science and Music Equipment',
+      105,
+      30,
+      { align: 'center' }
+    );
 
     doc.setFontSize(10);
     doc.text('Company Address: Janakpur, Nepal', 105, 40, { align: 'center' });
-    doc.text('Phone: 9804813946 | Email: info@niharka.com', 105, 50, { align: 'center' });
+    doc.text('Phone: 9804813946 | Email: info@niharka.com', 105, 50, {
+      align: 'center',
+    });
 
     doc.setLineWidth(0.5);
     doc.setDrawColor(0, 0, 0);
@@ -448,8 +457,8 @@ async function generateProductsReceipt() {
       doc.setFont('helvetica', 'bold');
       doc.text('Sr. No.', 20, currentY);
       doc.text('Name', 40, currentY);
-      doc.text('Price', 70, currentY);  // Adjusting the position to give more room to "Description"
-      doc.text('Description', 100, currentY);  // Starting "Description" earlier for wider space
+      doc.text('Price', 70, currentY); // Adjusting the position to give more room to "Description"
+      doc.text('Description', 100, currentY); // Starting "Description" earlier for wider space
 
       currentY += 10; // Move Y for the table content
 
@@ -483,7 +492,9 @@ async function generateProductsReceipt() {
 
     // Final thank you message
     doc.setFontSize(12);
-    doc.text('Thank you for your business!', 105, currentY + 20, { align: 'center' });
+    doc.text('Thank you for your business!', 105, currentY + 20, {
+      align: 'center',
+    });
 
     // Save the PDF
     doc.save('products_receipt.pdf');
@@ -537,10 +548,6 @@ async function generateProductsExcel() {
   XLSX.writeFile(workbook, 'products_receipt.xlsx');
 }
 
-
-
-
-
 // ----------------------------------------------------------
 // for Dealer inq
 // ----------------------------------------------------------
@@ -553,18 +560,24 @@ async function showDealInq() {
 
   dealInq.forEach((item) => {
     dealContainer.innerHTML += `
-    <div>
-      <p><span>Deaaler's name:</span>${item.person_name}</p>
-      <p><span>Deaaler's inquiry:</span>${item.inquiry}</p>
-      <p><span>Deaaler's phone:</span>${item.phone}</p>
-      <p><span>Deaaler's company:</span>${item.company_name}</p>
-      <p><span>Company's name:</span>${item.company_email}</p>
-      <p><span>Company's business:</span>${item.business}</p>
-      <p><span>Company's address:</span>${item.company_address}</p>
-      <p><span>Company's country:</span>${item.country}</p>
-
-      
-      <div>
+    <div class="each-dealer-inquiry">
+      <div class="dealer-details">
+        <div>
+          <p><span>Dealer's name:</span> ${item.person_name}</p> 
+          <p><span>Dealer's phone:</span> ${item.phone}</p>
+          <p><span>Company's address:</span> ${item.company_address}</p>
+        </div>
+        <div>
+          <p><span>Company's Name:</span> ${item.company_name}</p>
+          <p><span>Company's Email:</span> ${item.company_email}</p>  
+          <p><span>Company's country:</span> ${item.country}</p>
+        </div>
+      </div>
+      <div class="dealer-inquiry">
+        <p><span>Company's business:</span> ${item.business}</p>
+        <p><span>Dealer's inquiry:</span> ${item.inquiry}</p>
+      </div>
+      <div class="dealer-button">
         <button id='deal-${item.deal_id}' class='dealReceiptBtn'>
           Make receipt
         </button>
@@ -757,37 +770,55 @@ async function showCartInq() {
     const productList = item.cart[0].products
       .map(
         (product) => `
-      <li>
-        <img src="${product.image}" alt="${product.name}" style="width: 50px; height: 50px;">
-        <p>Name: ${product.name}</p>
-        <p>Description: ${product.description}</p>
-        <p>Price: ${product.price}</p>
-      </li>
+      <tr>
+        <td class="cart-item-table-image"><img src="${product.image}" alt="${product.name}" style="width: 50px; height: 50px;"></td>
+        <td>${product.name}</td>
+        <td>${product.quantity}</td>
+        <td>${product.price}</td>
+      </tr>
     `
       )
       .join('');
 
     cartContainer.innerHTML += `
       <div class="cart-item">
-        <h4>Cart ID: ${item.cart_id}</h2>
-        <p>Created At: ${new Date(
-          item.createdAt.seconds * 1000
-        ).toLocaleString()}</p>
-        <h5>Products:</h5>
-        <ul>${productList}</ul>
-
+        <div class="cart-item-top">
+          <h6>Cart ID: ${item.cart_id}</h6>
+            <p style="font-size: 0.7rem;">Created At: ${new Date(
+              item.createdAt.seconds * 1000
+            ).toLocaleString()}</p>
+        </div>
+        <div class="cart-item-table">
+          <h4>Products:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>${productList}</tbody>
+          </table>
+        </div>
+        <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-        <p>Name: ${item.first_address.fname1} ${item.first_address.lname1}</p>
-        <p>Email: ${item.first_address.email1}</p>
-        <p>Phone: ${item.first_address.phone1}</p>
-        <p>Address: ${item.first_address.address1}, ${
+          <p><span>Name :</span>${item.first_address.fname1} ${
+      item.first_address.lname1
+    }</p>
+          <p><span>Email :</span>${item.first_address.email1}</p>
+          <p><span>Phone :</span>${item.first_address.phone1}</p>
+          <p><span>Address :</span>${item.first_address.address1}, ${
       item.first_address.city1
     }, ${item.first_address.country1}</p>
-        <p>Post: ${item.first_address.post1}</p>
-
-        <h4>Order Note:</h4>
-        <p>${item.order_note}</p>
-        <div>
+          <p><span>Post Code :</span>${item.first_address.post1}</p>
+        </div> 
+        <div class="cart-item-note">
+          <h4>Order Note:&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+          <p style="font-size: 0.9rem;">${item.order_note}</p>
+        </div>
+        <div class="cart-inquiry-button">
           <button id='cart-${item.deal_id}' class='dealReceiptBtn'>
             Make receipt
           </button>

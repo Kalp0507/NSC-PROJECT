@@ -12044,9 +12044,12 @@ textarea:focus {
   }
 }
 
-.allProduct-heading {
+.adminPage-heading {
   display: flex;
   justify-content: center;
+}
+.adminPage-heading h1 {
+  color: rgb(184, 3, 3);
 }
 
 .product-list {
@@ -12225,4 +12228,196 @@ textarea:focus {
   to {
     transform: translateX(-100%);
   }
+}
+
+/* dealer inquiry style */
+.each-dealer-inquiry {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dealer-details {
+  display: flex;
+  flex-direction: row;
+}
+
+.dealer-details div {
+  width: 50%;
+}
+
+.each-dealer-inquiry p {
+  font-size: 0.8rem;
+}
+
+.each-dealer-inquiry span {
+  font-weight: 800;
+}
+.each-dealer-inquiry .dealReceiptBtn {
+  background: rgb(0, 41, 127);
+  color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 140px;
+  margin-right: 5px;
+  padding: 0px 15px 0px 15px;
+}
+
+.each-dealer-inquiry .dealReceiptBtn:hover {
+  background: rgb(12, 60, 165);
+}
+
+.dealer-button {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+@media (max-width: 991px) {
+  .dealer-details {
+    flex-direction: column;
+  }
+}
+
+/* style cart inquiry items */
+.cart-item {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.cart-item .cart-item-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.cart-item-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+.cart-item-table table thead th {
+  padding: 5px 0px 5px 8px;
+}
+.cart-item-table th,
+.cart-item-table td {
+  border: 1px solid lightslategray;
+  padding: 0px 8px 0px 8px;
+  text-align: left;
+}
+
+.cart-item-table table th {
+  background-color: #233d62;
+  color: white;
+}
+.cart-item-table table tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+
+.cart-item-table table .cart-item-table-image {
+  width: 100px;
+  height: 100px;
+}
+.cart-item-table table .cart-item-table-image img {
+  border-radius: 5px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  margin: 10px;
+  background-color: white;
+}
+
+.cart-item-cust-details p {
+  font-size: 0.9rem;
+  line-height: 8px;
+}
+
+.cart-item-cust-details {
+  margin-bottom: 30px;
+}
+
+.cart-item-cust-details span {
+  display: inline-flex;
+  width: 100px;
+  font-weight: 800;
+}
+
+.cart-item-note {
+  display: flex;
+  flex-direction: row;
+}
+
+.cart-inquiry-button {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.cart-inquiry-button .dealReceiptBtn {
+  background: rgb(0, 41, 127);
+  color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 140px;
+  margin-right: 5px;
+  padding: 0px 15px 0px 15px;
+}
+
+.cart-inquiry-button .dealReceiptBtn:hover {
+  background: rgb(12, 60, 165);
+}
+
+@media (max-width: 767px) {
+  .cart-item .cart-item-top {
+    flex-direction: column;
+  }
+}
+
+/* announcement style */
+
+.announcement-content {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.update-announcement-button {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.update-announcement-button button {
+  background: rgb(0, 41, 127);
+  color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 140px;
+  margin-right: 5px;
+  padding: 0px 15px 0px 15px;
+}
+
+.update-announcement-button button:hover {
+  background: rgb(12, 60, 165);
+}
+
+#admin-announcement {
+  padding: 8px;
+  margin: 10px 0px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px 3px rgba(21, 3, 131, 0.05);
 }
