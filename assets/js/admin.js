@@ -336,6 +336,8 @@ function printProducts(products, type) {
     editProductBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         console.log(btn.getAttribute('pid')); // Logs the individual button clicked
+        let clickedProduct = btn.getAttribute('pid');
+        editProducts(clickedProduct);
       });
     });
 
@@ -359,6 +361,80 @@ function printProducts(products, type) {
       });
     });
   });
+}
+
+async function editProducts(id) {
+  try {
+    const docRef = doc(db, 'NSC-products', id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const productData = docSnap.data();
+
+      //form to edit the product details
+      const editFormHtml = `
+        <div id="editProductModal" class="modal">
+          <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Edit Product</h2>
+            <form id="editProductForm">
+              <label for="productName">Name:</label>
+              <input type="text" id="productName" value="${productData.name}" required>
+              
+              <label for="productPrice">Price:</label>
+              <input type="number" id="productPrice" value="${productData.price}" required>
+              
+              <label for="productDescription">Description:</label>
+              <textarea id="productDescription" required>${productData.description}</textarea>
+              
+              <button type="submit">Save Changes</button>
+            </form>
+          </div>
+        </div>
+      `;
+
+      document.body.insertAdjacentHTML('beforeend', editFormHtml);
+
+      const modal = document.getElementById('editProductModal');
+      const closeButton = document.querySelector('.close-button');
+
+      // Show the modal
+      modal.style.display = 'block';
+
+      // Close the modal when the close button is clicked
+      closeButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+
+      // Handle form submission
+      const editProductForm = document.getElementById('editProductForm');
+      // editProductForm.addEventListener('submit', async (event) => {
+      //   event.preventDefault();
+
+      //   const updatedName = document.getElementById('productName').value;
+      //   const updatedPrice = document.getElementById('productPrice').value;
+      //   const updatedDescription =
+      //     document.getElementById('productDescription').value;
+
+      //   await updateDoc(docRef, {
+      //     name: updatedName,
+      //     price: updatedPrice,
+      //     description: updatedDescription,
+      //   });
+
+      //   alert('Product successfully updated!');
+      //   modal.style.display = 'none';
+      //   modal.remove();
+      //   showProducts();
+      // });
+    } else {
+      console.log('No such document!');
+      alert('Product not found.');
+    }
+  } catch (error) {
+    console.error('Error editing product:', error);
+    alert('Failed to edit product. Please try again.');
+  }
 }
 
 async function deleteProduct(id) {
