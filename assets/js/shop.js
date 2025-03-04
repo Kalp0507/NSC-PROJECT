@@ -8,6 +8,8 @@ import {
   getDocs,
   addDoc,
   setDoc,
+  doc,
+  updateDoc
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 import {
   getStorage,
@@ -73,6 +75,9 @@ const storage = getStorage(app);
 // open funcitons
 // ----------------------------------------------------------
 
+const urlParams = new URLSearchParams(window.location.search);
+let cartId = urlParams.get('id') ?? null;
+console.log(cartId);
 const allProducts = [];
 let cart = [];
 
@@ -90,6 +95,69 @@ async function getAllProducts() {
   }
 }
 
+async function getCart(cartId) {
+  console.log('Fetching cart', cartId);
+  try {
+    const cartInqRef = collection(db, 'carts');
+    const q = query(cartInqRef, where('cartId', '==', cartId));
+    const snapshot = await getDocs(q);
+
+    // console.log(snapshot.doc.data())
+    // snapshot.forEach((doc) => cart.push(doc.data()));
+    snapshot.forEach((doc) => {
+      const cartData = doc.data();
+      if (cartData.products) {
+        cartData.products.forEach((product) => {
+          cart.push({
+            name: product.name,
+            price: product.price,
+            quantity: product.quantity,
+            pid: product.pid,
+          });
+        });
+      }
+    });
+    console.log(cart);
+  } catch (error) {
+    console.log('Error fetching carts: ', error);
+  }
+}
+
+async function postNewCart() {
+  try {
+    const docRef = await addDoc(collection(db, 'carts'), {
+      products: [...cart],
+      createdAt: new Date(),
+    });
+    await setDoc(docRef, { cartId: docRef.id }, { merge: true });
+    cartId = docRef.id;
+    console.log('cart submitted successfully !!!!', cartId);
+  } catch (error) {
+    console.log('Error creating new cart:', error)
+  }
+}
+
+async function updateCart(updatedCart) {
+  if (updatedCart.length < 1) {
+    alert('Your cart is empty !!!... please add products from shop')
+  }
+  else {
+    try {
+      const docRef = doc(db, 'carts', cartId);
+
+      console.log(updatedCart,cartId)
+      // Update the document
+      await updateDoc(docRef, {
+        products: updatedCart
+      });
+
+      alert('Cart updated successfully !!!')
+    } catch (error) {
+      console.log('Error updating cart:', error)
+    }
+  }
+}
+
 // ----------------------------------------------------------
 // for shop page
 // ----------------------------------------------------------
@@ -101,6 +169,10 @@ $(document).ready(async function () {
   const defaultType = 'physics-lab';
 
   await getAllProducts();
+  if (cartId) {
+    await getCart(cartId)
+  }
+  displayCart(cart)
 
   console.log(allProducts);
 
@@ -178,7 +250,7 @@ $(document).ready(async function () {
     cartButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const pid = button.getAttribute('pid');
-        console.log(pid);
+        console.log('pid', pid);
         addToCart(pid);
       });
     });
@@ -205,19 +277,20 @@ $(document).ready(async function () {
   function displayCart(cart) {
     const cartContainer = document.getElementById('cart-container');
     let cartHTML = `
-        <div class="cart-items">
-        ${cart
-          .map(
-            (item) => `
+    <div class="cart-items">
+    ${cart
+        .map(
+          (item) => `
             <div class="cart-item">
-                <h3>${item.name}</h3>
+            <h3>${item.name}</h3>
             </div>
             `
-          )
-          .join('')}
+        )
+        .join('')}
         </div>
         `;
     cartContainer.innerHTML = cartHTML;
+    updateCartCount()
   }
   function updateCartCount() {
     const cartCountElement = document.getElementById('cartCount');
@@ -234,19 +307,18 @@ $(document).ready(async function () {
         return;
       }
       try {
-        const docRef = await addDoc(collection(db, 'carts'), {
-          products: [...cart],
-          createdAt: new Date(),
-        });
-        await setDoc(docRef, { cartId: docRef.id }, { merge: true });
+        if (cartId) {
+          await updateCart(cart)
+        }
+        else {
+          await postNewCart();
+        }
 
-        console.log('cart submitted successfully !!!!', docRef.id);
-        console.log(button.innerHTML.toString().trim());
         if (button.innerHTML.toString().trim() == 'Checkout') {
-          window.location.href = `checkout.html?id=${docRef.id}`;
+          window.location.href = `checkout.html?id=${cartId}`;
         }
         if (button.innerHTML.toString().trim() == 'View Cart') {
-          window.location.href = `cart.html?id=${docRef.id}`;
+          window.location.href = `cart.html?id=${cartId}`;
         }
       } catch (error) {
         console.log('Error storing cart: ', error);
