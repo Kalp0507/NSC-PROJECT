@@ -8,6 +8,9 @@ import {
   getDocs,
   addDoc,
   setDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 import {
   getStorage,
@@ -77,6 +80,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const cartId = urlParams.get('id');
 console.log(cartId);
 let cart = [];
+let currentCart = [];
 
 //Fetching cart from db
 async function getCart(cartId) {
@@ -96,6 +100,7 @@ async function getCart(cartId) {
             name: product.name,
             price: product.price,
             quantity: product.quantity,
+            pid: product.pid,
           });
         });
       }
@@ -104,16 +109,129 @@ async function getCart(cartId) {
   } catch (error) {
     console.log('Error fetching carts: ', error);
   }
-  renderCartItems(cart);
 }
+
+async function deleteCart(id) {
+  try {
+    const docRef = doc(db, 'carts', id); // Direct reference to the document by id
+    await deleteDoc(docRef); // Delete the document
+
+    alert("cart deleted successfully", id)
+  } catch (error) {
+    console.log("Error in deleting cart:", error);
+  }
+}
+
+async function updateCart(updatedCart) {
+  // get cart by id from db
+  // get current cart from frontend
+
+  // if current cart has no prod.... delete cart from db ---> we cant
+  if (updatedCart.length < 1) {
+    alert('Your cart is empty !!!... please add products from shop')
+  }
+  else {
+    // else change db with current card
+    // how??? => just change the products with new product array ?
+    try {
+      const docRef = doc(db, 'carts', cartId);
+
+      console.log(updatedCart)
+      // Update the document
+      await updateDoc(docRef, {
+        products: updatedCart
+      });
+
+      alert('Cart updated successfully !!!')
+      renderCartItems(updatedCart)
+    } catch (error) {
+      console.log('Error updating cart:', error)
+    }
+  }
+}
+
+
+
 
 // ----------------------------------------------------------
 // for Cart page
 // ----------------------------------------------------------
 $(document).ready(async function () {
   await getCart(cartId);
+  renderCartItems(cart)
   console.log('Cart ID:', cartId);
+  currentCart = JSON.parse(JSON.stringify(cart));
 });
+
+// for currentCart products
+const updateCartbtn = document.getElementById('updateCartbtn');
+const continueShoppingBtn = document.getElementById('continueShoppingBtn');
+const checkoutBtn = document.getElementById('checkoutBtn');
+
+updateCartbtn.addEventListener('click', () => {
+  if (areCartsEqual(cart, currentCart)) {
+    alert('Cart is the same');
+  } else {
+    updateCart(currentCart);
+  }
+});
+
+
+continueShoppingBtn.addEventListener('click', () => {
+  updateCart(currentCart);
+  window.location.href = `shop.html?id=${cartId}`;
+})
+
+checkoutBtn.addEventListener('click', () => {
+  updateCart(currentCart);
+  window.location.href = `checkout.html?id=${cartId}`;
+})
+
+function deleteProductFromCart(pid, c) {
+  const updatedCart = c.filter((product) => product.pid !== pid);
+
+  // If the cart is empty, optionally delete the cart
+  // if (updatedCart.length < 1) {
+  //   deleteCart(cartId);
+  // }
+
+  currentCart = updatedCart;  // Update the outer scope's currentCart
+  renderCartItems(currentCart);  // Re-render the cart
+  return;
+}
+
+// Function to deep compare two arrays of objects
+function areCartsEqual(cart1, cart2) {
+  if (cart1.length !== cart2.length) {
+    return false;
+  }
+
+  // Sort both carts by product ID (or any unique identifier) for consistent comparison
+  cart1.sort((a, b) => a.pid.localeCompare(b.pid));
+  cart2.sort((a, b) => a.pid.localeCompare(b.pid));
+
+  return cart1.every((product1, index) => {
+    const product2 = cart2[index];
+    return (
+      product1.pid === product2.pid &&
+      product1.name === product2.name &&
+      product1.price === product2.price &&
+      product1.quantity === product2.quantity
+    );
+  });
+}
+
+function updateQuantity(pid, newQuantity) {
+  console.log(currentCart, newQuantity);
+
+  currentCart.forEach((product) => {
+    if (product.pid === pid) {
+      product.quantity = parseInt(newQuantity);
+    }
+  });
+
+  console.log(currentCart,cart);
+}
 
 // ----------------------------------------------------------
 // for frontend
@@ -121,6 +239,7 @@ $(document).ready(async function () {
 function renderCartItems(cart) {
   const cartContainer = document.querySelector('.cart-wrap tbody');
   cartContainer.innerHTML = '';
+  console.log(cart)
 
   if (cart.length === 0) {
     cartContainer.innerHTML = '<p>Your cart is empty.</p>';
@@ -140,23 +259,70 @@ function renderCartItems(cart) {
     <td class="stock">
       <ul class="input-style">
         <li class="quantity cart-plus-minus">
-          <input type="text" value="${item.quantity}" />
+          <div class='decreaseQuan' pid='${item.pid}'>-</div>
+          <input type="text" value="${item.quantity}" pid='${item.pid}' class='updateQuantityinput'/>
+          <div class='increaseQuan' pid='${item.pid}'>+</div>
         </li>
       </ul>
     </td>
     <td class="action">
-      <ul>
-        <li class="w-btn">
-          <a
+          <div
+            pid='${item.pid}'
             data-bs-toggle="tooltip"
             data-bs-html="true"
+            class='deleteCartProduct'
             title="Remove from Cart"
-            ><i class="fi ti-trash"></i
-          ></a>
-        </li>
-      </ul>
+            >
+            <i class="fi ti-trash"></i>
+            </div>
     </td>
   `;
     cartContainer.appendChild(itemRow);
   });
+
+  const deleteCartProductBtns = document.querySelectorAll('.deleteCartProduct');
+  deleteCartProductBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      console.log(deleteCartProductBtns);
+      let clickedProduct = btn.getAttribute('pid');
+      console.log('here', clickedProduct)
+      deleteProductFromCart(clickedProduct, currentCart);
+      console.log(deleteCartProductBtns, currentCart);
+    })
+  })
+
+  const updateQuantityinput = document.querySelectorAll('.updateQuantityinput')
+
+  const decreaseQuan = document.querySelectorAll('.decreaseQuan')
+  decreaseQuan.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      let clickedProduct = btn.getAttribute('pid');
+      updateQuantityinput.forEach((input) => {
+        if (input.getAttribute('pid') === clickedProduct) {
+          if (input.value == 1) {
+            input.value = 1
+          }
+          else {
+            input.value--;
+            updateQuantity(clickedProduct,input.value)
+          }
+        }
+      })
+
+    })
+  })
+
+  const increaseQuan = document.querySelectorAll('.increaseQuan')
+  increaseQuan.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      let clickedProduct = btn.getAttribute('pid');
+      updateQuantityinput.forEach((input) => {
+        if (input.getAttribute('pid') === clickedProduct) {
+          input.value++;
+          updateQuantity(clickedProduct,input.value)
+        }
+      })
+
+    })
+  })
 }
