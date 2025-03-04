@@ -108,6 +108,9 @@
               Dealer Inquiries/ Contact us
             </li>
             <li onclick="showSection1('cart-inquiries')">Cart Inquiries</li>
+            <li onclick="showSection1('announcements-section')">
+              Announcements
+            </li>
           </ul>
         </div>
         <div class="admin-content">
@@ -214,8 +217,8 @@
             class="admin-section"
             style="display: none; overflow: visible"
           >
-            <div class="allProduct-heading">
-              <h1 style="color: rgb(184, 3, 3)">All Products</h1>
+            <div class="adminPage-heading">
+              <h1>All Products</h1>
             </div>
             <div class="admin-product-dropdown">
               <div class="mobile-dropdown2">
@@ -349,7 +352,7 @@
             class="admin-section"
             style="display: none"
           >
-            <h1>Dealer Inquiries</h1>
+            <div class="adminPage-heading"><h1>Dealer Inquiries</h1></div>
             <div class="inquiry-list" id="dealContainer"></div>
           </section>
 
@@ -359,8 +362,36 @@
             class="admin-section"
             style="display: none"
           >
-            <h1>Cart Inquiries</h1>
+            <div class="adminPage-heading"><h1>Cart Inquiries</h1></div>
             <div class="cart-list" id="cartContainer"></div>
+          </section>
+
+          <section
+            id="announcements-section"
+            class="admin-section"
+            style="display: none"
+          >
+            <div class="adminPage-heading"><h1>Announcements</h1></div>
+            <div class="announcement-content">
+              <div>
+                <h6>Current Announcement :</h6>
+                <p style="font-size: 0.9rem">
+                  Welcome to NSC! Stay updated with the latest announcements.
+                </p>
+              </div>
+              <div>
+                <h6>Add new Announcement :</h6>
+                <label for="admin-announcement">Announcement :</label>
+                <input
+                  type="text"
+                  id="admin-announcement"
+                  name="admin-announcement"
+                />
+              </div>
+              <div class="update-announcement-button">
+                <button>Update</button>
+              </div>
+            </div>
           </section>
         </div>
       </div>

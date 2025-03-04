@@ -12044,9 +12044,12 @@ textarea:focus {
   }
 }
 
-.allProduct-heading {
+.adminPage-heading {
   display: flex;
   justify-content: center;
+}
+.adminPage-heading h1 {
+  color: rgb(184, 3, 3);
 }
 
 .product-list {
@@ -12225,4 +12228,267 @@ textarea:focus {
   to {
     transform: translateX(-100%);
   }
+}
+
+/* dealer inquiry style */
+.each-dealer-inquiry {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dealer-details {
+  display: flex;
+  flex-direction: row;
+}
+
+.dealer-details div {
+  width: 50%;
+}
+
+.each-dealer-inquiry p {
+  font-size: 0.8rem;
+}
+
+.each-dealer-inquiry span {
+  font-weight: 800;
+}
+.each-dealer-inquiry .dealReceiptBtn {
+  background: rgb(0, 41, 127);
+  color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 140px;
+  margin-right: 5px;
+  padding: 0px 15px 0px 15px;
+}
+
+.each-dealer-inquiry .dealReceiptBtn:hover {
+  background: rgb(12, 60, 165);
+}
+
+.dealer-button {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+@media (max-width: 991px) {
+  .dealer-details {
+    flex-direction: column;
+  }
+}
+
+/* style cart inquiry items */
+.cart-item {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.cart-item .cart-item-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.cart-item-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+.cart-item-table table thead th {
+  padding: 5px 0px 5px 8px;
+}
+.cart-item-table th,
+.cart-item-table td {
+  border: 1px solid lightslategray;
+  padding: 0px 8px 0px 8px;
+  text-align: left;
+}
+
+.cart-item-table table th {
+  background-color: #233d62;
+  color: white;
+}
+.cart-item-table table tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+
+.cart-item-table table .cart-item-table-image {
+  width: 100px;
+  height: 100px;
+}
+.cart-item-table table .cart-item-table-image img {
+  border-radius: 5px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  margin: 10px;
+  background-color: white;
+}
+
+.cart-item-cust-details p {
+  font-size: 0.9rem;
+  line-height: 8px;
+}
+
+.cart-item-cust-details {
+  margin-bottom: 30px;
+}
+
+.cart-item-cust-details span {
+  display: inline-flex;
+  width: 100px;
+  font-weight: 800;
+}
+
+.cart-item-note {
+  display: flex;
+  flex-direction: row;
+}
+
+.cart-inquiry-button {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.cart-inquiry-button .dealReceiptBtn {
+  background: rgb(0, 41, 127);
+  color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 140px;
+  margin-right: 5px;
+  padding: 0px 15px 0px 15px;
+}
+
+.cart-inquiry-button .dealReceiptBtn:hover {
+  background: rgb(12, 60, 165);
+}
+
+@media (max-width: 767px) {
+  .cart-item .cart-item-top {
+    flex-direction: column;
+  }
+}
+
+/* announcement style */
+
+.announcement-content {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.update-announcement-button {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.update-announcement-button button {
+  background: rgb(0, 41, 127);
+  color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 140px;
+  margin-right: 5px;
+  padding: 0px 15px 0px 15px;
+}
+
+.update-announcement-button button:hover {
+  background: rgb(12, 60, 165);
+}
+
+#admin-announcement {
+  padding: 8px;
+  margin: 10px 0px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px 3px rgba(21, 3, 131, 0.05);
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal .close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal label {
+  margin: 10px 0 5px;
+}
+
+.modal input[type='text'],
+.modal input[type='number'],
+.modal textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal button[type='submit'] {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal button[type='submit']:hover {
+  background-color: #45a049;
 }
