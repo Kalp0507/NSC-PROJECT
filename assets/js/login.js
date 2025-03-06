@@ -18,13 +18,13 @@ const firebaseConfig = {
 const firebaseConfig1 = {
     apiKey: "AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI",
     authDomain: "nsc-project-b2648.firebaseapp.com",
+    databaseURL: "https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "nsc-project-b2648",
-    storageBucket: "nsc-project-b2648.firebasestorage.com",
+    storageBucket: "nsc-project-b2648.firebasestorage.app",
     messagingSenderId: "208868373512",
     appId: "1:208868373512:web:b4b1c9922dcd9ef8e2cdbd",
     measurementId: "G-7TXJZD0N70"
-};
-
+  };
 // new unpaid
 const firebaseConfig2 = {
     apiKey: "AIzaSyCoPer3AlsOUO2zVmym11TRbsGTwRTe90k",
