@@ -252,6 +252,8 @@ $(document).ready(function () {
 // for All Products
 // ----------------------------------------------------------
 
+let selectedProducts = [];
+
 async function showProducts() {
   // getting all products
   const allProducts = await getAllProducts();
@@ -309,9 +311,10 @@ function printProducts(products, type) {
 
   const prodContainer = document.querySelector('.product-list tbody');
   products.forEach((item) => {
+    const isChecked = selectedProducts.includes(item.pid) ? 'checked' : ''; // Check if product is selected
     const productCard = document.createElement('tr');
     productCard.innerHTML = `
-      <td class="s1"><input type="checkbox" class="row-checkbox"></td>
+      <td class="s1"><input type="checkbox" class="row-checkbox selectProdBox" pid='${item.pid}' ${isChecked}></td>
       <td class="s1">${item.name}</td>
       <td class="s1">${item.price}</td>
       <td class="s2">${item.description}</td>
@@ -328,10 +331,9 @@ function printProducts(products, type) {
   $(document).ready(() => {
     const editProductBtns = document.querySelectorAll('.editProduct');
     const deleteProductBtns = document.querySelectorAll('.deleteProduct');
-    const generateProductsReceiptBtn =
-      document.querySelectorAll('#generateReceipt');
-    const generateProductsExcelBtn =
-      document.querySelectorAll('#generateExcel');
+    const generateProductsReceiptBtn = document.querySelectorAll('#generateReceipt');
+    const generateProductsExcelBtn = document.querySelectorAll('#generateExcel');
+    const selectProdBox = document.querySelectorAll('.selectProdBox');
 
     editProductBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -351,15 +353,27 @@ function printProducts(products, type) {
 
     generateProductsReceiptBtn.forEach((btn) => {
       btn.addEventListener('click', () => {
-        generateProductsReceipt();
+        generateProductsReceipt(selectedProducts)
       });
     });
 
     generateProductsExcelBtn.forEach((btn) => {
       btn.addEventListener('click', () => {
-        generateProductsExcel();
+        generateProductsExcel(selectedProducts);
       });
     });
+
+    selectProdBox.forEach((box)=>{
+      box.addEventListener('change',()=>{
+        let clickedProduct = box.getAttribute('pid');
+        if (box.checked) {
+          selectedProducts.push(clickedProduct);
+        } else {
+          selectedProducts = selectedProducts.filter( (product) => product !== clickedProduct );
+        }
+      })
+    })
+
   });
 }
 
@@ -449,7 +463,7 @@ async function deleteProduct(id) {
   }
 }
 
-async function generateProductsReceipt() {
+async function generateProductsReceipt(selectedProds) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -461,9 +475,23 @@ async function generateProductsReceipt() {
 
   // Fetching all products (assuming getAllProducts is an async function)
   const allProducts = await getAllProducts();
-
+  const productsToPrint = [];
+  
+  if (selectedProds.length > 0) {
+    // If selectedProds is not empty, add matching products
+    selectedProds.forEach((selectedProd) => {
+      const matchedProduct = allProducts.find((product) => product.pid === selectedProd);
+      if (matchedProduct) {
+        productsToPrint.push(matchedProduct);
+      }
+    });
+  } else {
+    // If selectedProds is empty, add all products
+    productsToPrint.push(...allProducts);
+  }
+  
   // Sorting products by type
-  const sortedProducts = allProducts.reduce((acc, product) => {
+  const sortedProducts = productsToPrint.reduce((acc, product) => {
     if (!acc[product.type]) {
       acc[product.type] = [];
     }
@@ -582,12 +610,28 @@ async function generateProductsReceipt() {
   };
 }
 
-async function generateProductsExcel() {
+async function generateProductsExcel(selectedProds) {
   // Sample product data (replace with your actual product data)
   const allProducts = await getAllProducts();
+  const productsToPrint = [];
+  
+  if (selectedProds.length > 0) {
+    // If selectedProds is not empty, add matching products
+    selectedProds.forEach((selectedProd) => {
+      const matchedProduct = allProducts.find((product) => product.pid === selectedProd);
+      if (matchedProduct) {
+        productsToPrint.push(matchedProduct);
+      }
+    });
+  } else {
+    // If selectedProds is empty, add all products
+    productsToPrint.push(...allProducts);
+  }
+
+  console.log(productsToPrint)
 
   // Sort products by type
-  const sortedProducts = allProducts.reduce((acc, product) => {
+  const sortedProducts = productsToPrint.reduce((acc, product) => {
     if (!acc[product.type]) {
       acc[product.type] = [];
     }
