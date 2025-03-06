@@ -116,9 +116,9 @@ async function deleteCart(id) {
     const docRef = doc(db, 'carts', id); // Direct reference to the document by id
     await deleteDoc(docRef); // Delete the document
 
-    alert("cart deleted successfully", id)
+    alert('cart deleted successfully', id);
   } catch (error) {
-    console.log("Error in deleting cart:", error);
+    console.log('Error in deleting cart:', error);
   }
 }
 
@@ -128,37 +128,33 @@ async function updateCart(updatedCart) {
 
   // if current cart has no prod.... delete cart from db ---> we cant
   if (updatedCart.length < 1) {
-    alert('Your cart is empty !!!... please add products from shop')
-  }
-  else {
+    alert('Your cart is empty !!!... please add products from shop');
+  } else {
     // else change db with current card
     // how??? => just change the products with new product array ?
     try {
       const docRef = doc(db, 'carts', cartId);
 
-      console.log(updatedCart)
+      console.log(updatedCart);
       // Update the document
       await updateDoc(docRef, {
-        products: updatedCart
+        products: updatedCart,
       });
 
-      alert('Cart updated successfully !!!')
-      renderCartItems(updatedCart)
+      alert('Cart updated successfully !!!');
+      renderCartItems(updatedCart);
     } catch (error) {
-      console.log('Error updating cart:', error)
+      console.log('Error updating cart:', error);
     }
   }
 }
-
-
-
 
 // ----------------------------------------------------------
 // for Cart page
 // ----------------------------------------------------------
 $(document).ready(async function () {
   await getCart(cartId);
-  renderCartItems(cart)
+  renderCartItems(cart);
   console.log('Cart ID:', cartId);
   currentCart = JSON.parse(JSON.stringify(cart));
 });
@@ -176,16 +172,15 @@ updateCartbtn.addEventListener('click', () => {
   }
 });
 
-
 continueShoppingBtn.addEventListener('click', () => {
   updateCart(currentCart);
   window.location.href = `shop.html?id=${cartId}`;
-})
+});
 
 checkoutBtn.addEventListener('click', () => {
   updateCart(currentCart);
   window.location.href = `checkout.html?id=${cartId}`;
-})
+});
 
 function deleteProductFromCart(pid, c) {
   const updatedCart = c.filter((product) => product.pid !== pid);
@@ -195,8 +190,8 @@ function deleteProductFromCart(pid, c) {
   //   deleteCart(cartId);
   // }
 
-  currentCart = updatedCart;  // Update the outer scope's currentCart
-  renderCartItems(currentCart);  // Re-render the cart
+  currentCart = updatedCart; // Update the outer scope's currentCart
+  renderCartItems(currentCart); // Re-render the cart
   return;
 }
 
@@ -230,7 +225,7 @@ function updateQuantity(pid, newQuantity) {
     }
   });
 
-  console.log(currentCart,cart);
+  console.log(currentCart, cart);
 }
 
 // ----------------------------------------------------------
@@ -239,12 +234,14 @@ function updateQuantity(pid, newQuantity) {
 function renderCartItems(cart) {
   const cartContainer = document.querySelector('.cart-wrap tbody');
   cartContainer.innerHTML = '';
-  console.log(cart)
+  console.log(cart);
 
   if (cart.length === 0) {
-    cartContainer.innerHTML = '<p>Your cart is empty.</p>';
+    cartContainer.innerHTML =
+      '<p>&nbsp;&nbsp;&nbsp;&nbsp;Your cart is empty.</p>';
     return;
   }
+
   cart.forEach((item) => {
     const itemRow = document.createElement('tr');
     itemRow.innerHTML = `
@@ -259,9 +256,9 @@ function renderCartItems(cart) {
     <td class="stock">
       <ul class="input-style">
         <li class="quantity cart-plus-minus">
-          <div class='decreaseQuan' pid='${item.pid}'>-</div>
+          <div class='qtybutton decreaseQuan' pid='${item.pid}'>-</div>
           <input type="text" value="${item.quantity}" pid='${item.pid}' class='updateQuantityinput'/>
-          <div class='increaseQuan' pid='${item.pid}'>+</div>
+          <div class='increaseQuan qtybutton' pid='${item.pid}'>+</div>
         </li>
       </ul>
     </td>
@@ -285,44 +282,41 @@ function renderCartItems(cart) {
     btn.addEventListener('click', () => {
       console.log(deleteCartProductBtns);
       let clickedProduct = btn.getAttribute('pid');
-      console.log('here', clickedProduct)
+      console.log('here', clickedProduct);
       deleteProductFromCart(clickedProduct, currentCart);
       console.log(deleteCartProductBtns, currentCart);
-    })
-  })
+    });
+  });
 
-  const updateQuantityinput = document.querySelectorAll('.updateQuantityinput')
+  const updateQuantityinput = document.querySelectorAll('.updateQuantityinput');
 
-  const decreaseQuan = document.querySelectorAll('.decreaseQuan')
+  const decreaseQuan = document.querySelectorAll('.decreaseQuan');
   decreaseQuan.forEach((btn) => {
     btn.addEventListener('click', () => {
       let clickedProduct = btn.getAttribute('pid');
       updateQuantityinput.forEach((input) => {
         if (input.getAttribute('pid') === clickedProduct) {
           if (input.value == 1) {
-            input.value = 1
-          }
-          else {
+            input.value = 1;
+          } else {
             input.value--;
-            updateQuantity(clickedProduct,input.value)
+            updateQuantity(clickedProduct, input.value);
           }
         }
-      })
+      });
+    });
+  });
 
-    })
-  })
-
-  const increaseQuan = document.querySelectorAll('.increaseQuan')
+  const increaseQuan = document.querySelectorAll('.increaseQuan');
   increaseQuan.forEach((btn) => {
     btn.addEventListener('click', () => {
       let clickedProduct = btn.getAttribute('pid');
       updateQuantityinput.forEach((input) => {
         if (input.getAttribute('pid') === clickedProduct) {
           input.value++;
-          updateQuantity(clickedProduct,input.value)
+          updateQuantity(clickedProduct, input.value);
         }
-      })
-
-    })
-  })
+      });
+    });
+  });
 }

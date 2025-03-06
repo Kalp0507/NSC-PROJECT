@@ -9,7 +9,7 @@ import {
   addDoc,
   setDoc,
   doc,
-  updateDoc
+  updateDoc,
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 import {
   getStorage,
@@ -133,27 +133,26 @@ async function postNewCart() {
     cartId = docRef.id;
     console.log('cart submitted successfully !!!!', cartId);
   } catch (error) {
-    console.log('Error creating new cart:', error)
+    console.log('Error creating new cart:', error);
   }
 }
 
 async function updateCart(updatedCart) {
   if (updatedCart.length < 1) {
-    alert('Your cart is empty !!!... please add products from shop')
-  }
-  else {
+    alert('Your cart is empty !!!... please add products from shop');
+  } else {
     try {
       const docRef = doc(db, 'carts', cartId);
 
-      console.log(updatedCart,cartId)
+      console.log(updatedCart, cartId);
       // Update the document
       await updateDoc(docRef, {
-        products: updatedCart
+        products: updatedCart,
       });
 
-      alert('Cart updated successfully !!!')
+      alert('Cart updated successfully !!!');
     } catch (error) {
-      console.log('Error updating cart:', error)
+      console.log('Error updating cart:', error);
     }
   }
 }
@@ -170,9 +169,9 @@ $(document).ready(async function () {
 
   await getAllProducts();
   if (cartId) {
-    await getCart(cartId)
+    await getCart(cartId);
   }
-  displayCart(cart)
+  displayCart(cart);
 
   console.log(allProducts);
 
@@ -279,18 +278,18 @@ $(document).ready(async function () {
     let cartHTML = `
     <div class="cart-items">
     ${cart
-        .map(
-          (item) => `
+      .map(
+        (item) => `
             <div class="cart-item">
             <h3>${item.name}</h3>
             </div>
             `
-        )
-        .join('')}
+      )
+      .join('')}
         </div>
         `;
     cartContainer.innerHTML = cartHTML;
-    updateCartCount()
+    updateCartCount();
   }
   function updateCartCount() {
     const cartCountElement = document.getElementById('cartCount');
@@ -308,9 +307,8 @@ $(document).ready(async function () {
       }
       try {
         if (cartId) {
-          await updateCart(cart)
-        }
-        else {
+          await updateCart(cart);
+        } else {
           await postNewCart();
         }
 
