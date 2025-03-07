@@ -3,19 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase
 import { getFirestore, collection, query, where, getDocs, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
-// old unpaid
 const firebaseConfig = {
-    apiKey: "AIzaSyDdBer8FpN4VBvyFaGXuuZWPsgnov7Yb9Q",
-    authDomain: "nsc-project-95e23.firebaseapp.com",
-    databaseURL: "https://nsc-project-95e23-default-rtdb.firebaseio.com",
-    projectId: "nsc-project-95e23",
-    storageBucket: "nsc-project-95e23.firebasestorage.app",
-    messagingSenderId: "96525728452",
-    appId: "1:96525728452:web:018809632318722637e791"
-};
-
-// new paid
-const firebaseConfig1 = {
     apiKey: "AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI",
     authDomain: "nsc-project-b2648.firebaseapp.com",
     databaseURL: "https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -24,17 +12,8 @@ const firebaseConfig1 = {
     messagingSenderId: "208868373512",
     appId: "1:208868373512:web:b4b1c9922dcd9ef8e2cdbd",
     measurementId: "G-7TXJZD0N70"
-  };
-// new unpaid
-const firebaseConfig2 = {
-    apiKey: "AIzaSyCoPer3AlsOUO2zVmym11TRbsGTwRTe90k",
-    authDomain: "fir-8dbaa.firebaseapp.com",
-    projectId: "fir-8dbaa",
-    storageBucket: "fir-8dbaa.firebasestorage.app",
-    messagingSenderId: "362967685119",
-    appId: "1:362967685119:web:5d8e2b0814a25ef64cf9ca",
-    measurementId: "G-B1KDG3MCP4"
 };
+
 
 // Initialize Firebase
 let app;
@@ -72,7 +51,7 @@ $(document).ready(function () {
                 throw new Error("Firestore database (db) is not initialized.");
             }
             // Firestore query using modular SDK
-            const adminRef = collection(db, "admins");
+            const adminRef = collection(db, "admin");
             const q = query(adminRef, where("email", "==", email));
             const snapshot = await getDocs(q);
             console.log(` Retrieved Documents: ${snapshot.docs.length}`);

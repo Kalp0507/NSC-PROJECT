@@ -16,37 +16,17 @@ import {
   getDownloadURL,
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
 
-// old unpaid
-const firebaseConfig = {
-  apiKey: 'AIzaSyDdBer8FpN4VBvyFaGXuuZWPsgnov7Yb9Q',
-  authDomain: 'nsc-project-95e23.firebaseapp.com',
-  databaseURL: 'https://nsc-project-95e23-default-rtdb.firebaseio.com',
-  projectId: 'nsc-project-95e23',
-  storageBucket: 'nsc-project-95e23.firebasestorage.app',
-  messagingSenderId: '96525728452',
-  appId: '1:96525728452:web:018809632318722637e791',
-};
 
 // new paid
-const firebaseConfig1 = {
-  apiKey: 'AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI',
-  authDomain: 'nsc-project-b2648.firebaseapp.com',
-  projectId: 'nsc-project-b2648',
-  storageBucket: 'nsc-project-b2648.firebasestorage.com',
-  messagingSenderId: '208868373512',
-  appId: '1:208868373512:web:b4b1c9922dcd9ef8e2cdbd',
-  measurementId: 'G-7TXJZD0N70',
-};
-
-// new unpaid
-const firebaseConfig2 = {
-  apiKey: 'AIzaSyCoPer3AlsOUO2zVmym11TRbsGTwRTe90k',
-  authDomain: 'fir-8dbaa.firebaseapp.com',
-  projectId: 'fir-8dbaa',
-  storageBucket: 'fir-8dbaa.firebasestorage.app',
-  messagingSenderId: '362967685119',
-  appId: '1:362967685119:web:5d8e2b0814a25ef64cf9ca',
-  measurementId: 'G-B1KDG3MCP4',
+const firebaseConfig = {
+  apiKey: "AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI",
+  authDomain: "nsc-project-b2648.firebaseapp.com",
+  databaseURL: "https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "nsc-project-b2648",
+  storageBucket: "nsc-project-b2648.firebasestorage.app",
+  messagingSenderId: "208868373512",
+  appId: "1:208868373512:web:b4b1c9922dcd9ef8e2cdbd",
+  measurementId: "G-7TXJZD0N70"
 };
 
 // Initialize Firebase
@@ -74,6 +54,9 @@ const storage = getStorage(app);
 // ----------------------------------------------------------
 const urlParams = new URLSearchParams(window.location.search);
 const cartId = urlParams.get('id');
+if(!cartId){
+  window.location.href = `shop.html`;
+}
 console.log(cartId);
 let cart = [];
 
@@ -159,7 +142,7 @@ $(document).ready(function () {
     const products = [...cart];
 
     try {
-      const docRef = await addDoc(collection(db, 'NSC-cartInquiries'), {
+      const docRef = await addDoc(collection(db, 'cartInquiries'), {
         first_address: {
           fname1: fname1,
           lname1: lname1,
@@ -184,7 +167,7 @@ $(document).ready(function () {
               phone2: phone2,
             }
           : {},
-        cart: products,
+        cartId: cartId,
         createdAt: new Date(),
       });
 

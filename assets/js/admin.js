@@ -19,38 +19,18 @@ import {
   getDownloadURL,
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
 
-// old unpaid
-const firebaseConfig = {
-  apiKey: 'AIzaSyDdBer8FpN4VBvyFaGXuuZWPsgnov7Yb9Q',
-  authDomain: 'nsc-project-95e23.firebaseapp.com',
-  databaseURL: 'https://nsc-project-95e23-default-rtdb.firebaseio.com',
-  projectId: 'nsc-project-95e23',
-  storageBucket: 'nsc-project-95e23.firebasestorage.app',
-  messagingSenderId: '96525728452',
-  appId: '1:96525728452:web:018809632318722637e791',
-};
-
 // new paid
-const firebaseConfig1 = {
-  apiKey: 'AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI',
-  authDomain: 'nsc-project-b2648.firebaseapp.com',
-  projectId: 'nsc-project-b2648',
-  storageBucket: 'nsc-project-b2648.firebasestorage.com',
-  messagingSenderId: '208868373512',
-  appId: '1:208868373512:web:b4b1c9922dcd9ef8e2cdbd',
-  measurementId: 'G-7TXJZD0N70',
+const firebaseConfig = {
+  apiKey: "AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI",
+  authDomain: "nsc-project-b2648.firebaseapp.com",
+  databaseURL: "https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "nsc-project-b2648",
+  storageBucket: "nsc-project-b2648.firebasestorage.app",
+  messagingSenderId: "208868373512",
+  appId: "1:208868373512:web:b4b1c9922dcd9ef8e2cdbd",
+  measurementId: "G-7TXJZD0N70"
 };
 
-// new unpaid
-const firebaseConfig2 = {
-  apiKey: 'AIzaSyCoPer3AlsOUO2zVmym11TRbsGTwRTe90k',
-  authDomain: 'fir-8dbaa.firebaseapp.com',
-  projectId: 'fir-8dbaa',
-  storageBucket: 'fir-8dbaa.firebasestorage.app',
-  messagingSenderId: '362967685119',
-  appId: '1:362967685119:web:5d8e2b0814a25ef64cf9ca',
-  measurementId: 'G-B1KDG3MCP4',
-};
 
 // Initialize Firebase
 let app;
@@ -81,7 +61,7 @@ async function getAllProducts() {
   console.log('fetching all products');
   let allProducts = [];
   try {
-    const prodRef = collection(db, 'NSC-products');
+    const prodRef = collection(db, 'products');
     const q = query(prodRef);
     const snapshot = await getDocs(q);
 
@@ -99,7 +79,7 @@ async function getCartInquiries() {
   let cartInquries = [];
   try {
     let resInq = [];
-    const cartInqRef = collection(db, 'NSC-cartInquiries');
+    const cartInqRef = collection(db, 'cartInquiries');
     const q = query(cartInqRef);
     const snapshot = await getDocs(q);
 
@@ -125,7 +105,7 @@ async function getDealerInquiries(id) {
   console.log('Fetching dealer inquiries');
   let dealerInquiries = [];
   try {
-    const prodRef = collection(db, 'NSC-inquiries');
+    const prodRef = collection(db, 'dealerInquiries');
     let snapshot;
     if (id === undefined) {
       snapshot = await getDocs(query(prodRef));
@@ -156,7 +136,6 @@ async function getAllCart() {
   console.log('fetching all carts!!');
   let carts = [];
   try {
-    console.log('here');
     const prodRef = collection(db, 'carts');
     const q = query(prodRef);
     const snapshot = await getDocs(q);
@@ -170,6 +149,31 @@ async function getAllCart() {
   }
 }
 
+//Fetching cart from db
+async function getCart(id) {
+  console.log('Fetching cart', id);
+  let cart=[];
+  try {
+    const cartInqRef = collection(db, 'carts');
+    const q = query(cartInqRef, where('cartId', '==', id));
+    const snapshot = await getDocs(q);
+
+    // console.log(snapshot.doc.data())
+    // snapshot.forEach((doc) => cart.push(doc.data()));
+    snapshot.forEach((doc) => {
+      const cartData = doc.data();
+      if (cartData.products) {
+        cartData.products.forEach((product) => {
+          cart.push(product);
+        });
+      }
+    });
+
+    return cart
+  } catch (error) {
+    console.log('Error fetching carts: ', error);
+  }
+}
 // ----------------------------------------------------------
 // for admin page
 // ----------------------------------------------------------
@@ -183,8 +187,8 @@ $(document).ready(function () {
     let price = $('#productPrice').val().trim();
     let description = $('#productDesc').val().trim();
     let type = $('#productType').val().trim();
-    let imageFile = $('#productImage').val().trim(); // Ensures an image is selected
-    // let imageFile = $("#productImage")[0].files;
+    // let imageFile = $('#productImage').val().trim(); // Ensures an image is selected
+    let imageFile = $("#productImage")[0].files;
 
     // Validate that no fields are empty
     if (!name || !price || !description || !type || !imageFile) {
@@ -192,27 +196,27 @@ $(document).ready(function () {
       return;
     }
 
-    // if (imageFile.length > 1) {
-    //   alert("Please select only one image");
-    //   return;
-    // }
+    if (imageFile.length > 1) {
+      alert("Please select only one image");
+      return;
+    }
 
     try {
-      // // Step 1: Upload Image to Firebase Storage
-      // const storageRef = ref(storage, `product-images/${imageFile.name}`);
-      // const uploadTask = await uploadBytes(storageRef, imageFile);
-
-      // // Step 2: Get Image URL
-      // const imageUrl = await getDownloadURL(uploadTask.ref);
-      // console.log(imageUrl);
+      // Step 1: Upload Image to Firebase Storage
+      let file = imageFile[0]; // Get the first file from the list
+      const storageRef = ref(storage, `product-images/${file.name}`);
+      const uploadTask = await uploadBytes(storageRef, file);
+      // Step 2: Get Image URL
+      const imageUrl = await getDownloadURL(uploadTask.ref);
+      console.log(imageUrl);
 
       // Step 3: Store Product Data in Firestore
-      const docRef = await addDoc(collection(db, 'NSC-products'), {
+      const docRef = await addDoc(collection(db, 'products'), {
         name: name,
         price: price,
         description: description,
         type: type,
-        imageUrl: imageFile, // Store image URL
+        imageUrl: imageUrl, // Store image URL
         createdAt: new Date(),
       });
 
@@ -363,13 +367,13 @@ function printProducts(products, type) {
       });
     });
 
-    selectProdBox.forEach((box)=>{
-      box.addEventListener('change',()=>{
+    selectProdBox.forEach((box) => {
+      box.addEventListener('change', () => {
         let clickedProduct = box.getAttribute('pid');
         if (box.checked) {
           selectedProducts.push(clickedProduct);
         } else {
-          selectedProducts = selectedProducts.filter( (product) => product !== clickedProduct );
+          selectedProducts = selectedProducts.filter((product) => product !== clickedProduct);
         }
       })
     })
@@ -476,7 +480,7 @@ async function generateProductsReceipt(selectedProds) {
   // Fetching all products (assuming getAllProducts is an async function)
   const allProducts = await getAllProducts();
   const productsToPrint = [];
-  
+
   if (selectedProds.length > 0) {
     // If selectedProds is not empty, add matching products
     selectedProds.forEach((selectedProd) => {
@@ -489,7 +493,7 @@ async function generateProductsReceipt(selectedProds) {
     // If selectedProds is empty, add all products
     productsToPrint.push(...allProducts);
   }
-  
+
   // Sorting products by type
   const sortedProducts = productsToPrint.reduce((acc, product) => {
     if (!acc[product.type]) {
@@ -614,7 +618,7 @@ async function generateProductsExcel(selectedProds) {
   // Sample product data (replace with your actual product data)
   const allProducts = await getAllProducts();
   const productsToPrint = [];
-  
+
   if (selectedProds.length > 0) {
     // If selectedProds is not empty, add matching products
     selectedProds.forEach((selectedProd) => {
@@ -881,32 +885,31 @@ async function getInquiryPDF(data) {
 
 async function showCartInq() {
   const cartInq = await getCartInquiries();
-  console.log(cartInq);
-
+  console.log(cartInq[0].cartId);
+  
   const cartContainer = document.getElementById('cartContainer');
   cartContainer.innerHTML = ''; // Clear the container before appending new content
-
-  cartInq.forEach((item) => {
-    const productList = item.cart[0].products
-      .map(
-        (product) => `
+  
+  cartInq.forEach(async (item) => {
+    let productList = await getCart(item.cartId)
+    console.log(productList)
+    const tableProducts = productList.map((product) => `
       <tr>
-        <td class="cart-item-table-image"><img src="${product.image}" alt="${product.name}" style="width: 50px; height: 50px;"></td>
+        <td class="cart-item-table-image"><img src=${product.imageUrl} alt="${product.name}" style="width: 50px; height: 50px;"></td>
         <td>${product.name}</td>
         <td>${product.quantity}</td>
         <td>${product.price}</td>
       </tr>
     `
-      )
-      .join('');
+  ).join('');
 
     cartContainer.innerHTML += `
       <div class="cart-item">
         <div class="cart-item-top">
           <h6>Cart ID: ${item.cart_id}</h6>
             <p style="font-size: 0.7rem;">Created At: ${new Date(
-              item.createdAt.seconds * 1000
-            ).toLocaleString()}</p>
+      item.createdAt.seconds * 1000
+    ).toLocaleString()}</p>
         </div>
         <div class="cart-item-table">
           <h4>Products:</h4>
@@ -919,19 +922,17 @@ async function showCartInq() {
                 <th>Price</th>
               </tr>
             </thead>
-            <tbody>${productList}</tbody>
+            <tbody>${tableProducts}</tbody>
           </table>
         </div>
         <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-          <p><span>Name :</span>${item.first_address.fname1} ${
-      item.first_address.lname1
-    }</p>
+          <p><span>Name :</span>${item.first_address.fname1} ${item.first_address.lname1
+      }</p>
           <p><span>Email :</span>${item.first_address.email1}</p>
           <p><span>Phone :</span>${item.first_address.phone1}</p>
-          <p><span>Address :</span>${item.first_address.address1}, ${
-      item.first_address.city1
-    }, ${item.first_address.country1}</p>
+          <p><span>Address :</span>${item.first_address.address1}, ${item.first_address.city1
+      }, ${item.first_address.country1}</p>
           <p><span>Post Code :</span>${item.first_address.post1}</p>
         </div> 
         <div class="cart-item-note">
@@ -1001,9 +1002,8 @@ async function getCartInquiryPDF(receiptData) {
     counterY
   );
   doc.text(
-    `Date: ${
-      new Date(createdAt.seconds * 1000).toLocaleDateString() ||
-      '..................'
+    `Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() ||
+    '..................'
     }`,
     rightAlignX,
     counterY
@@ -1012,8 +1012,7 @@ async function getCartInquiryPDF(receiptData) {
   // Customer details (First Address)
   counterY += 7;
   doc.text(
-    `Customer Name: ${
-      first_address.fname1 + first_address.lname1 || '..................'
+    `Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'
     }`,
     leftAlignX,
     counterY
