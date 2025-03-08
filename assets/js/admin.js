@@ -21,16 +21,16 @@ import {
 
 // new paid
 const firebaseConfig = {
-  apiKey: "AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI",
-  authDomain: "nsc-project-b2648.firebaseapp.com",
-  databaseURL: "https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "nsc-project-b2648",
-  storageBucket: "nsc-project-b2648.firebasestorage.app",
-  messagingSenderId: "208868373512",
-  appId: "1:208868373512:web:b4b1c9922dcd9ef8e2cdbd",
-  measurementId: "G-7TXJZD0N70"
+  apiKey: 'AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI',
+  authDomain: 'nsc-project-b2648.firebaseapp.com',
+  databaseURL:
+    'https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'nsc-project-b2648',
+  storageBucket: 'nsc-project-b2648.firebasestorage.app',
+  messagingSenderId: '208868373512',
+  appId: '1:208868373512:web:b4b1c9922dcd9ef8e2cdbd',
+  measurementId: 'G-7TXJZD0N70',
 };
-
 
 // Initialize Firebase
 let app;
@@ -152,7 +152,7 @@ async function getAllCart() {
 //Fetching cart from db
 async function getCart(id) {
   console.log('Fetching cart', id);
-  let cart=[];
+  let cart = [];
   try {
     const cartInqRef = collection(db, 'carts');
     const q = query(cartInqRef, where('cartId', '==', id));
@@ -169,7 +169,7 @@ async function getCart(id) {
       }
     });
 
-    return cart
+    return cart;
   } catch (error) {
     console.log('Error fetching carts: ', error);
   }
@@ -188,7 +188,7 @@ $(document).ready(function () {
     let description = $('#productDesc').val().trim();
     let type = $('#productType').val().trim();
     // let imageFile = $('#productImage').val().trim(); // Ensures an image is selected
-    let imageFile = $("#productImage")[0].files;
+    let imageFile = $('#productImage')[0].files;
 
     // Validate that no fields are empty
     if (!name || !price || !description || !type || !imageFile) {
@@ -197,7 +197,7 @@ $(document).ready(function () {
     }
 
     if (imageFile.length > 1) {
-      alert("Please select only one image");
+      alert('Please select only one image');
       return;
     }
 
@@ -335,8 +335,10 @@ function printProducts(products, type) {
   $(document).ready(() => {
     const editProductBtns = document.querySelectorAll('.editProduct');
     const deleteProductBtns = document.querySelectorAll('.deleteProduct');
-    const generateProductsReceiptBtn = document.querySelectorAll('#generateReceipt');
-    const generateProductsExcelBtn = document.querySelectorAll('#generateExcel');
+    const generateProductsReceiptBtn =
+      document.querySelectorAll('#generateReceipt');
+    const generateProductsExcelBtn =
+      document.querySelectorAll('#generateExcel');
     const selectProdBox = document.querySelectorAll('.selectProdBox');
 
     editProductBtns.forEach((btn) => {
@@ -357,7 +359,7 @@ function printProducts(products, type) {
 
     generateProductsReceiptBtn.forEach((btn) => {
       btn.addEventListener('click', () => {
-        generateProductsReceipt(selectedProducts)
+        generateProductsReceipt(selectedProducts);
       });
     });
 
@@ -373,11 +375,12 @@ function printProducts(products, type) {
         if (box.checked) {
           selectedProducts.push(clickedProduct);
         } else {
-          selectedProducts = selectedProducts.filter((product) => product !== clickedProduct);
+          selectedProducts = selectedProducts.filter(
+            (product) => product !== clickedProduct
+          );
         }
-      })
-    })
-
+      });
+    });
   });
 }
 
@@ -484,7 +487,9 @@ async function generateProductsReceipt(selectedProds) {
   if (selectedProds.length > 0) {
     // If selectedProds is not empty, add matching products
     selectedProds.forEach((selectedProd) => {
-      const matchedProduct = allProducts.find((product) => product.pid === selectedProd);
+      const matchedProduct = allProducts.find(
+        (product) => product.pid === selectedProd
+      );
       if (matchedProduct) {
         productsToPrint.push(matchedProduct);
       }
@@ -622,7 +627,9 @@ async function generateProductsExcel(selectedProds) {
   if (selectedProds.length > 0) {
     // If selectedProds is not empty, add matching products
     selectedProds.forEach((selectedProd) => {
-      const matchedProduct = allProducts.find((product) => product.pid === selectedProd);
+      const matchedProduct = allProducts.find(
+        (product) => product.pid === selectedProd
+      );
       if (matchedProduct) {
         productsToPrint.push(matchedProduct);
       }
@@ -632,7 +639,7 @@ async function generateProductsExcel(selectedProds) {
     productsToPrint.push(...allProducts);
   }
 
-  console.log(productsToPrint)
+  console.log(productsToPrint);
 
   // Sort products by type
   const sortedProducts = productsToPrint.reduce((acc, product) => {
@@ -703,7 +710,7 @@ async function showDealInq() {
       </div>
       <div class="dealer-button">
         <button id='deal-${item.deal_id}' class='dealReceiptBtn'>
-          Make receipt
+          Make receipt <i class="fa fa-download"></i>
         </button>
       </div>
     </div>
@@ -886,14 +893,16 @@ async function getInquiryPDF(data) {
 async function showCartInq() {
   const cartInq = await getCartInquiries();
   console.log(cartInq[0].cartId);
-  
+
   const cartContainer = document.getElementById('cartContainer');
   cartContainer.innerHTML = ''; // Clear the container before appending new content
-  
+
   cartInq.forEach(async (item) => {
-    let productList = await getCart(item.cartId)
-    console.log(productList)
-    const tableProducts = productList.map((product) => `
+    let productList = await getCart(item.cartId);
+    console.log(productList);
+    const tableProducts = productList
+      .map(
+        (product) => `
       <tr>
         <td class="cart-item-table-image"><img src=${product.imageUrl} alt="${product.name}" style="width: 50px; height: 50px;"></td>
         <td>${product.name}</td>
@@ -901,15 +910,16 @@ async function showCartInq() {
         <td>${product.price}</td>
       </tr>
     `
-  ).join('');
+      )
+      .join('');
 
     cartContainer.innerHTML += `
       <div class="cart-item">
         <div class="cart-item-top">
           <h6>Cart ID: ${item.cart_id}</h6>
             <p style="font-size: 0.7rem;">Created At: ${new Date(
-      item.createdAt.seconds * 1000
-    ).toLocaleString()}</p>
+              item.createdAt.seconds * 1000
+            ).toLocaleString()}</p>
         </div>
         <div class="cart-item-table">
           <h4>Products:</h4>
@@ -927,12 +937,14 @@ async function showCartInq() {
         </div>
         <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-          <p><span>Name :</span>${item.first_address.fname1} ${item.first_address.lname1
-      }</p>
+          <p><span>Name :</span>${item.first_address.fname1} ${
+      item.first_address.lname1
+    }</p>
           <p><span>Email :</span>${item.first_address.email1}</p>
           <p><span>Phone :</span>${item.first_address.phone1}</p>
-          <p><span>Address :</span>${item.first_address.address1}, ${item.first_address.city1
-      }, ${item.first_address.country1}</p>
+          <p><span>Address :</span>${item.first_address.address1}, ${
+      item.first_address.city1
+    }, ${item.first_address.country1}</p>
           <p><span>Post Code :</span>${item.first_address.post1}</p>
         </div> 
         <div class="cart-item-note">
@@ -940,13 +952,55 @@ async function showCartInq() {
           <p style="font-size: 0.9rem;">${item.order_note}</p>
         </div>
         <div class="cart-inquiry-button">
-          <button id='cart-${item.deal_id}' class='dealReceiptBtn'>
-            Make receipt
+          <button class='dealExcelReceiptBtn'>
+            Excel <i class="fa fa-download"></i>
           </button>
+          <button id='cart-${item.deal_id}' class='dealReceiptBtn'>
+            receipt <i class="fa fa-download"></i>
+          </button>
+          <div id="companyModal" class="modal2">
+            <div class="modal-content2">
+              <span class="close2">&times;</span>
+              <h2>Select a Company</h2>
+              <select id="companySelect2">
+                <option value="neha-sangeet-vigyan-kendra">Neha Sangeet Vigyan Kendra</option>
+                <option value="niharika-scientific-center">Niharika Scientific Center</option>
+              </select>
+              <button id="confirmSelection">Confirm</button>
+            </div>
+          </div>
         </div>
       </div>
-      
     `;
+
+    let modal2 = document.getElementById('companyModal');
+    let excelButton2 = document.querySelector('.dealExcelReceiptBtn');
+    let receiptButton2 = document.querySelector('.dealReceiptBtn');
+    let span2 = document.getElementsByClassName('close2')[0];
+    let confirmButton = document.getElementById('confirmSelection');
+
+    excelButton2.onclick = function () {
+      modal2.style.display = 'block';
+    };
+
+    receiptButton2.onclick = function () {
+      modal2.style.display = 'block';
+    };
+
+    span2.onclick = function () {
+      modal2.style.display = 'none';
+    };
+
+    window.onclick = function (event) {
+      if (event.target == modal2) {
+        modal2.style.display = 'none';
+      }
+    };
+
+    confirmButton.onclick = function () {
+      let selectedCompany = document.getElementById('companySelect2').value;
+      alert('You selected: ' + selectedCompany);
+    };
   });
 
   const dealReceiptBtn = document.querySelectorAll('.dealReceiptBtn');
@@ -1002,8 +1056,9 @@ async function getCartInquiryPDF(receiptData) {
     counterY
   );
   doc.text(
-    `Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() ||
-    '..................'
+    `Date: ${
+      new Date(createdAt.seconds * 1000).toLocaleDateString() ||
+      '..................'
     }`,
     rightAlignX,
     counterY
@@ -1012,7 +1067,8 @@ async function getCartInquiryPDF(receiptData) {
   // Customer details (First Address)
   counterY += 7;
   doc.text(
-    `Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'
+    `Customer Name: ${
+      first_address.fname1 + first_address.lname1 || '..................'
     }`,
     leftAlignX,
     counterY
