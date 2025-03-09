@@ -89,10 +89,9 @@ async function getCartInquiries(id) {
       snapshot.forEach((doc) => {
         cartInquiries.push({ ...doc.data(), cart_id: doc.id });
       });
-
     } else {
       // Fetch a single document if id is provided
-      console.log(id)
+      console.log(id);
       const docRef = doc(db, 'cartInquiries', id);
       const docSnap = await getDoc(docRef);
 
@@ -106,7 +105,6 @@ async function getCartInquiries(id) {
 
     console.log(cartInquiries);
     return cartInquiries;
-
   } catch (error) {
     console.error('Error fetching cart inquiries: ', error);
     return [];
@@ -195,7 +193,6 @@ async function uploadImageToStorage(file) {
   const url = await getDownloadURL(snapshot.ref);
   return url;
 }
-
 
 // ----------------------------------------------------------
 // for admin page
@@ -456,14 +453,12 @@ async function editProducts(id) {
         modal.style.display = 'none';
       });
 
-      let editFormSubmitbtn = document.getElementById('editFormSubmit')
+      let editFormSubmitbtn = document.getElementById('editFormSubmit');
       editFormSubmitbtn.addEventListener('click', async (e) => {
-        await updateProduct(e, productData, docRef)
+        await updateProduct(e, productData, docRef);
         modal.style.display = 'none';
-        showProducts()
-      })
-
-
+        showProducts();
+      });
     } else {
       console.log('No such document!');
       alert('Product not found.');
@@ -480,10 +475,20 @@ async function updateProduct(e, productData, docRef) {
   // Get the updated input values from the form using plain JS
   const updatedName = document.getElementById('editProductName').value.trim();
   const updatedPrice = document.getElementById('editProductPrice').value.trim();
-  const updatedDescription = document.getElementById('editProductDescription').value.trim();
+  const updatedDescription = document
+    .getElementById('editProductDescription')
+    .value.trim();
   const updatedImageFile = document.getElementById('editProductImage').files;
 
-  console.log(updatedName, '-', updatedDescription, '-', updatedPrice, '-', updatedImageFile);
+  console.log(
+    updatedName,
+    '-',
+    updatedDescription,
+    '-',
+    updatedPrice,
+    '-',
+    updatedImageFile
+  );
 
   let updatedData = {};
   let needsUpdate = false;
@@ -516,7 +521,7 @@ async function updateProduct(e, productData, docRef) {
   } else {
     alert('No changes detected.');
   }
-};
+}
 
 async function deleteProduct(id) {
   try {
@@ -782,7 +787,7 @@ async function showDealInq() {
 
   dealReceiptBtn.forEach((btn) => {
     btn.addEventListener('click', () => {
-      console.log(btn.id)
+      console.log(btn.id);
       makeReceipt(btn.id.trim());
     });
   });
@@ -955,14 +960,63 @@ async function showCartInq() {
   const cartInq = await getCartInquiries();
 
   const cartContainer = document.getElementById('cartContainer');
-  cartContainer.innerHTML = ''; // Clear the container before appending new content
+  cartContainer.innerHTML = '';
 
-  cartInq.forEach(async (item) => {
-    let productList = await getCart(item.cartId);
-    console.log(productList);
-    const tableProducts = productList
-      .map(
-        (product) => `
+  const summaryTable = `
+  <div class="admin-cart-inquiry-summary-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Cart ID</th>
+          <th>Name</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${cartInq
+          .map(
+            (item) => `
+          <tr data-cart-id="${item.cart_id}" class="cart-row">
+            <td>${item.cart_id}</td>
+            <td>${item.first_address.fname1} ${item.first_address.lname1}</td>
+            <td>${new Date(item.createdAt.seconds * 1000).toLocaleString()}</td>
+          </tr>
+        `
+          )
+          .join('')}
+      </tbody>
+    </table>
+  </div>
+  `;
+
+  cartContainer.innerHTML = summaryTable;
+
+  const cartRows = document.querySelectorAll('.cart-row');
+  cartRows.forEach((row) => {
+    row.addEventListener('click', async () => {
+      const cartId = row.getAttribute('data-cart-id');
+      await showCartDetails(cartId, cartInq);
+    });
+  });
+}
+
+async function showCartDetails(cartId, cartInq) {
+  const cartContainer = document.getElementById('cartContainer');
+  cartContainer.innerHTML = '';
+
+  const selectedCartInq = cartInq.find((item) => item.cart_id === cartId);
+  if (!selectedCartInq) {
+    console.error('Cart inquiry not found');
+    return;
+  }
+
+  // Fetch the product list for the selected cart
+  let productList = await getCart(cartId);
+  console.log(productList);
+
+  const tableProducts = productList
+    .map(
+      (product) => `
       <tr>
         <td class="cart-item-table-image"><img src=${product.imageUrl} alt="${product.name}" style="width: 50px; height: 50px;"></td>
         <td>${product.name}</td>
@@ -970,117 +1024,126 @@ async function showCartInq() {
         <td>${product.price}</td>
       </tr>
     `
-      )
-      .join('');
+    )
+    .join('');
 
-    cartContainer.innerHTML += `
-      <div class="cart-item">
-        <div class="cart-item-top">
-          <h6>Cart ID: ${item.cart_id}</h6>
-            <p style="font-size: 0.7rem;">Created At: ${new Date(
-      item.createdAt.seconds * 1000
-    ).toLocaleString()}</p>
-        </div>
-        <div class="cart-item-table">
-          <h4>Products:</h4>
-          <table>
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-              </tr>
-            </thead>
-            <tbody>${tableProducts}</tbody>
-          </table>
-        </div>
-        <div class="cart-item-cust-details">
+  const backButton = `<button id="backButton">Back</button>`;
+
+  cartContainer.innerHTML = `
+    ${backButton}
+    <div class="cart-item">
+      <div class="cart-item-top">
+        <h6>Cart ID: ${selectedCartInq.cart_id}</h6>
+        <p style="font-size: 0.7rem;">Created At: ${new Date(
+          selectedCartInq.createdAt.seconds * 1000
+        ).toLocaleString()}</p>
+      </div>
+      <div class="cart-item-table">
+        <h4>Products:</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>${tableProducts}</tbody>
+        </table>
+      </div>
+      <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-          <p><span>Name :</span>${item.first_address.fname1} ${item.first_address.lname1
-      }</p>
-          <p><span>Email :</span>${item.first_address.email1}</p>
-          <p><span>Phone :</span>${item.first_address.phone1}</p>
-          <p><span>Address :</span>${item.first_address.address1}, ${item.first_address.city1
-      }, ${item.first_address.country1}</p>
-          <p><span>Post Code :</span>${item.first_address.post1}</p>
-        </div> 
-        <div class="cart-item-note">
-          <h4>Order Note:&nbsp;&nbsp;&nbsp;&nbsp;</h4>
-          <p style="font-size: 0.9rem;">${item.order_note}</p>
-        </div>
-        <div class="cart-inquiry-button">
-          <button id='cart-${item.cart_id}' class='dealExcelReceiptBtn'>
-            Excel <i class="fa fa-download"></i>
-          </button>
-          <button id='cart-${item.cart_id}' class='dealReceiptBtn'>
-            receipt <i class="fa fa-download"></i>
-          </button>
-          <div id="companyModal" class="modal2">
-            <div class="modal-content2">
-              <span class="close2">&times;</span>
-              <h2>Select a Company</h2>
-              <select id="companySelect2">
-                <option value="neha-sangeet-vigyan-kendra">Neha Sangeet Vigyan Kendra</option>
-                <option value="niharika-scientific-center">Niharika Scientific Center</option>
-              </select>
-              <button class="confirmSelection">Confirm</button>
-            </div>
+        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${
+    selectedCartInq.first_address.lname1
+  }</p>
+        <p><span>Email :</span>${selectedCartInq.first_address.email1}</p>
+        <p><span>Phone :</span>${selectedCartInq.first_address.phone1}</p>
+        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${
+    selectedCartInq.first_address.city1
+  }, ${selectedCartInq.first_address.country1}</p>
+        <p><span>Post Code :</span>${selectedCartInq.first_address.post1}</p>
+      </div> 
+      <div class="cart-item-note">
+        <h4>Order Note:&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+        <p style="font-size: 0.9rem;">${selectedCartInq.order_note}</p>
+      </div>
+      <div class="cart-inquiry-button">
+        <button id='cart-${
+          selectedCartInq.cart_id
+        }' class='dealExcelReceiptBtn'>
+          Excel <i class="fa fa-download"></i>
+        </button>
+        <button id='cart-${selectedCartInq.cart_id}' class='dealReceiptBtn'>
+          receipt <i class="fa fa-download"></i>
+        </button>
+        <div id="companyModal" class="modal2">
+          <div class="modal-content2">
+            <span class="close2">&times;</span>
+            <h2>Select a Company</h2>
+            <select id="companySelect2">
+              <option value="neha-sangeet-vigyan-kendra">Neha Sangeet Vigyan Kendra</option>
+              <option value="niharika-scientific-center">Niharika Scientific Center</option>
+            </select>
+            <button class="confirmSelection">Confirm</button>
           </div>
         </div>
       </div>
-    `;
+    </div>
+  `;
 
-    let modal2 = document.getElementById('companyModal');
-    // let receiptButton2 = document.querySelector('.dealReceiptBtn');
-    let span2 = document.getElementsByClassName('close2')[0];
-    let confirmButton = document.querySelector('.confirmSelection');
+  let modal2 = document.getElementById('companyModal');
+  let span2 = document.getElementsByClassName('close2')[0];
+  let confirmButton = document.querySelector('.confirmSelection');
 
-    span2.onclick = function () {
+  span2.onclick = function () {
+    modal2.style.display = 'none';
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal2) {
       modal2.style.display = 'none';
-    };
+    }
+  };
 
-    window.onclick = function (event) {
-      if (event.target == modal2) {
-        modal2.style.display = 'none';
-      }
-    };
+  const dealReceiptBtn = document.querySelectorAll('.dealReceiptBtn');
+  const dealExcelReceiptBtn = document.querySelectorAll('.dealExcelReceiptBtn');
 
-    const dealReceiptBtn = document.querySelectorAll('.dealReceiptBtn');
-    const dealExcelReceiptBtn = document.querySelectorAll('.dealExcelReceiptBtn');
-
-    dealReceiptBtn.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        // console.log(btn.id)
-        modal2.style.display = 'block';
-        confirmButton.onclick = function () {
-          let selectedCompany = document.getElementById('companySelect2').value.split('-')[0];
-          console.log(selectedCompany)
-          makeReceipt(btn.id.trim(), selectedCompany);
-        };
-      });
+  dealReceiptBtn.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      // console.log(btn.id)
+      modal2.style.display = 'block';
+      confirmButton.onclick = function () {
+        let selectedCompany = document
+          .getElementById('companySelect2')
+          .value.split('-')[0];
+        console.log(selectedCompany);
+        makeReceipt(btn.id.trim(), selectedCompany);
+      };
     });
-
-    dealExcelReceiptBtn.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        // console.log(btn.id)
-        modal2.style.display = 'block';
-        confirmButton.onclick = function () {
-          let selectedCompany = document.getElementById('companySelect2').value.split('-')[0];
-          console.log(btn)
-          generateCartInqExcel(btn.id, selectedCompany)
-        };
-      });
-    });
-
   });
-}
 
+  dealExcelReceiptBtn.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      // console.log(btn.id)
+      modal2.style.display = 'block';
+      confirmButton.onclick = function () {
+        let selectedCompany = document
+          .getElementById('companySelect2')
+          .value.split('-')[0];
+        console.log(btn);
+        generateCartInqExcel(btn.id, selectedCompany);
+      };
+    });
+  });
+
+  document.getElementById('backButton').addEventListener('click', showCartInq);
+}
 async function getCartInquiryPDF(receiptData, company) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  console.log(receiptData, company)
+  console.log(receiptData, company);
 
   // Example data structure from the second image (replace it with your actual prop data)
   const {
@@ -1093,7 +1156,7 @@ async function getCartInquiryPDF(receiptData, company) {
   } = receiptData[0];
 
   const products = await getCart(receiptData[0].cartId);
-  console.log(products)
+  console.log(products);
 
   // Company Header Section
   doc.setFontSize(20);
@@ -1110,7 +1173,14 @@ async function getCartInquiryPDF(receiptData, company) {
   if (company.toLowerCase() == 'neha') {
     doc.text('Vyayampath Chowk, Janakpurdham', 105, 30, null, null, 'center');
   } else {
-    doc.text('(An autherized supplier for science & music equipments)', 105, 30, null, null, 'center');
+    doc.text(
+      '(An autherized supplier for science & music equipments)',
+      105,
+      30,
+      null,
+      null,
+      'center'
+    );
     doc.text('Kyampas Chowk, Janakpurdham', 105, 35, null, null, 'center');
   }
   // Fields for Invoice Number, Date, etc.
@@ -1128,8 +1198,9 @@ async function getCartInquiryPDF(receiptData, company) {
     counterY
   );
   doc.text(
-    `Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() ||
-    '..................'
+    `Date: ${
+      new Date(createdAt.seconds * 1000).toLocaleDateString() ||
+      '..................'
     }`,
     rightAlignX,
     counterY
@@ -1138,7 +1209,8 @@ async function getCartInquiryPDF(receiptData, company) {
   // Customer details (First Address)
   counterY += 7;
   doc.text(
-    `Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'
+    `Customer Name: ${
+      first_address.fname1 + first_address.lname1 || '..................'
     }`,
     leftAlignX,
     counterY
@@ -1217,7 +1289,14 @@ async function getCartInquiryPDF(receiptData, company) {
 
 async function generateCartInqExcel(inqid, company) {
   const inqData = await getCartInquiries(inqid.split('-')[1]);
-  const { cartId, dateTime, first_address, order_note, second_address, is_address2 } = inqData[0];
+  const {
+    cartId,
+    dateTime,
+    first_address,
+    order_note,
+    second_address,
+    is_address2,
+  } = inqData[0];
   const products = await getCart(cartId);
   let companyName = '';
 
@@ -1266,7 +1345,7 @@ async function generateCartInqExcel(inqid, company) {
       ['Address:', second_address.address2 || 'N/A'],
       ['Post:', second_address.post2 || 'N/A'],
       ['City:', second_address.city2 || 'N/A'],
-      ['Country:', second_address.country2 || 'N/A'],
+      ['Country:', second_address.country2 || 'N/A']
     );
   }
 
@@ -1281,8 +1360,8 @@ async function generateCartInqExcel(inqid, company) {
 
   // Merging the "Order Summary" and "Company Name" cells
   worksheet['!merges'] = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 2 } },  // Merging "Order Summary" title
-    { s: { r: 2, c: 1 }, e: { r: 2, c: 3 } }   // Merging "Company Name"
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }, // Merging "Order Summary" title
+    { s: { r: 2, c: 1 }, e: { r: 2, c: 3 } }, // Merging "Company Name"
   ];
 
   // Apply basic styles (bold headers, colors, alignment)
@@ -1297,28 +1376,38 @@ async function generateCartInqExcel(inqid, company) {
       if (R === 0) {
         // "Order Summary" styling
         cell.s = {
-          font: { bold: true, sz: 14, color: { rgb: "FFFFFF" } },  // Bold, larger, white text
-          alignment: { horizontal: "center" },                     // Center alignment
-          fill: { fgColor: { rgb: "4F81BD" } }                     // Blue background
+          font: { bold: true, sz: 14, color: { rgb: 'FFFFFF' } }, // Bold, larger, white text
+          alignment: { horizontal: 'center' }, // Center alignment
+          fill: { fgColor: { rgb: '4F81BD' } }, // Blue background
         };
       } else if (R === 2) {
         // "Company Name" styling
         cell.s = {
-          font: { bold: true, sz: 12 },                            // Bold, slightly larger text
-          alignment: { horizontal: "center" },                     // Center alignment
+          font: { bold: true, sz: 12 }, // Bold, slightly larger text
+          alignment: { horizontal: 'center' }, // Center alignment
         };
-      } else if (R === 4 || R === 10 || (R === 16 && is_address2) || R === range.e.r) {
+      } else if (
+        R === 4 ||
+        R === 10 ||
+        (R === 16 && is_address2) ||
+        R === range.e.r
+      ) {
         // Section headers: "Products", "Customer Details", "Secondary Address"
         cell.s = {
-          font: { bold: true, sz: 12, color: { rgb: "FFFFFF" } },  // Bold, white text
-          alignment: { horizontal: "left" },                       // Left-aligned
-          fill: { fgColor: { rgb: "4F81BD" } },                    // Blue background
+          font: { bold: true, sz: 12, color: { rgb: 'FFFFFF' } }, // Bold, white text
+          alignment: { horizontal: 'left' }, // Left-aligned
+          fill: { fgColor: { rgb: '4F81BD' } }, // Blue background
         };
       } else {
         // Apply borders to all cells
         cell.s = {
-          alignment: { horizontal: "left" },
-          border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } },
+          alignment: { horizontal: 'left' },
+          border: {
+            top: { style: 'thin' },
+            bottom: { style: 'thin' },
+            left: { style: 'thin' },
+            right: { style: 'thin' },
+          },
         };
       }
     }
@@ -1331,7 +1420,6 @@ async function generateCartInqExcel(inqid, company) {
   XLSX.writeFile(workbook, 'cart_inquiry.xlsx');
 }
 
-
 // ----------------------------------------------------------
 // for announcement
 // ----------------------------------------------------------
@@ -1343,14 +1431,14 @@ async function getAnnouncement() {
 
     if (!snapshot.empty) {
       const firstDoc = snapshot.docs[0]; // Access the first document (if available)
-      console.log("Announcement data:", firstDoc.data()); // Log the data of the first document
+      console.log('Announcement data:', firstDoc.data()); // Log the data of the first document
       return firstDoc.data();
     } else {
-      console.log("No announcements found.");
+      console.log('No announcements found.');
     }
     return;
   } catch (error) {
-    console.log("Error fetching announcement:", error);
+    console.log('Error fetching announcement:', error);
   }
 }
 
@@ -1370,19 +1458,18 @@ async function updateAnnouncement(newAnn) {
 
       showCurrentAnnouncement();
       const inputAnnouncement = document.querySelector('#admin-announcement');
-      inputAnnouncement.value = ''
-      console.log("Announcement updated successfully.");
+      inputAnnouncement.value = '';
+      console.log('Announcement updated successfully.');
     } else {
-      console.log("No announcements found to update.");
+      console.log('No announcements found to update.');
     }
   } catch (error) {
-    console.log("Error updating announcement:", error);
+    console.log('Error updating announcement:', error);
   }
 }
 
-
 async function showCurrentAnnouncement() {
-  const currentAnnouncement = document.getElementById('curremtAnnouncement')
+  const currentAnnouncement = document.getElementById('curremtAnnouncement');
   const inputAnnouncement = document.querySelector('#admin-announcement');
   const updateAnnouncementBtn = document.getElementById('updateAnnouncement');
 
@@ -1390,8 +1477,8 @@ async function showCurrentAnnouncement() {
   currentAnnouncement.innerText = curAnn.announcement;
 
   updateAnnouncementBtn.addEventListener('click', async () => {
-    if(inputAnnouncement.value !== '')
-      await updateAnnouncement(inputAnnouncement.value)
-    else alert('Enter new annoucement')
-  })
+    if (inputAnnouncement.value !== '')
+      await updateAnnouncement(inputAnnouncement.value);
+    else alert('Enter new annoucement');
+  });
 }

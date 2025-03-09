@@ -12575,3 +12575,12 @@ textarea:focus {
   height: 35px;
   border-radius: 5px;
 }
+
+/* admin cart inquiry section style */
+.admin-cart-inquiry-summary-table  table, .admin-cart-inquiry-summary-table  table th, .admin-cart-inquiry-summary-table  table td{
+  border: 1px solid;
+}
+
+.admin-cart-inquiry-summary-table  table tr {
+  cursor: pointer;
+}
