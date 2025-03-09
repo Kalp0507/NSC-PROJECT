@@ -8,7 +8,7 @@ import {
   getDocs,
   getDoc,
   addDoc,
-  setDoc,
+  updateDoc,
   deleteDoc,
   doc,
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
@@ -74,29 +74,42 @@ async function getAllProducts() {
 }
 
 //fetching cart inquiries
-async function getCartInquiries() {
-  console.log('fetching cart inquiries');
-  let cartInquries = [];
+async function getCartInquiries(id) {
+  console.log('Fetching cart inquiries');
+  let cartInquiries = [];
   try {
-    let resInq = [];
-    const cartInqRef = collection(db, 'cartInquiries');
-    const q = query(cartInqRef);
-    const snapshot = await getDocs(q);
+    const prodRef = collection(db, 'cartInquiries');
+    let snapshot;
 
-    snapshot.forEach((doc) => resInq.push(doc.data()));
-    const carts = await getAllCart();
+    if (id === undefined) {
+      // Fetch all documents if id is not provided
+      snapshot = await getDocs(query(prodRef));
 
-    resInq.forEach((item) => {
-      const cart = carts.filter((c) => c.cartId == item.cart_id);
-      cartInquries.push({
-        cart: cart,
-        ...item,
+      // Add each document's data to cartInquiries array
+      snapshot.forEach((doc) => {
+        cartInquiries.push({ ...doc.data(), cart_id: doc.id });
       });
-    });
 
-    return cartInquries;
+    } else {
+      // Fetch a single document if id is provided
+      console.log(id)
+      const docRef = doc(db, 'cartInquiries', id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        cartInquiries.push({ ...docSnap.data(), cart_id: docSnap.id });
+      } else {
+        console.log('No such document!');
+        return [];
+      }
+    }
+
+    console.log(cartInquiries);
+    return cartInquiries;
+
   } catch (error) {
-    console.log('Error fetching cart inquries: ', error);
+    console.error('Error fetching cart inquiries: ', error);
+    return [];
   }
 }
 
@@ -110,7 +123,7 @@ async function getDealerInquiries(id) {
     if (id === undefined) {
       snapshot = await getDocs(query(prodRef));
     } else {
-      const docRef = doc(db, 'NSC-inquiries', id);
+      const docRef = doc(db, 'dealerInquiries', id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -174,6 +187,16 @@ async function getCart(id) {
     console.log('Error fetching carts: ', error);
   }
 }
+
+// Getting url of image
+async function uploadImageToStorage(file) {
+  const storageRef = ref(storage, `product-images/${file.name}`);
+  const snapshot = await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(snapshot.ref);
+  return url;
+}
+
+
 // ----------------------------------------------------------
 // for admin page
 // ----------------------------------------------------------
@@ -243,6 +266,8 @@ $(document).ready(function () {
         showDealInq();
       } else if (element.innerText.trim() === 'Cart Inquiries') {
         showCartInq();
+      } else if (element.innerText.trim() === 'Announcements') {
+        showCurrentAnnouncement();
       }
     });
   });
@@ -386,29 +411,33 @@ function printProducts(products, type) {
 
 async function editProducts(id) {
   try {
-    const docRef = doc(db, 'NSC-products', id);
+    const docRef = doc(db, 'products', id);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const productData = docSnap.data();
-
+      let editFormHtml = ``;
       //form to edit the product details
-      const editFormHtml = `
+      editFormHtml = `
         <div id="editProductModal" class="modal">
           <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2>Edit Product</h2>
             <form id="editProductForm">
               <label for="productName">Name:</label>
-              <input type="text" id="productName" value="${productData.name}" required>
+              <input type="text" id="editProductName" value="${productData.name}" required>
               
               <label for="productPrice">Price:</label>
-              <input type="number" id="productPrice" value="${productData.price}" required>
-              
+              <input type="number" id="editProductPrice" value="${productData.price}" required>
+
+              <label for="productImage">Image:</label>
+              <input type="file" id="editProductImage">
+              <img src='${productData.imageUrl}' alt='productImage' />
+
               <label for="productDescription">Description:</label>
-              <textarea id="productDescription" required>${productData.description}</textarea>
+              <textarea id="editProductDescription" required>${productData.description}</textarea>
               
-              <button type="submit">Save Changes</button>
+              <button type="submit" id='editFormSubmit'>Save Changes</button>
             </form>
           </div>
         </div>
@@ -427,27 +456,14 @@ async function editProducts(id) {
         modal.style.display = 'none';
       });
 
-      // Handle form submission
-      const editProductForm = document.getElementById('editProductForm');
-      // editProductForm.addEventListener('submit', async (event) => {
-      //   event.preventDefault();
+      let editFormSubmitbtn = document.getElementById('editFormSubmit')
+      editFormSubmitbtn.addEventListener('click', async (e) => {
+        await updateProduct(e, productData, docRef)
+        modal.style.display = 'none';
+        showProducts()
+      })
 
-      //   const updatedName = document.getElementById('productName').value;
-      //   const updatedPrice = document.getElementById('productPrice').value;
-      //   const updatedDescription =
-      //     document.getElementById('productDescription').value;
 
-      //   await updateDoc(docRef, {
-      //     name: updatedName,
-      //     price: updatedPrice,
-      //     description: updatedDescription,
-      //   });
-
-      //   alert('Product successfully updated!');
-      //   modal.style.display = 'none';
-      //   modal.remove();
-      //   showProducts();
-      // });
     } else {
       console.log('No such document!');
       alert('Product not found.');
@@ -458,9 +474,53 @@ async function editProducts(id) {
   }
 }
 
+async function updateProduct(e, productData, docRef) {
+  e.preventDefault();
+
+  // Get the updated input values from the form using plain JS
+  const updatedName = document.getElementById('editProductName').value.trim();
+  const updatedPrice = document.getElementById('editProductPrice').value.trim();
+  const updatedDescription = document.getElementById('editProductDescription').value.trim();
+  const updatedImageFile = document.getElementById('editProductImage').files;
+
+  console.log(updatedName, '-', updatedDescription, '-', updatedPrice, '-', updatedImageFile);
+
+  let updatedData = {};
+  let needsUpdate = false;
+
+  // Check if any of the fields have been changed
+  if (updatedName !== productData.name) {
+    updatedData.name = updatedName;
+    needsUpdate = true;
+  }
+
+  if (updatedPrice !== productData.price) {
+    updatedData.price = updatedPrice; // ensure price is a number
+    needsUpdate = true;
+  }
+
+  if (updatedDescription !== productData.description) {
+    updatedData.description = updatedDescription;
+    needsUpdate = true;
+  }
+
+  if (updatedImageFile && updatedImageFile.length > 0) {
+    const newImageUrl = await uploadImageToStorage(updatedImageFile[0]); // Pass the first file in the FileList
+    updatedData.imageUrl = newImageUrl;
+    needsUpdate = true;
+  }
+
+  if (needsUpdate) {
+    // Update the product document in Firestore
+    await updateDoc(docRef, updatedData);
+  } else {
+    alert('No changes detected.');
+  }
+};
+
 async function deleteProduct(id) {
   try {
-    const docRef = doc(db, 'NSC-products', id); // Direct reference to the document by id
+    const docRef = doc(db, 'products', id); // Direct reference to the document by id
     await deleteDoc(docRef); // Delete the document
     showProducts();
     alert('Product successfully deleted!');
@@ -688,6 +748,7 @@ async function showDealInq() {
   console.log(dealInq);
 
   const dealContainer = document.getElementById('dealContainer');
+  dealContainer.innerHTML = ''; // Clear the container before appending new content
 
   dealInq.forEach((item) => {
     dealContainer.innerHTML += `
@@ -721,13 +782,13 @@ async function showDealInq() {
 
   dealReceiptBtn.forEach((btn) => {
     btn.addEventListener('click', () => {
-      // console.log(btn.id)
+      console.log(btn.id)
       makeReceipt(btn.id.trim());
     });
   });
 }
 
-async function makeReceipt(itemId) {
+async function makeReceipt(itemId, company) {
   const itemType = itemId.split('-')[0];
   const id = itemId.split('-')[1];
   let doc;
@@ -737,7 +798,7 @@ async function makeReceipt(itemId) {
     getInquiryPDF(doc[0]);
   } else if (itemType === 'cart') {
     doc = await getCartInquiries(id);
-    getCartInquiryPDF(doc);
+    getCartInquiryPDF(doc, company);
   }
   console.log(doc);
 }
@@ -892,7 +953,6 @@ async function getInquiryPDF(data) {
 
 async function showCartInq() {
   const cartInq = await getCartInquiries();
-  console.log(cartInq[0].cartId);
 
   const cartContainer = document.getElementById('cartContainer');
   cartContainer.innerHTML = ''; // Clear the container before appending new content
@@ -918,8 +978,8 @@ async function showCartInq() {
         <div class="cart-item-top">
           <h6>Cart ID: ${item.cart_id}</h6>
             <p style="font-size: 0.7rem;">Created At: ${new Date(
-              item.createdAt.seconds * 1000
-            ).toLocaleString()}</p>
+      item.createdAt.seconds * 1000
+    ).toLocaleString()}</p>
         </div>
         <div class="cart-item-table">
           <h4>Products:</h4>
@@ -937,14 +997,12 @@ async function showCartInq() {
         </div>
         <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-          <p><span>Name :</span>${item.first_address.fname1} ${
-      item.first_address.lname1
-    }</p>
+          <p><span>Name :</span>${item.first_address.fname1} ${item.first_address.lname1
+      }</p>
           <p><span>Email :</span>${item.first_address.email1}</p>
           <p><span>Phone :</span>${item.first_address.phone1}</p>
-          <p><span>Address :</span>${item.first_address.address1}, ${
-      item.first_address.city1
-    }, ${item.first_address.country1}</p>
+          <p><span>Address :</span>${item.first_address.address1}, ${item.first_address.city1
+      }, ${item.first_address.country1}</p>
           <p><span>Post Code :</span>${item.first_address.post1}</p>
         </div> 
         <div class="cart-item-note">
@@ -952,10 +1010,10 @@ async function showCartInq() {
           <p style="font-size: 0.9rem;">${item.order_note}</p>
         </div>
         <div class="cart-inquiry-button">
-          <button class='dealExcelReceiptBtn'>
+          <button id='cart-${item.cart_id}' class='dealExcelReceiptBtn'>
             Excel <i class="fa fa-download"></i>
           </button>
-          <button id='cart-${item.deal_id}' class='dealReceiptBtn'>
+          <button id='cart-${item.cart_id}' class='dealReceiptBtn'>
             receipt <i class="fa fa-download"></i>
           </button>
           <div id="companyModal" class="modal2">
@@ -974,18 +1032,9 @@ async function showCartInq() {
     `;
 
     let modal2 = document.getElementById('companyModal');
-    let excelButton2 = document.querySelector('.dealExcelReceiptBtn');
-    let receiptButton2 = document.querySelector('.dealReceiptBtn');
+    // let receiptButton2 = document.querySelector('.dealReceiptBtn');
     let span2 = document.getElementsByClassName('close2')[0];
     let confirmButton = document.querySelector('.confirmSelection');
-
-    excelButton2.onclick = function () {
-      modal2.style.display = 'block';
-    };
-
-    receiptButton2.onclick = function () {
-      modal2.style.display = 'block';
-    };
 
     span2.onclick = function () {
       modal2.style.display = 'none';
@@ -997,28 +1046,41 @@ async function showCartInq() {
       }
     };
 
-    confirmButton.onclick = function () {
-      let selectedCompany = document.getElementById('companySelect2').value;
-      alert('You selected: ' + selectedCompany);
-      modal2.style.display = 'none';
-    };
-  });
+    const dealReceiptBtn = document.querySelectorAll('.dealReceiptBtn');
+    const dealExcelReceiptBtn = document.querySelectorAll('.dealExcelReceiptBtn');
 
-  const dealReceiptBtn = document.querySelectorAll('.dealReceiptBtn');
-
-  dealReceiptBtn.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      // console.log(btn.id)
-      makeReceipt(btn.id.trim());
+    dealReceiptBtn.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        // console.log(btn.id)
+        modal2.style.display = 'block';
+        confirmButton.onclick = function () {
+          let selectedCompany = document.getElementById('companySelect2').value.split('-')[0];
+          console.log(selectedCompany)
+          makeReceipt(btn.id.trim(), selectedCompany);
+        };
+      });
     });
+
+    dealExcelReceiptBtn.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        // console.log(btn.id)
+        modal2.style.display = 'block';
+        confirmButton.onclick = function () {
+          let selectedCompany = document.getElementById('companySelect2').value.split('-')[0];
+          console.log(btn)
+          generateCartInqExcel(btn.id, selectedCompany)
+        };
+      });
+    });
+
   });
 }
 
-async function getCartInquiryPDF(receiptData) {
+async function getCartInquiryPDF(receiptData, company) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  // console.log(receiptData[0].cart[0])
+  console.log(receiptData, company)
 
   // Example data structure from the second image (replace it with your actual prop data)
   const {
@@ -1029,19 +1091,28 @@ async function getCartInquiryPDF(receiptData) {
     order_note,
     createdAt,
   } = receiptData[0];
-  const products = receiptData[0].cart[0].products;
+
+  const products = await getCart(receiptData[0].cartId);
+  console.log(products)
 
   // Company Header Section
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(40, 116, 166); // Dark blue color
-  doc.text('Neha Music Science Center', 105, 20, null, null, 'center'); // Business Name
+  if (company.toLowerCase() == 'neha') {
+    doc.text('Neha Music Science Center', 105, 20, null, null, 'center'); // Business Name
+  } else {
+    doc.text('Niharika Scientific Center', 105, 20, null, null, 'center'); // Business Name
+  }
   doc.setFontSize(12);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(0, 0, 0); // Black color
-  doc.text('NEHA SANGIT VIGYAN KENDRA', 105, 28, null, null, 'center');
-  doc.text('Vyayampath Chowk, Janakpurdham', 105, 36, null, null, 'center');
-
+  if (company.toLowerCase() == 'neha') {
+    doc.text('Vyayampath Chowk, Janakpurdham', 105, 30, null, null, 'center');
+  } else {
+    doc.text('(An autherized supplier for science & music equipments)', 105, 30, null, null, 'center');
+    doc.text('Kyampas Chowk, Janakpurdham', 105, 35, null, null, 'center');
+  }
   // Fields for Invoice Number, Date, etc.
   const leftAlignX = 20;
   const rightAlignX = 150;
@@ -1057,9 +1128,8 @@ async function getCartInquiryPDF(receiptData) {
     counterY
   );
   doc.text(
-    `Date: ${
-      new Date(createdAt.seconds * 1000).toLocaleDateString() ||
-      '..................'
+    `Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() ||
+    '..................'
     }`,
     rightAlignX,
     counterY
@@ -1068,8 +1138,7 @@ async function getCartInquiryPDF(receiptData) {
   // Customer details (First Address)
   counterY += 7;
   doc.text(
-    `Customer Name: ${
-      first_address.fname1 + first_address.lname1 || '..................'
+    `Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'
     }`,
     leftAlignX,
     counterY
@@ -1098,7 +1167,7 @@ async function getCartInquiryPDF(receiptData) {
   // Table Header for Products
   counterY += 10;
   doc.text('S.No', 20, counterY);
-  doc.text('Description', 40, counterY);
+  doc.text('Name', 40, counterY);
   doc.text('Quantity', 120, counterY);
   doc.text('Unit Price', 140, counterY);
   doc.text('Total Price', 160, counterY);
@@ -1107,7 +1176,7 @@ async function getCartInquiryPDF(receiptData) {
   // Table Content - Products List
   products.forEach((product, index) => {
     doc.text(`${index + 1}`, 20, counterY);
-    doc.text(`${product.description || '..............'}`, 40, counterY);
+    doc.text(`${product.name || '..............'}`, 40, counterY);
     doc.text(`${product.quantity || '........'}`, 120, counterY);
     doc.text(`${product.price || '........'}`, 140, counterY);
     doc.text(
@@ -1144,4 +1213,185 @@ async function getCartInquiryPDF(receiptData) {
 
   // Save the PDF
   doc.save('receipt.pdf');
+}
+
+async function generateCartInqExcel(inqid, company) {
+  const inqData = await getCartInquiries(inqid.split('-')[1]);
+  const { cartId, dateTime, first_address, order_note, second_address, is_address2 } = inqData[0];
+  const products = await getCart(cartId);
+  let companyName = '';
+
+  if (company.toLowerCase() == 'neha') {
+    companyName = 'Neha Music Science Center';
+  } else {
+    companyName = 'Niharika Scientific Center';
+  }
+
+  // Create a new workbook
+  const workbook = XLSX.utils.book_new();
+
+  // Prepare data for a single sheet
+  const sheetData = [
+    ['Order Summary'],
+    ['Cart ID:', cartId || 'N/A'],
+    ['Company:', companyName || 'N/A'],
+    [], // Blank row for separation
+
+    ['Products'],
+    ['Name', 'Quantity', 'Price'], // Header row for products
+    ...products.map((product) => [
+      product.name || 'N/A',
+      product.quantity || 'N/A',
+      product.price || 'N/A',
+    ]),
+    [], // Blank row for separation
+
+    ['Customer Details'],
+    ['Name:', first_address.fname1 + ' ' + first_address.lname1 || 'N/A'],
+    ['Email:', first_address.email1 || 'N/A'],
+    ['Phone:', first_address.phone1 || 'N/A'],
+    ['Address:', first_address.address1 || 'N/A'],
+    ['Post:', first_address.post1 || 'N/A'],
+    ['City:', first_address.city1 || 'N/A'],
+    ['Country:', first_address.country1 || 'N/A'],
+  ];
+
+  // Conditionally add second address if is_address2 is true
+  if (is_address2 && second_address) {
+    sheetData.push([], ['Secondary Address']);
+    sheetData.push(
+      ['Name:', second_address.fname2 + ' ' + second_address.lname2 || 'N/A'],
+      ['Email:', second_address.email2 || 'N/A'],
+      ['Phone:', second_address.phone2 || 'N/A'],
+      ['Address:', second_address.address2 || 'N/A'],
+      ['Post:', second_address.post2 || 'N/A'],
+      ['City:', second_address.city2 || 'N/A'],
+      ['Country:', second_address.country2 || 'N/A'],
+    );
+  }
+
+  // Add the order note at the end
+  sheetData.push([], ['Order Note'], [order_note || 'N/A']);
+
+  // Create a worksheet from the sheetData
+  let worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+
+  // Beautify the sheet by setting styles
+  const range = XLSX.utils.decode_range(worksheet['!ref']); // Get the range of the sheet
+
+  // Merging the "Order Summary" and "Company Name" cells
+  worksheet['!merges'] = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 2 } },  // Merging "Order Summary" title
+    { s: { r: 2, c: 1 }, e: { r: 2, c: 3 } }   // Merging "Company Name"
+  ];
+
+  // Apply basic styles (bold headers, colors, alignment)
+  for (let R = range.s.r; R <= range.e.r; ++R) {
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+      if (!worksheet[cellRef]) continue;
+
+      const cell = worksheet[cellRef];
+
+      // Apply specific styling for headers
+      if (R === 0) {
+        // "Order Summary" styling
+        cell.s = {
+          font: { bold: true, sz: 14, color: { rgb: "FFFFFF" } },  // Bold, larger, white text
+          alignment: { horizontal: "center" },                     // Center alignment
+          fill: { fgColor: { rgb: "4F81BD" } }                     // Blue background
+        };
+      } else if (R === 2) {
+        // "Company Name" styling
+        cell.s = {
+          font: { bold: true, sz: 12 },                            // Bold, slightly larger text
+          alignment: { horizontal: "center" },                     // Center alignment
+        };
+      } else if (R === 4 || R === 10 || (R === 16 && is_address2) || R === range.e.r) {
+        // Section headers: "Products", "Customer Details", "Secondary Address"
+        cell.s = {
+          font: { bold: true, sz: 12, color: { rgb: "FFFFFF" } },  // Bold, white text
+          alignment: { horizontal: "left" },                       // Left-aligned
+          fill: { fgColor: { rgb: "4F81BD" } },                    // Blue background
+        };
+      } else {
+        // Apply borders to all cells
+        cell.s = {
+          alignment: { horizontal: "left" },
+          border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } },
+        };
+      }
+    }
+  }
+
+  // Append the sheet to the workbook
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Cart Inquiry');
+
+  // Write the workbook to an Excel file and download it
+  XLSX.writeFile(workbook, 'cart_inquiry.xlsx');
+}
+
+
+// ----------------------------------------------------------
+// for announcement
+// ----------------------------------------------------------
+
+async function getAnnouncement() {
+  try {
+    const collectionRef = collection(db, 'announcements'); // Reference to the 'announcement' collection
+    const snapshot = await getDocs(collectionRef); // Use getDocs to retrieve all documents in the collection
+
+    if (!snapshot.empty) {
+      const firstDoc = snapshot.docs[0]; // Access the first document (if available)
+      console.log("Announcement data:", firstDoc.data()); // Log the data of the first document
+      return firstDoc.data();
+    } else {
+      console.log("No announcements found.");
+    }
+    return;
+  } catch (error) {
+    console.log("Error fetching announcement:", error);
+  }
+}
+
+// Function to update the first announcement document in the collection
+async function updateAnnouncement(newAnn) {
+  try {
+    // Reference to the 'announcement' collection
+    const collectionRef = collection(db, 'announcements');
+    const snapshot = await getDocs(collectionRef); // Retrieve all documents in the collection
+
+    if (!snapshot.empty) {
+      const firstDoc = snapshot.docs[0]; // Access the first document (if available)
+      const docRef = doc(db, 'announcements', firstDoc.id); // Get the document reference by ID
+
+      // Update the document with the new announcement data
+      await updateDoc(docRef, { announcement: newAnn });
+
+      showCurrentAnnouncement();
+      const inputAnnouncement = document.querySelector('#admin-announcement');
+      inputAnnouncement.value = ''
+      console.log("Announcement updated successfully.");
+    } else {
+      console.log("No announcements found to update.");
+    }
+  } catch (error) {
+    console.log("Error updating announcement:", error);
+  }
+}
+
+
+async function showCurrentAnnouncement() {
+  const currentAnnouncement = document.getElementById('curremtAnnouncement')
+  const inputAnnouncement = document.querySelector('#admin-announcement');
+  const updateAnnouncementBtn = document.getElementById('updateAnnouncement');
+
+  const curAnn = await getAnnouncement();
+  currentAnnouncement.innerText = curAnn.announcement;
+
+  updateAnnouncementBtn.addEventListener('click', async () => {
+    if(inputAnnouncement.value !== '')
+      await updateAnnouncement(inputAnnouncement.value)
+    else alert('Enter new annoucement')
+  })
 }
