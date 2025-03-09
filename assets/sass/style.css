@@ -2530,6 +2530,7 @@ img {
   width: 240px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 .mini-cart-content .mini-cart-action .mini-checkout-price {
   font-size: 16px;
@@ -11751,6 +11752,7 @@ wpo-hero-slider-s4
 }
 .wpo-contact-pg-section .office-info .office-info-item .office-info-text p {
   margin-bottom: 0;
+  font-size: 16px;
 }
 .wpo-contact-pg-section .wpo-contact-form-area {
   padding: 50px;
@@ -11977,7 +11979,7 @@ textarea:focus {
   display: flex;
   flex-direction: row;
 }
-@media (max-width: 600px) {
+@media (max-width: 689px) {
   #admin-content-container {
     flex-direction: column;
     background-color: grey;
@@ -12202,18 +12204,17 @@ textarea:focus {
 
 /* view cart and  checkout button style*/
 .cartSubmitbtn {
-  font-weight: 600;
-  padding: 15px 45px;
-  border: 1px solid rgb(0, 41, 127);
-  font-size: 16px;
-  margin-top: 15px;
-  border-radius: 5px;
-  padding: 20px 30px;
-  background-color: #019cde;
+  background: rgb(0, 41, 127);
   color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 160px;
+  padding: 0px 15px 0px 15px;
+  margin: 10px 0px 10px 20px;
 }
 .cartSubmitbtn:hover {
-  background-color: rgb(0, 41, 127);
+  background-color: rgb(12, 60, 165);
 }
 
 /* ticker style */
@@ -12535,10 +12536,10 @@ textarea:focus {
 .modal-content2 {
   border-radius: 8px;
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 25% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%;
 }
 
 .close2 {
@@ -12555,7 +12556,7 @@ textarea:focus {
   cursor: pointer;
 }
 
-#confirmSelection {
+.confirmSelection {
   background: rgb(0, 41, 127);
   color: #fff;
   border-style: none;
@@ -12566,7 +12567,7 @@ textarea:focus {
   margin: 10px 0px 10px 20px;
 }
 
-#confirmSelection:hover {
+.confirmSelection:hover {
   background-color: rgb(12, 60, 165);
 }
 
