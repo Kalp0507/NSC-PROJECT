@@ -318,6 +318,21 @@ function printProducts(products, type) {
           <button id="generateExcel">Excel <i class="fa fa-download"></i></button>
         </div>
       </div>
+      <div class="search-form-admin">
+        <form id="SearchFormAdmin">
+          <div class="search-form-container">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search here..."
+              id="searchInput"
+            />
+            <button class="search-toggle-btn-admin" style="padding-bottom: 30px" type="submit">
+              <i class="fi flaticon-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
       <table class="product-list">
         <thead>
           <tr>
@@ -774,7 +789,7 @@ async function showDealInq() {
             <td>${item.person_name}</td>
             <td>${item.company_name}</td>
             <td>${item.phone}</td>
-            <td><i class="fa fa-info-circle" aria-hidden="true"></i></td>
+            <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
           )
@@ -1023,7 +1038,7 @@ async function showCartInq() {
             <td>${item.cart_id}</td>
             <td>${item.first_address.fname1} ${item.first_address.lname1}</td>
             <td>${new Date(item.createdAt.seconds * 1000).toLocaleString()}</td>
-            <td><i class="fa fa-info-circle" aria-hidden="true"></i></td>
+            <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
           )
