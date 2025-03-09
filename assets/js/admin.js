@@ -266,6 +266,8 @@ $(document).ready(function () {
         showDealInq();
       } else if (element.innerText.trim() === 'Cart Inquiries') {
         showCartInq();
+      } else if (element.innerText.trim() === 'Announcements') {
+        showCurrentAnnouncement();
       }
     });
   });
@@ -414,28 +416,28 @@ async function editProducts(id) {
 
     if (docSnap.exists()) {
       const productData = docSnap.data();
-
+      let editFormHtml = ``;
       //form to edit the product details
-      const editFormHtml = `
+      editFormHtml = `
         <div id="editProductModal" class="modal">
           <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2>Edit Product</h2>
             <form id="editProductForm">
               <label for="productName">Name:</label>
-              <input type="text" id="productName" value="${productData.name}" required>
+              <input type="text" id="editProductName" value="${productData.name}" required>
               
               <label for="productPrice">Price:</label>
-              <input type="number" id="productPrice" value="${productData.price}" required>
+              <input type="number" id="editProductPrice" value="${productData.price}" required>
 
               <label for="productImage">Image:</label>
-              <input type="file" id="productImage">
+              <input type="file" id="editProductImage">
               <img src='${productData.imageUrl}' alt='productImage' />
 
               <label for="productDescription">Description:</label>
-              <textarea id="productDescription" required>${productData.description}</textarea>
+              <textarea id="editProductDescription" required>${productData.description}</textarea>
               
-              <button type="submit">Save Changes</button>
+              <button type="submit" id='editFormSubmit'>Save Changes</button>
             </form>
           </div>
         </div>
@@ -454,55 +456,14 @@ async function editProducts(id) {
         modal.style.display = 'none';
       });
 
-      // Handle form submission
+      let editFormSubmitbtn = document.getElementById('editFormSubmit')
+      editFormSubmitbtn.addEventListener('click', async (e) => {
+        await updateProduct(e, productData, docRef)
+        modal.style.display = 'none';
+        showProducts()
+      })
 
 
-      $('#editProductForm').submit(async function (e){
-        e.preventDefault();
-
-        // Get the updated input values from the form
-        const updatedName = $('#productName').val().trim();
-        const updatedPrice = $('#productPrice').val().trim();
-        const updatedDescription = $('#productDescription').val().trim();
-        const updatedImageFile = $('#productImage')[0].files[0];
-
-        console.log(updatedName,updatedDescription,updatedPrice,updatedImageFile) 
-
-        let updatedData = {};
-        let needsUpdate = false;
-
-        // Check if any of the fields have been changed
-        if (updatedName !== productData.name) {
-          updatedData.name = updatedName;
-          needsUpdate = true;
-        }
-
-        if (updatedPrice !== productData.price) {
-          updatedData.price = updatedPrice; // ensure price is a number
-          needsUpdate = true;
-        }
-
-        if (updatedDescription !== productData.description) {
-          updatedData.description = updatedDescription;
-          needsUpdate = true;
-        }
-
-        // Handle image update if a new file is selected
-        if (updatedImageFile) {
-          const newImageUrl = await uploadImageToStorage(updatedImageFile);
-          updatedData.imageUrl = newImageUrl;
-          needsUpdate = true;
-        }
-
-        if (needsUpdate) {
-          // Update the product document in Firestore
-          await updateDoc(docRef, updatedData);
-          alert('Product updated successfully!');
-          modal.style.display = 'none'; // Close the modal after updating
-        } else {
-          alert('No changes detected.');
-        }
-      });
     } else {
       console.log('No such document!');
       alert('Product not found.');
@@ -512,6 +473,50 @@ async function editProducts(id) {
     alert('Failed to edit product. Please try again.');
   }
 }
+
+async function updateProduct(e, productData, docRef) {
+  e.preventDefault();
+
+  // Get the updated input values from the form using plain JS
+  const updatedName = document.getElementById('editProductName').value.trim();
+  const updatedPrice = document.getElementById('editProductPrice').value.trim();
+  const updatedDescription = document.getElementById('editProductDescription').value.trim();
+  const updatedImageFile = document.getElementById('editProductImage').files;
+
+  console.log(updatedName, '-', updatedDescription, '-', updatedPrice, '-', updatedImageFile);
+
+  let updatedData = {};
+  let needsUpdate = false;
+
+  // Check if any of the fields have been changed
+  if (updatedName !== productData.name) {
+    updatedData.name = updatedName;
+    needsUpdate = true;
+  }
+
+  if (updatedPrice !== productData.price) {
+    updatedData.price = updatedPrice; // ensure price is a number
+    needsUpdate = true;
+  }
+
+  if (updatedDescription !== productData.description) {
+    updatedData.description = updatedDescription;
+    needsUpdate = true;
+  }
+
+  if (updatedImageFile && updatedImageFile.length > 0) {
+    const newImageUrl = await uploadImageToStorage(updatedImageFile[0]); // Pass the first file in the FileList
+    updatedData.imageUrl = newImageUrl;
+    needsUpdate = true;
+  }
+
+  if (needsUpdate) {
+    // Update the product document in Firestore
+    await updateDoc(docRef, updatedData);
+  } else {
+    alert('No changes detected.');
+  }
+};
 
 async function deleteProduct(id) {
   try {
@@ -743,6 +748,7 @@ async function showDealInq() {
   console.log(dealInq);
 
   const dealContainer = document.getElementById('dealContainer');
+  dealContainer.innerHTML = ''; // Clear the container before appending new content
 
   dealInq.forEach((item) => {
     dealContainer.innerHTML += `
@@ -792,7 +798,7 @@ async function makeReceipt(itemId, company) {
     getInquiryPDF(doc[0]);
   } else if (itemType === 'cart') {
     doc = await getCartInquiries(id);
-    getCartInquiryPDF(doc,company);
+    getCartInquiryPDF(doc, company);
   }
   console.log(doc);
 }
@@ -1052,7 +1058,7 @@ async function showCartInq() {
         confirmButton.onclick = function () {
           let selectedCompany = document.getElementById('companySelect2').value.split('-')[0];
           console.log(selectedCompany)
-          makeReceipt(btn.id.trim(),selectedCompany);
+          makeReceipt(btn.id.trim(), selectedCompany);
         };
       });
     });
@@ -1064,7 +1070,7 @@ async function showCartInq() {
         confirmButton.onclick = function () {
           let selectedCompany = document.getElementById('companySelect2').value.split('-')[0];
           console.log(btn)
-          generateCartInqExcel(btn.id ,selectedCompany)
+          generateCartInqExcel(btn.id, selectedCompany)
         };
       });
     });
@@ -1072,12 +1078,11 @@ async function showCartInq() {
   });
 }
 
-
 async function getCartInquiryPDF(receiptData, company) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  console.log(receiptData,company)
+  console.log(receiptData, company)
 
   // Example data structure from the second image (replace it with your actual prop data)
   const {
@@ -1229,11 +1234,11 @@ async function generateCartInqExcel(inqid, company) {
 
   // Prepare data for a single sheet
   const sheetData = [
-    ['Order Summary'], 
-    ['Cart ID:', cartId || 'N/A'], 
+    ['Order Summary'],
+    ['Cart ID:', cartId || 'N/A'],
     ['Company:', companyName || 'N/A'],
     [], // Blank row for separation
-    
+
     ['Products'],
     ['Name', 'Quantity', 'Price'], // Header row for products
     ...products.map((product) => [
@@ -1242,7 +1247,7 @@ async function generateCartInqExcel(inqid, company) {
       product.price || 'N/A',
     ]),
     [], // Blank row for separation
-    
+
     ['Customer Details'],
     ['Name:', first_address.fname1 + ' ' + first_address.lname1 || 'N/A'],
     ['Email:', first_address.email1 || 'N/A'],
@@ -1326,4 +1331,69 @@ async function generateCartInqExcel(inqid, company) {
 
   // Write the workbook to an Excel file and download it
   XLSX.writeFile(workbook, 'cart_inquiry.xlsx');
+}
+
+
+// ----------------------------------------------------------
+// for announcement
+// ----------------------------------------------------------
+
+async function getAnnouncement() {
+  try {
+    const collectionRef = collection(db, 'announcements'); // Reference to the 'announcement' collection
+    const snapshot = await getDocs(collectionRef); // Use getDocs to retrieve all documents in the collection
+
+    if (!snapshot.empty) {
+      const firstDoc = snapshot.docs[0]; // Access the first document (if available)
+      console.log("Announcement data:", firstDoc.data()); // Log the data of the first document
+      return firstDoc.data();
+    } else {
+      console.log("No announcements found.");
+    }
+    return;
+  } catch (error) {
+    console.log("Error fetching announcement:", error);
+  }
+}
+
+// Function to update the first announcement document in the collection
+async function updateAnnouncement(newAnn) {
+  try {
+    // Reference to the 'announcement' collection
+    const collectionRef = collection(db, 'announcements');
+    const snapshot = await getDocs(collectionRef); // Retrieve all documents in the collection
+
+    if (!snapshot.empty) {
+      const firstDoc = snapshot.docs[0]; // Access the first document (if available)
+      const docRef = doc(db, 'announcements', firstDoc.id); // Get the document reference by ID
+
+      // Update the document with the new announcement data
+      await updateDoc(docRef, { announcement: newAnn });
+
+      showCurrentAnnouncement();
+      const inputAnnouncement = document.querySelector('#admin-announcement');
+      inputAnnouncement.value = ''
+      console.log("Announcement updated successfully.");
+    } else {
+      console.log("No announcements found to update.");
+    }
+  } catch (error) {
+    console.log("Error updating announcement:", error);
+  }
+}
+
+
+async function showCurrentAnnouncement() {
+  const currentAnnouncement = document.getElementById('curremtAnnouncement')
+  const inputAnnouncement = document.querySelector('#admin-announcement');
+  const updateAnnouncementBtn = document.getElementById('updateAnnouncement');
+
+  const curAnn = await getAnnouncement();
+  currentAnnouncement.innerText = curAnn.announcement;
+
+  updateAnnouncementBtn.addEventListener('click', async () => {
+    if(inputAnnouncement.value !== '')
+      await updateAnnouncement(inputAnnouncement.value)
+    else alert('Enter new annoucement')
+  })
 }
