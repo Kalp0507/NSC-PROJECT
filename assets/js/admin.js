@@ -966,7 +966,7 @@ async function showCartInq() {
                 <option value="neha-sangeet-vigyan-kendra">Neha Sangeet Vigyan Kendra</option>
                 <option value="niharika-scientific-center">Niharika Scientific Center</option>
               </select>
-              <button id="confirmSelection">Confirm</button>
+              <button class="confirmSelection">Confirm</button>
             </div>
           </div>
         </div>
@@ -977,7 +977,7 @@ async function showCartInq() {
     let excelButton2 = document.querySelector('.dealExcelReceiptBtn');
     let receiptButton2 = document.querySelector('.dealReceiptBtn');
     let span2 = document.getElementsByClassName('close2')[0];
-    let confirmButton = document.getElementById('confirmSelection');
+    let confirmButton = document.querySelector('.confirmSelection');
 
     excelButton2.onclick = function () {
       modal2.style.display = 'block';
@@ -1000,6 +1000,7 @@ async function showCartInq() {
     confirmButton.onclick = function () {
       let selectedCompany = document.getElementById('companySelect2').value;
       alert('You selected: ' + selectedCompany);
+      modal2.style.display = 'none';
     };
   });
 
