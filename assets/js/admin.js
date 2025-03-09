@@ -755,42 +755,84 @@ async function showDealInq() {
   const dealContainer = document.getElementById('dealContainer');
   dealContainer.innerHTML = ''; // Clear the container before appending new content
 
-  dealInq.forEach((item) => {
-    dealContainer.innerHTML += `
+  const summaryTable = `
+  <div class="admin-dealer-inquiry-summary-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Dealer's Name</th>
+          <th>Company Name</th>
+          <th>Dealer's Phone</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${dealInq
+          .map(
+            (item) => `
+          <tr data-deal-id="${item.deal_id}" class="dealer-row">
+            <td>${item.person_name}</td>
+            <td>${item.company_name}</td>
+            <td>${item.phone}</td>
+            <td><i class="fa fa-info-circle" aria-hidden="true"></i></td>
+          </tr>
+        `
+          )
+          .join('')}
+      </tbody>
+    </table>
+  </div>
+  `;
+
+  dealContainer.innerHTML = summaryTable;
+
+  const dealerRows = document.querySelectorAll('.dealer-row');
+  dealerRows.forEach((row) => {
+    row.addEventListener('click', async () => {
+      const dealId = row.getAttribute('data-deal-id');
+      await showDealerDetails(dealId, dealInq);
+    });
+  });
+}
+
+async function showDealerDetails(dealId, dealInq) {
+  const dealContainer = document.getElementById('dealContainer');
+  dealContainer.innerHTML = ''; // Clear previous content
+
+  const selectedDealInq = dealInq.find((item) => item.deal_id === dealId);
+  if (!selectedDealInq) {
+    console.error('Dealer inquiry not found');
+    return;
+  }
+
+  // Create a back button
+  const backButton = `<button id="backButton"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>`;
+
+  // Display the details of the selected dealer inquiry
+  dealContainer.innerHTML = `
+    ${backButton}
     <div class="each-dealer-inquiry">
       <div class="dealer-details">
         <div>
-          <p><span>Dealer's name:</span> ${item.person_name}</p> 
-          <p><span>Dealer's phone:</span> ${item.phone}</p>
-          <p><span>Company's address:</span> ${item.company_address}</p>
+          <p><span>Dealer's name:</span> ${selectedDealInq.person_name}</p> 
+          <p><span>Dealer's phone:</span> ${selectedDealInq.phone}</p>
+          <p><span>Company's address:</span> ${selectedDealInq.company_address}</p>
         </div>
         <div>
-          <p><span>Company's Name:</span> ${item.company_name}</p>
-          <p><span>Company's Email:</span> ${item.company_email}</p>  
-          <p><span>Company's country:</span> ${item.country}</p>
+          <p><span>Company's Name:</span> ${selectedDealInq.company_name}</p>
+          <p><span>Company's Email:</span> ${selectedDealInq.company_email}</p>  
+          <p><span>Company's country:</span> ${selectedDealInq.country}</p>
         </div>
       </div>
       <div class="dealer-inquiry">
-        <p><span>Company's business:</span> ${item.business}</p>
-        <p><span>Dealer's inquiry:</span> ${item.inquiry}</p>
-      </div>
-      <div class="dealer-button">
-        <button id='deal-${item.deal_id}' class='dealReceiptBtn'>
-          Make receipt <i class="fa fa-download"></i>
-        </button>
+        <p><span>Company's business:</span> ${selectedDealInq.business}</p>
+        <p><span>Dealer's inquiry:</span> ${selectedDealInq.inquiry}</p>
       </div>
     </div>
   `;
-  });
 
-  const dealReceiptBtn = document.querySelectorAll('.dealReceiptBtn');
-
-  dealReceiptBtn.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      console.log(btn.id);
-      makeReceipt(btn.id.trim());
-    });
-  });
+  // Add event listener for the back button
+  document.getElementById('backButton').addEventListener('click', showDealInq);
 }
 
 async function makeReceipt(itemId, company) {
@@ -970,6 +1012,7 @@ async function showCartInq() {
           <th>Cart ID</th>
           <th>Name</th>
           <th>Created At</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -980,6 +1023,7 @@ async function showCartInq() {
             <td>${item.cart_id}</td>
             <td>${item.first_address.fname1} ${item.first_address.lname1}</td>
             <td>${new Date(item.createdAt.seconds * 1000).toLocaleString()}</td>
+            <td><i class="fa fa-info-circle" aria-hidden="true"></i></td>
           </tr>
         `
           )
@@ -1012,7 +1056,7 @@ async function showCartDetails(cartId, cartInq) {
 
   // Fetch the product list for the selected cart
   let productList = await getCart(cartId);
-  console.log(productList);
+  console.log('Product List:', productList);
 
   const tableProducts = productList
     .map(
@@ -1027,7 +1071,7 @@ async function showCartDetails(cartId, cartInq) {
     )
     .join('');
 
-  const backButton = `<button id="backButton">Back</button>`;
+  const backButton = `<button id="backButton"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>`;
 
   cartContainer.innerHTML = `
     ${backButton}
