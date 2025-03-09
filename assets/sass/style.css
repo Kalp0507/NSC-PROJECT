@@ -11883,12 +11883,12 @@ wpo-hero-slider-s4
 
 .product-form-container {
   background: #fff;
-  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   text-align: center;
   margin: 20px;
+  padding: 20px 50px;
 }
 
 .admin-section .product-form-container h1 {
@@ -11952,7 +11952,10 @@ textarea:focus {
   font-weight: 900;
   display: none;
 }
-
+.product-form-container #productType {
+  width: 60%;
+  height: 30px;
+}
 .admin-content {
   width: 100%;
   display: flex;
@@ -12631,4 +12634,59 @@ textarea:focus {
 }
 .admin-dealer-inquiry-summary-table table tbody tr:hover {
   cursor: pointer;
+}
+
+.product-form-container-heading {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.product-form-container-heading img {
+  margin-left: 20px;
+}
+
+/* Style for the search form container */
+.search-form-admin {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.search-form-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-form-admin .form-control {
+  width: 300px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-form-admin .form-control:focus {
+  border-color: #007bff;
+}
+
+.search-toggle-btn-admin:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.search-form-admin button[type='submit'] {
+  background-color: rgb(0, 41, 127);
+  border: none;
+  color: white;
+  height: 8px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 5px;
+  transition: background-color 0.3s;
+}
+
+.search-form-admin button[type='submit']:hover {
+  background-color: #0056b3;
 }
