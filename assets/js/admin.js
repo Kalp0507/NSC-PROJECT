@@ -87,7 +87,7 @@ async function getCartInquiries(id) {
 
       // Add each document's data to cartInquiries array
       snapshot.forEach((doc) => {
-        cartInquiries.push({ ...doc.data(), cart_id: doc.id });
+        cartInquiries.push({ ...doc.data(), cart_inq_id: doc.id });
       });
     } else {
       // Fetch a single document if id is provided
@@ -96,7 +96,7 @@ async function getCartInquiries(id) {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        cartInquiries.push({ ...docSnap.data(), cart_id: docSnap.id });
+        cartInquiries.push({ ...docSnap.data(), cart_inq_id: docSnap.id });
       } else {
         console.log('No such document!');
         return [];
@@ -1077,8 +1077,8 @@ async function showCartInq() {
         ${cartInq
       .map(
         (item) => `
-          <tr data-cart-id="${item.cart_id}" class="cart-row">
-            <td>${item.cart_id}</td>
+          <tr data-cart-id="${item.cart_inq_id}" class="cart-row">
+            <td>${item.cart_inq_id}</td>
             <td>${item.first_address.fname1} ${item.first_address.lname1}</td>
             <td>${new Date(item.createdAt.seconds * 1000).toLocaleString()}</td>
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
@@ -1096,24 +1096,25 @@ async function showCartInq() {
   const cartRows = document.querySelectorAll('.cart-row');
   cartRows.forEach((row) => {
     row.addEventListener('click', async () => {
-      const cartId = row.getAttribute('data-cart-id');
-      await showCartDetails(cartId, cartInq);
+      const cartInqId = row.getAttribute('data-cart-id');
+      await showCartDetails(cartInqId, cartInq);
     });
   });
 }
 
-async function showCartDetails(cartId, cartInq) {
+async function showCartDetails(cartInqId, cartInq) {
+  console.log(cartInq, cartInqId)
   const cartContainer = document.getElementById('cartContainer');
   cartContainer.innerHTML = '';
 
-  const selectedCartInq = cartInq.find((item) => item.cart_id === cartId);
+  const selectedCartInq = cartInq.find((item) => item.cart_inq_id === cartInqId);
   if (!selectedCartInq) {
     console.error('Cart inquiry not found');
     return;
   }
 
   // Fetch the product list for the selected cart
-  let productList = await getCart(cartId);
+  let productList = await getCart(selectedCartInq.cartId);
   console.log('Product List:', productList);
 
   const tableProducts = productList
