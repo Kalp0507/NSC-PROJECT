@@ -64,8 +64,9 @@ $(document).ready(function () {
                 let adminData = doc.data();
 
                 if (adminData.password === password) {
-                    alert("Login successful!");
-                    localStorage.setItem("admin", JSON.stringify(adminData));
+                    // alert("Login successful!");
+                    // localStorage.setItem("admin", JSON.stringify(adminData));
+                    localStorage.setItem("isAuth", true);
                     window.location.href = "admin.html";
                 } else {
                     alert("Incorrect password!");

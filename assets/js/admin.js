@@ -52,6 +52,7 @@ const storage = getStorage(app);
 // // reference to the storage service
 // const storage = firebase.storage();
 
+
 // ----------------------------------------------------------
 // open funcitons
 // ----------------------------------------------------------
@@ -72,6 +73,26 @@ async function getAllProducts() {
     console.log('Error fetching products: ', error);
   }
 }
+
+async function getSearchedProducts(term, allProdOfType) {
+  if (term === '') {
+    alert('There is nothing to search for');
+    return []; // Return empty array if no search term
+  }
+
+  // Convert term to lowercase for case-insensitive search
+  const searchTerm = term.toLowerCase();
+
+  // Filter products whose name contains the search term
+  const filteredProducts = allProdOfType.filter(product =>
+    product.name.toLowerCase().includes(searchTerm)
+  );
+
+  console.log(filteredProducts)
+  return filteredProducts;
+}
+
+
 
 //fetching cart inquiries
 async function getCartInquiries(id) {
@@ -193,6 +214,22 @@ async function uploadImageToStorage(file) {
   const url = await getDownloadURL(snapshot.ref);
   return url;
 }
+
+$(document).ready(() => {
+  let isAuth = localStorage.getItem('isAuth');
+  console.log(isAuth)
+  if (isAuth === 'false') {
+    window.location.href = 'login.html'
+  }
+
+  const logOutBtn = document.getElementById('logoutBtn');
+
+  logOutBtn.addEventListener('click', () => {
+    // localStorage.removeItem('admin');
+    localStorage.setItem('isAuth', false);
+    window.location.href = 'login.html'
+  })
+})
 
 // ----------------------------------------------------------
 // for admin page
@@ -325,11 +362,14 @@ function printProducts(products, type) {
             <input
               type="text"
               class="form-control"
-              placeholder="Search here..."
+              placeholder="Search product name..."
               id="searchInput"
             />
             <button class="search-toggle-btn-admin" style="padding-bottom: 30px" type="submit">
               <i class="fi flaticon-search"></i>
+            </button>
+            <button class="search-toggle-btn-admin" style="padding-bottom: 30px" type="button">
+              Show All
             </button>
           </div>
         </form>
@@ -379,6 +419,49 @@ function printProducts(products, type) {
       document.querySelectorAll('#generateExcel');
     const selectProdBox = document.querySelectorAll('.selectProdBox');
     const selectAllbtn = document.querySelector('#selectAllbtn');
+    const searchProductFormAdmin = document.getElementById('SearchFormAdmin');
+
+    $(searchProductFormAdmin).submit(async (e) => {
+      e.preventDefault();
+
+      const searchTerm = searchProductFormAdmin.childNodes[1].childNodes[1].value;
+      const showAllProdbtn = searchProductFormAdmin.childNodes[1].childNodes[5];
+      console.log(showAllProdbtn)
+
+      showAllProdbtn.addEventListener('click', () => {
+        showProducts(products, type)
+      })
+
+      const searchedPrducts = await getSearchedProducts(searchTerm, products);
+      const prodContainer = document.querySelector('.product-list tbody');
+      prodContainer.innerHTML = ''
+
+      if (searchedPrducts.empty) {
+        const productCard = document.createElement('tr');
+        productCard.innerHTML = '<p>There is no product with this name</p>'
+
+        prodContainer.appendChild(productCard)
+      } else {
+        searchedPrducts.forEach((item) => {
+          const productCard = document.createElement('tr');
+          const isChecked = selectedProducts.includes(item.pid) ? 'checked' : ''; // Check if product is selected
+          productCard.innerHTML = `
+        <td class="s1"><input type="checkbox" class="row-checkbox selectProdBox" pid='${item.pid}' ${isChecked}></td>
+        <td class="s1">${item.name}</td>
+        <td class="s1">${item.price}</td>
+        <td class="s2">${item.description}</td>
+        <td class="product-buttons s3">
+          <button pid='${item.pid}' class='editProduct'>Edit</button>
+          <button pid='${item.pid}' class='deleteProduct'>Delete</button>
+        </td>
+      `;
+          prodContainer.appendChild(productCard);
+        });
+      }
+
+
+    })
+
 
     editProductBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -454,6 +537,8 @@ function printProducts(products, type) {
       }
       console.log(selectedProducts)
     })
+
+
   });
 }
 
@@ -1401,7 +1486,7 @@ async function generateCartInqExcel(inqid, company) {
   let companyName = '';
   let total = 0;
 
-  products.forEach((p)=> total = total+(p.quantity*p.price) )
+  products.forEach((p) => total = total + (p.quantity * p.price))
   console.log(total)
 
   if (company.toLowerCase() == 'neha') {
@@ -1429,8 +1514,8 @@ async function generateCartInqExcel(inqid, company) {
     ]),
     [], // Blank row for separation
 
-    ['','Total', total],
-    
+    ['', 'Total', total],
+
     // ['Customer Details'],
     // ['Name:', first_address.fname1 + ' ' + first_address.lname1 || 'N/A'],
     // ['Email:', first_address.email1 || 'N/A'],
