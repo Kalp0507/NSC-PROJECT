@@ -87,7 +87,7 @@ async function getCartInquiries(id) {
 
       // Add each document's data to cartInquiries array
       snapshot.forEach((doc) => {
-        cartInquiries.push({ ...doc.data(), cart_id: doc.id });
+        cartInquiries.push({ ...doc.data(), cart_inq_id: doc.id });
       });
     } else {
       // Fetch a single document if id is provided
@@ -96,7 +96,7 @@ async function getCartInquiries(id) {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        cartInquiries.push({ ...docSnap.data(), cart_id: docSnap.id });
+        cartInquiries.push({ ...docSnap.data(), cart_inq_id: docSnap.id });
       } else {
         console.log('No such document!');
         return [];
@@ -314,6 +314,7 @@ function printProducts(products, type) {
       <div class="product-section-heading">
         <h3>${type}</h3>
         <div class="download-buttons">
+          <button id="selectAllbtn">Select All</button>
           <button id="generateReceipt">Receipt <i class="fa fa-download"></i></button>
           <button id="generateExcel">Excel <i class="fa fa-download"></i></button>
         </div>
@@ -377,6 +378,7 @@ function printProducts(products, type) {
     const generateProductsExcelBtn =
       document.querySelectorAll('#generateExcel');
     const selectProdBox = document.querySelectorAll('.selectProdBox');
+    const selectAllbtn = document.querySelector('#selectAllbtn');
 
     editProductBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -412,14 +414,49 @@ function printProducts(products, type) {
         if (box.checked) {
           selectedProducts.push(clickedProduct);
         } else {
+          let checkValue;
+          selectProdBox.forEach((b) => {
+            checkValue = b.checked;
+          })
+          if (checkValue) {
+            selectAllbtn.innerText = 'Select All'
+          }
           selectedProducts = selectedProducts.filter(
             (product) => product !== clickedProduct
           );
         }
       });
     });
+
+    let allBoxChecked = true;
+    selectAllbtn.addEventListener('click', async () => {
+      selectedProducts = [];
+      console.log(allBoxChecked)
+      if (allBoxChecked) {
+        selectAllbtn.innerText = 'Unselect All'
+        selectProdBox.forEach((box) => {
+          box.checked = true;
+        })
+        const allProds = await getAllProducts();
+
+        allProds.forEach((prod) => {
+          selectedProducts.push(prod.pid)
+        })
+        allBoxChecked = false
+      }
+      else {
+        selectAllbtn.innerText = 'Select All'
+        selectProdBox.forEach((box) => {
+          box.checked = false;
+        })
+        selectedProducts = [];
+        allBoxChecked = true;
+      }
+      console.log(selectedProducts)
+    })
   });
 }
+
 
 async function editProducts(id) {
   try {
@@ -550,7 +587,7 @@ async function deleteProduct(id) {
   }
 }
 
-async function generateProductsReceipt(selectedProds) {
+async function generateProductsReceipt() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -564,19 +601,21 @@ async function generateProductsReceipt(selectedProds) {
   const allProducts = await getAllProducts();
   const productsToPrint = [];
 
-  if (selectedProds.length > 0) {
-    // If selectedProds is not empty, add matching products
-    selectedProds.forEach((selectedProd) => {
+  if (selectedProducts.length > 0) {
+    // If selectedProducts is not empty, add matching products
+    selectedProducts.forEach((selectedProd) => {
       const matchedProduct = allProducts.find(
         (product) => product.pid === selectedProd
       );
       if (matchedProduct) {
+        console.log(matchedProduct);
         productsToPrint.push(matchedProduct);
       }
     });
+    console.log(productsToPrint);
   } else {
-    // If selectedProds is empty, add all products
-    productsToPrint.push(...allProducts);
+    alert('Select atleast one product!!')
+    return;
   }
 
   // Sorting products by type
@@ -650,7 +689,7 @@ async function generateProductsReceipt(selectedProds) {
       doc.setFont('helvetica', 'bold');
       doc.text('Sr. No.', 20, currentY);
       doc.text('Name', 40, currentY);
-      doc.text('Price', 70, currentY); // Adjusting the position to give more room to "Description"
+      doc.text('Price', 80, currentY); // Adjusting the position to give more room to "Description"
       doc.text('Description', 100, currentY); // Starting "Description" earlier for wider space
 
       currentY += 10; // Move Y for the table content
@@ -662,13 +701,15 @@ async function generateProductsReceipt(selectedProds) {
         const price = product.price?.toString() || 'N/A';
         const description = product.description || 'N/A';
 
+        // Wrap name and price if necessary, with column width constraints
+        const nameText = doc.splitTextToSize(name, 25); // Narrow width for Name
+        const priceText = doc.splitTextToSize(price, 20); // Narrow width for Price
+        const descriptionText = doc.splitTextToSize(description, 90); // Widened description area
+
         doc.setFont('helvetica', 'normal');
         doc.text(srNo, 20, currentY);
-        doc.text(name, 40, currentY);
-        doc.text(price, 70, currentY);
-
-        // Wrap description if it's too long, now with a wider width
-        const descriptionText = doc.splitTextToSize(description, 90); // Widened description area
+        doc.text(nameText, 40, currentY);
+        doc.text(priceText, 80, currentY);
         doc.text(descriptionText, 100, currentY);
 
         currentY += 10; // Move Y for the next product row, adjust for wrapped text
@@ -699,14 +740,15 @@ async function generateProductsReceipt(selectedProds) {
   };
 }
 
-async function generateProductsExcel(selectedProds) {
+async function generateProductsExcel() {
   // Sample product data (replace with your actual product data)
   const allProducts = await getAllProducts();
   const productsToPrint = [];
 
-  if (selectedProds.length > 0) {
-    // If selectedProds is not empty, add matching products
-    selectedProds.forEach((selectedProd) => {
+  if (selectedProducts.length > 0) {
+    // If selectedProducts is not empty, add matching products
+    console.log(selectedProducts)
+    selectedProducts.forEach((selectedProd) => {
       const matchedProduct = allProducts.find(
         (product) => product.pid === selectedProd
       );
@@ -715,8 +757,9 @@ async function generateProductsExcel(selectedProds) {
       }
     });
   } else {
-    // If selectedProds is empty, add all products
-    productsToPrint.push(...allProducts);
+    // If selectedProducts is empty, add all products
+    alert('select krle kuch ')
+    return;
   }
 
   console.log(productsToPrint);
@@ -783,8 +826,8 @@ async function showDealInq() {
       </thead>
       <tbody>
         ${dealInq
-          .map(
-            (item) => `
+      .map(
+        (item) => `
           <tr data-deal-id="${item.deal_id}" class="dealer-row">
             <td>${item.person_name}</td>
             <td>${item.company_name}</td>
@@ -792,8 +835,8 @@ async function showDealInq() {
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-          )
-          .join('')}
+      )
+      .join('')}
       </tbody>
     </table>
   </div>
@@ -1032,17 +1075,17 @@ async function showCartInq() {
       </thead>
       <tbody>
         ${cartInq
-          .map(
-            (item) => `
-          <tr data-cart-id="${item.cart_id}" class="cart-row">
-            <td>${item.cart_id}</td>
+      .map(
+        (item) => `
+          <tr data-cart-id="${item.cart_inq_id}" class="cart-row">
+            <td>${item.cart_inq_id}</td>
             <td>${item.first_address.fname1} ${item.first_address.lname1}</td>
             <td>${new Date(item.createdAt.seconds * 1000).toLocaleString()}</td>
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-          )
-          .join('')}
+      )
+      .join('')}
       </tbody>
     </table>
   </div>
@@ -1053,24 +1096,25 @@ async function showCartInq() {
   const cartRows = document.querySelectorAll('.cart-row');
   cartRows.forEach((row) => {
     row.addEventListener('click', async () => {
-      const cartId = row.getAttribute('data-cart-id');
-      await showCartDetails(cartId, cartInq);
+      const cartInqId = row.getAttribute('data-cart-id');
+      await showCartDetails(cartInqId, cartInq);
     });
   });
 }
 
-async function showCartDetails(cartId, cartInq) {
+async function showCartDetails(cartInqId, cartInq) {
+  console.log(cartInq, cartInqId)
   const cartContainer = document.getElementById('cartContainer');
   cartContainer.innerHTML = '';
 
-  const selectedCartInq = cartInq.find((item) => item.cart_id === cartId);
+  const selectedCartInq = cartInq.find((item) => item.cart_inq_id === cartInqId);
   if (!selectedCartInq) {
     console.error('Cart inquiry not found');
     return;
   }
 
   // Fetch the product list for the selected cart
-  let productList = await getCart(cartId);
+  let productList = await getCart(selectedCartInq.cartId);
   console.log('Product List:', productList);
 
   const tableProducts = productList
@@ -1094,8 +1138,8 @@ async function showCartDetails(cartId, cartInq) {
       <div class="cart-item-top">
         <h6>Cart ID: ${selectedCartInq.cart_id}</h6>
         <p style="font-size: 0.7rem;">Created At: ${new Date(
-          selectedCartInq.createdAt.seconds * 1000
-        ).toLocaleString()}</p>
+    selectedCartInq.createdAt.seconds * 1000
+  ).toLocaleString()}</p>
       </div>
       <div class="cart-item-table">
         <h4>Products:</h4>
@@ -1113,14 +1157,12 @@ async function showCartDetails(cartId, cartInq) {
       </div>
       <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${
-    selectedCartInq.first_address.lname1
-  }</p>
+        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${selectedCartInq.first_address.lname1
+    }</p>
         <p><span>Email :</span>${selectedCartInq.first_address.email1}</p>
         <p><span>Phone :</span>${selectedCartInq.first_address.phone1}</p>
-        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${
-    selectedCartInq.first_address.city1
-  }, ${selectedCartInq.first_address.country1}</p>
+        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${selectedCartInq.first_address.city1
+    }, ${selectedCartInq.first_address.country1}</p>
         <p><span>Post Code :</span>${selectedCartInq.first_address.post1}</p>
       </div> 
       <div class="cart-item-note">
@@ -1128,9 +1170,8 @@ async function showCartDetails(cartId, cartInq) {
         <p style="font-size: 0.9rem;">${selectedCartInq.order_note}</p>
       </div>
       <div class="cart-inquiry-button">
-        <button id='cart-${
-          selectedCartInq.cart_id
-        }' class='dealExcelReceiptBtn'>
+        <button id='cart-${selectedCartInq.cart_id
+    }' class='dealExcelReceiptBtn'>
           Excel <i class="fa fa-download"></i>
         </button>
         <button id='cart-${selectedCartInq.cart_id}' class='dealReceiptBtn'>
@@ -1198,6 +1239,7 @@ async function showCartDetails(cartId, cartInq) {
 
   document.getElementById('backButton').addEventListener('click', showCartInq);
 }
+
 async function getCartInquiryPDF(receiptData, company) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -1257,9 +1299,8 @@ async function getCartInquiryPDF(receiptData, company) {
     counterY
   );
   doc.text(
-    `Date: ${
-      new Date(createdAt.seconds * 1000).toLocaleDateString() ||
-      '..................'
+    `Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() ||
+    '..................'
     }`,
     rightAlignX,
     counterY
@@ -1268,8 +1309,7 @@ async function getCartInquiryPDF(receiptData, company) {
   // Customer details (First Address)
   counterY += 7;
   doc.text(
-    `Customer Name: ${
-      first_address.fname1 + first_address.lname1 || '..................'
+    `Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'
     }`,
     leftAlignX,
     counterY
