@@ -894,6 +894,7 @@ async function showDealerDetails(dealId, dealInq) {
 }
 
 async function makeReceipt(itemId, company) {
+  console.log(itemId)
   const itemType = itemId.split('-')[0];
   const id = itemId.split('-')[1];
   let doc;
@@ -1136,7 +1137,7 @@ async function showCartDetails(cartInqId, cartInq) {
     ${backButton}
     <div class="cart-item">
       <div class="cart-item-top">
-        <h6>Cart ID: ${selectedCartInq.cart_id}</h6>
+        <h6>Cart ID: ${selectedCartInq.cart_inq_id}</h6>
         <p style="font-size: 0.7rem;">Created At: ${new Date(
     selectedCartInq.createdAt.seconds * 1000
   ).toLocaleString()}</p>
@@ -1170,11 +1171,11 @@ async function showCartDetails(cartInqId, cartInq) {
         <p style="font-size: 0.9rem;">${selectedCartInq.order_note}</p>
       </div>
       <div class="cart-inquiry-button">
-        <button id='cart-${selectedCartInq.cart_id
+        <button id='cart-${selectedCartInq.cart_inq_id
     }' class='dealExcelReceiptBtn'>
           Excel <i class="fa fa-download"></i>
         </button>
-        <button id='cart-${selectedCartInq.cart_id}' class='dealReceiptBtn'>
+        <button id='cart-${selectedCartInq.cart_inq_id}' class='dealReceiptBtn'>
           receipt <i class="fa fa-download"></i>
         </button>
         <div id="companyModal" class="modal2">
@@ -1398,6 +1399,10 @@ async function generateCartInqExcel(inqid, company) {
   } = inqData[0];
   const products = await getCart(cartId);
   let companyName = '';
+  let total = 0;
+
+  products.forEach((p)=> total = total+(p.quantity*p.price) )
+  console.log(total)
 
   if (company.toLowerCase() == 'neha') {
     companyName = 'Neha Music Science Center';
@@ -1424,32 +1429,34 @@ async function generateCartInqExcel(inqid, company) {
     ]),
     [], // Blank row for separation
 
-    ['Customer Details'],
-    ['Name:', first_address.fname1 + ' ' + first_address.lname1 || 'N/A'],
-    ['Email:', first_address.email1 || 'N/A'],
-    ['Phone:', first_address.phone1 || 'N/A'],
-    ['Address:', first_address.address1 || 'N/A'],
-    ['Post:', first_address.post1 || 'N/A'],
-    ['City:', first_address.city1 || 'N/A'],
-    ['Country:', first_address.country1 || 'N/A'],
+    ['','Total', total],
+    
+    // ['Customer Details'],
+    // ['Name:', first_address.fname1 + ' ' + first_address.lname1 || 'N/A'],
+    // ['Email:', first_address.email1 || 'N/A'],
+    // ['Phone:', first_address.phone1 || 'N/A'],
+    // ['Address:', first_address.address1 || 'N/A'],
+    // ['Post:', first_address.post1 || 'N/A'],
+    // ['City:', first_address.city1 || 'N/A'],
+    // ['Country:', first_address.country1 || 'N/A'],
   ];
 
   // Conditionally add second address if is_address2 is true
-  if (is_address2 && second_address) {
-    sheetData.push([], ['Secondary Address']);
-    sheetData.push(
-      ['Name:', second_address.fname2 + ' ' + second_address.lname2 || 'N/A'],
-      ['Email:', second_address.email2 || 'N/A'],
-      ['Phone:', second_address.phone2 || 'N/A'],
-      ['Address:', second_address.address2 || 'N/A'],
-      ['Post:', second_address.post2 || 'N/A'],
-      ['City:', second_address.city2 || 'N/A'],
-      ['Country:', second_address.country2 || 'N/A']
-    );
-  }
+  // if (is_address2 && second_address) {
+  //   sheetData.push([], ['Secondary Address']);
+  //   sheetData.push(
+  //     ['Name:', second_address.fname2 + ' ' + second_address.lname2 || 'N/A'],
+  //     ['Email:', second_address.email2 || 'N/A'],
+  //     ['Phone:', second_address.phone2 || 'N/A'],
+  //     ['Address:', second_address.address2 || 'N/A'],
+  //     ['Post:', second_address.post2 || 'N/A'],
+  //     ['City:', second_address.city2 || 'N/A'],
+  //     ['Country:', second_address.country2 || 'N/A']
+  //   );
+  // }
 
   // Add the order note at the end
-  sheetData.push([], ['Order Note'], [order_note || 'N/A']);
+  // sheetData.push([], ['Order Note'], [order_note || 'N/A']);
 
   // Create a worksheet from the sheetData
   let worksheet = XLSX.utils.aoa_to_sheet(sheetData);
@@ -1516,7 +1523,7 @@ async function generateCartInqExcel(inqid, company) {
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Cart Inquiry');
 
   // Write the workbook to an Excel file and download it
-  XLSX.writeFile(workbook, 'cart_inquiry.xlsx');
+  XLSX.writeFile(workbook, `cart_inquiry_${inqid.split('-')[1]}.xlsx`);
 }
 
 // ----------------------------------------------------------
