@@ -78,12 +78,7 @@ async function getCart(cartId) {
       const cartData = doc.data();
       if (cartData.products) {
         cartData.products.forEach((product) => {
-          cart.push({
-            name: product.name,
-            price: product.price,
-            quantity: product.quantity,
-            pid: product.pid,
-          });
+          cart.push(product);
         });
       }
     });
