@@ -547,9 +547,10 @@ async function editProducts(id) {
   try {
     const docRef = doc(db, 'products', id);
     const docSnap = await getDoc(docRef);
-
+    
     if (docSnap.exists()) {
       const productData = docSnap.data();
+      console.log(productData)
       let editFormHtml = ``;
       //form to edit the product details
       editFormHtml = `
@@ -596,6 +597,7 @@ async function editProducts(id) {
       // Close the modal when the close button is clicked
       closeButton.addEventListener('click', () => {
         modal.style.display = 'none';
+        modal.remove();
       });
 
       let editFormSubmitbtn = document.getElementById('editFormSubmit');
@@ -603,6 +605,7 @@ async function editProducts(id) {
         await updateProduct(e, productData, docRef);
         modal.style.display = 'none';
         showProducts();
+        modal.remove();
       });
     } else {
       console.log('No such document!');
