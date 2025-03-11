@@ -775,7 +775,7 @@ async function generateProductsReceipt() {
       doc.text('Sr. No.', 20, currentY);
       doc.text('Name', 40, currentY);
       doc.text('Price', 80, currentY); // Adjusting the position to give more room to "Description"
-      doc.text('Description', 100, currentY); // Starting "Description" earlier for wider space
+      // doc.text('Description', 100, currentY); // Starting "Description" earlier for wider space
 
       currentY += 10; // Move Y for the table content
 
@@ -784,22 +784,22 @@ async function generateProductsReceipt() {
         const srNo = (idx + 1).toString(); // Serial number for each product
         const name = product.name || 'N/A';
         const price = product.price?.toString() || 'N/A';
-        const description = product.description || 'N/A';
+        // const description = product.description || 'N/A';
 
         // Wrap name and price if necessary, with column width constraints
         const nameText = doc.splitTextToSize(name, 25); // Narrow width for Name
         const priceText = doc.splitTextToSize(price, 20); // Narrow width for Price
-        const descriptionText = doc.splitTextToSize(description, 90); // Widened description area
+        // const descriptionText = doc.splitTextToSize(description, 90); // Widened description area
 
         doc.setFont('helvetica', 'normal');
         doc.text(srNo, 20, currentY);
         doc.text(nameText, 40, currentY);
         doc.text(priceText, 80, currentY);
-        doc.text(descriptionText, 100, currentY);
+        // doc.text(descriptionText, 100, currentY);
 
         currentY += 10; // Move Y for the next product row, adjust for wrapped text
-        const descriptionHeight = descriptionText.length * 5;
-        currentY += descriptionHeight - 10; // Account for wrapped text height
+        // const descriptionHeight = descriptionText.length * 5;
+        // currentY += descriptionHeight - 10; // Account for wrapped text height
 
         // Handle page break if needed
         if (currentY > 280) {
@@ -843,7 +843,7 @@ async function generateProductsExcel() {
     });
   } else {
     // If selectedProducts is empty, add all products
-    alert('select krle kuch ')
+    alert('There is nothing selected')
     return;
   }
 
@@ -867,12 +867,12 @@ async function generateProductsExcel() {
 
     // Create a sheet data with headers
     const sheetData = [
-      ['Sr. No.', 'Name', 'Price', 'Description'], // Header row
+      ['Sr. No.', 'Name', 'Price'], // Header row
       ...products.map((product, idx) => [
         idx + 1, // Sr. No.
         product.name || 'N/A', // Product name
         product.price?.toString() || 'N/A', // Price
-        product.description || 'N/A', // Description
+        // product.description || 'N/A', // Description
       ]),
     ];
 

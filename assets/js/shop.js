@@ -209,7 +209,7 @@ $(document).ready(async function () {
       'physics-lab': 'Physics Lab Equipment',
       'biology-lab': 'Biology Lab Equipment',
       'chemistry-lab': 'Chemistry Lab Equipment',
-      microscopes: 'Microscopes',
+      'microscopes': 'Microscopes',
       'educational-charts': 'Educational Charts',
       'mechanical-lab': 'Mechanical Engineering Lab Equipment',
       'civil-lab': 'Surveying & Civil Engineering Equipment',
