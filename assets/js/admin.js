@@ -52,7 +52,6 @@ const storage = getStorage(app);
 // // reference to the storage service
 // const storage = firebase.storage();
 
-
 // ----------------------------------------------------------
 // open funcitons
 // ----------------------------------------------------------
@@ -84,15 +83,13 @@ async function getSearchedProducts(term, allProdOfType) {
   const searchTerm = term.toLowerCase();
 
   // Filter products whose name contains the search term
-  const filteredProducts = allProdOfType.filter(product =>
+  const filteredProducts = allProdOfType.filter((product) =>
     product.name.toLowerCase().includes(searchTerm)
   );
 
-  console.log(filteredProducts)
+  console.log(filteredProducts);
   return filteredProducts;
 }
-
-
 
 //fetching cart inquiries
 async function getCartInquiries(id) {
@@ -217,9 +214,9 @@ async function uploadImageToStorage(file) {
 
 $(document).ready(() => {
   let isAuth = localStorage.getItem('isAuth');
-  console.log(isAuth)
+  console.log(isAuth);
   if (isAuth === 'false') {
-    window.location.href = 'login.html'
+    window.location.href = 'login.html';
   }
 
   const logOutBtn = document.getElementById('logoutBtn');
@@ -227,9 +224,9 @@ $(document).ready(() => {
   logOutBtn.addEventListener('click', () => {
     // localStorage.removeItem('admin');
     localStorage.setItem('isAuth', false);
-    window.location.href = 'login.html'
-  })
-})
+    window.location.href = 'login.html';
+  });
+});
 
 // ----------------------------------------------------------
 // for admin page
@@ -368,7 +365,7 @@ function printProducts(products, type) {
             <button class="search-toggle-btn-admin" style="padding-bottom: 30px" type="submit">
               <i class="fi flaticon-search"></i>
             </button>
-            <button class="search-toggle-btn-admin" style="padding-bottom: 30px" type="button">
+            <button class="show-all-btn-admin" type="button" style="display: none;">
               Show All
             </button>
           </div>
@@ -378,6 +375,7 @@ function printProducts(products, type) {
         <thead>
           <tr>
             <th class="s1">Select</th>
+            <th class="s1">Sr. No.</th>
             <th class="s1">Name</th>
             <th class="s1">Price</th>
             <th class="s2">Description</th>
@@ -392,11 +390,14 @@ function printProducts(products, type) {
   sectionContainer.innerHTML += typeContainer;
 
   const prodContainer = document.querySelector('.product-list tbody');
-  products.forEach((item) => {
+  products.forEach((item, index) => {
     const isChecked = selectedProducts.includes(item.pid) ? 'checked' : ''; // Check if product is selected
     const productCard = document.createElement('tr');
     productCard.innerHTML = `
-      <td class="s1"><input type="checkbox" class="row-checkbox selectProdBox" pid='${item.pid}' ${isChecked}></td>
+      <td class="s1"><input type="checkbox" class="row-checkbox selectProdBox" pid='${
+        item.pid
+      }' ${isChecked}></td>
+      <td class="s1">${index + 1}</td>
       <td class="s1">${item.name}</td>
       <td class="s1">${item.price}</td>
       <td class="s2">${item.description}</td>
@@ -424,27 +425,33 @@ function printProducts(products, type) {
     $(searchProductFormAdmin).submit(async (e) => {
       e.preventDefault();
 
-      const searchTerm = searchProductFormAdmin.childNodes[1].childNodes[1].value;
+      const searchTerm =
+        searchProductFormAdmin.childNodes[1].childNodes[1].value;
       const showAllProdbtn = searchProductFormAdmin.childNodes[1].childNodes[5];
-      console.log(showAllProdbtn)
+      console.log(showAllProdbtn);
 
       showAllProdbtn.addEventListener('click', () => {
-        showProducts(products, type)
-      })
+        showProducts(products, type);
+        showAllProdbtn.style.display = 'none';
+      });
+
+      showAllProdbtn.style.display = 'block';
 
       const searchedPrducts = await getSearchedProducts(searchTerm, products);
       const prodContainer = document.querySelector('.product-list tbody');
-      prodContainer.innerHTML = ''
+      prodContainer.innerHTML = '';
 
       if (searchedPrducts.empty) {
         const productCard = document.createElement('tr');
-        productCard.innerHTML = '<p>There is no product with this name</p>'
+        productCard.innerHTML = '<p>There is no product with this name</p>';
 
-        prodContainer.appendChild(productCard)
+        prodContainer.appendChild(productCard);
       } else {
         searchedPrducts.forEach((item) => {
           const productCard = document.createElement('tr');
-          const isChecked = selectedProducts.includes(item.pid) ? 'checked' : ''; // Check if product is selected
+          const isChecked = selectedProducts.includes(item.pid)
+            ? 'checked'
+            : ''; // Check if product is selected
           productCard.innerHTML = `
         <td class="s1"><input type="checkbox" class="row-checkbox selectProdBox" pid='${item.pid}' ${isChecked}></td>
         <td class="s1">${item.name}</td>
@@ -458,10 +465,7 @@ function printProducts(products, type) {
           prodContainer.appendChild(productCard);
         });
       }
-
-
-    })
-
+    });
 
     editProductBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -500,9 +504,9 @@ function printProducts(products, type) {
           let checkValue;
           selectProdBox.forEach((b) => {
             checkValue = b.checked;
-          })
+          });
           if (checkValue) {
-            selectAllbtn.innerText = 'Select All'
+            selectAllbtn.innerText = 'Select All';
           }
           selectedProducts = selectedProducts.filter(
             (product) => product !== clickedProduct
@@ -514,34 +518,30 @@ function printProducts(products, type) {
     let allBoxChecked = true;
     selectAllbtn.addEventListener('click', async () => {
       selectedProducts = [];
-      console.log(allBoxChecked)
+      console.log(allBoxChecked);
       if (allBoxChecked) {
-        selectAllbtn.innerText = 'Unselect All'
+        selectAllbtn.innerText = 'Unselect All';
         selectProdBox.forEach((box) => {
           box.checked = true;
-        })
+        });
         const allProds = await getAllProducts();
 
         allProds.forEach((prod) => {
-          selectedProducts.push(prod.pid)
-        })
-        allBoxChecked = false
-      }
-      else {
-        selectAllbtn.innerText = 'Select All'
+          selectedProducts.push(prod.pid);
+        });
+        allBoxChecked = false;
+      } else {
+        selectAllbtn.innerText = 'Select All';
         selectProdBox.forEach((box) => {
           box.checked = false;
-        })
+        });
         selectedProducts = [];
         allBoxChecked = true;
       }
-      console.log(selectedProducts)
-    })
-
-
+      console.log(selectedProducts);
+    });
   });
 }
-
 
 async function editProducts(id) {
   try {
@@ -555,23 +555,31 @@ async function editProducts(id) {
       editFormHtml = `
         <div id="editProductModal" class="modal">
           <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Edit Product</h2>
+            <div class="modal-content-heading">
+              <h2>Edit Product</h2>
+              <span class="close-button">&times;</span>
+            </div>
             <form id="editProductForm">
-              <label for="productName">Name:</label>
-              <input type="text" id="editProductName" value="${productData.name}" required>
-              
-              <label for="productPrice">Price:</label>
-              <input type="number" id="editProductPrice" value="${productData.price}" required>
-
-              <label for="productImage">Image:</label>
-              <input type="file" id="editProductImage">
-              <img src='${productData.imageUrl}' alt='productImage' />
-
-              <label for="productDescription">Description:</label>
-              <textarea id="editProductDescription" required>${productData.description}</textarea>
-              
-              <button type="submit" id='editFormSubmit'>Save Changes</button>
+              <div>
+                <label for="productName">Name:</label>
+                <input type="text" id="editProductName" value="${productData.name}" required>
+              </div>
+              <div>
+                <label for="productPrice">Price:</label>
+                <input type="number" id="editProductPrice" value="${productData.price}" required>
+              </div>
+              <div>
+                <label for="productImage">Image:</label>
+                <input type="file" id="editProductImage">
+                <img src='${productData.imageUrl}' alt='productImage' />
+              <div>
+              <div>
+                <label for="productDescription">Description:</label>
+                <textarea id="editProductDescription" required>${productData.description}</textarea>
+              </div>
+              <div class="modal-save-changes-btn">
+                <button type="submit" id='editFormSubmit'>Save Changes</button>
+              <div>
             </form>
           </div>
         </div>
@@ -699,7 +707,7 @@ async function generateProductsReceipt() {
     });
     console.log(productsToPrint);
   } else {
-    alert('Select atleast one product!!')
+    alert('Select atleast one product!!');
     return;
   }
 
@@ -832,7 +840,7 @@ async function generateProductsExcel() {
 
   if (selectedProducts.length > 0) {
     // If selectedProducts is not empty, add matching products
-    console.log(selectedProducts)
+    console.log(selectedProducts);
     selectedProducts.forEach((selectedProd) => {
       const matchedProduct = allProducts.find(
         (product) => product.pid === selectedProd
@@ -843,7 +851,7 @@ async function generateProductsExcel() {
     });
   } else {
     // If selectedProducts is empty, add all products
-    alert('There is nothing selected')
+    alert('There is nothing selected');
     return;
   }
 
@@ -891,9 +899,16 @@ async function generateProductsExcel() {
 // for Dealer inq
 // ----------------------------------------------------------
 
-async function showDealInq() {
+async function showDealInq(page = 1) {
   const dealInq = await getDealerInquiries();
   console.log(dealInq);
+  const itemsPerPage = 10;
+  const totalItems = dealInq.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // start and end index for the current page
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
 
   const dealContainer = document.getElementById('dealContainer');
   dealContainer.innerHTML = ''; // Clear the container before appending new content
@@ -903,6 +918,7 @@ async function showDealInq() {
     <table>
       <thead>
         <tr>
+          <th>Sr. No.</th>
           <th>Dealer's Name</th>
           <th>Company Name</th>
           <th>Dealer's Phone</th>
@@ -911,23 +927,49 @@ async function showDealInq() {
       </thead>
       <tbody>
         ${dealInq
-      .map(
-        (item) => `
+          .slice(startIndex, endIndex)
+          .map(
+            (item, index) => `
           <tr data-deal-id="${item.deal_id}" class="dealer-row">
+            <td>${startIndex + index + 1}</td>
             <td>${item.person_name}</td>
             <td>${item.company_name}</td>
             <td>${item.phone}</td>
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-      )
-      .join('')}
+          )
+          .join('')}
       </tbody>
     </table>
   </div>
   `;
 
   dealContainer.innerHTML = summaryTable;
+
+  const paginationControls = document.createElement('div');
+  paginationControls.className = 'pagination-controls';
+
+  if (page > 1) {
+    const prevButton = document.createElement('button');
+    prevButton.innerHTML =
+      '<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>';
+    prevButton.onclick = () => showDealInq(page - 1);
+    paginationControls.appendChild(prevButton);
+  }
+  const pagebtn = document.createElement('div');
+  pagebtn.innerText = 'Page ' + page + ' of ' + totalPages;
+  paginationControls.appendChild(pagebtn);
+
+  if (page < totalPages) {
+    const nextButton = document.createElement('button');
+    nextButton.innerHTML =
+      '<i class="fa fa-chevron-circle-right" aria-hidden="true"></i>';
+    nextButton.onclick = () => showDealInq(page + 1);
+    paginationControls.appendChild(nextButton);
+  }
+
+  dealContainer.appendChild(paginationControls);
 
   const dealerRows = document.querySelectorAll('.dealer-row');
   dealerRows.forEach((row) => {
@@ -979,7 +1021,7 @@ async function showDealerDetails(dealId, dealInq) {
 }
 
 async function makeReceipt(itemId, company) {
-  console.log(itemId)
+  console.log(itemId);
   const itemType = itemId.split('-')[0];
   const id = itemId.split('-')[1];
   let doc;
@@ -1142,8 +1184,15 @@ async function getInquiryPDF(data) {
 // for cart inq
 // ----------------------------------------------------------
 
-async function showCartInq() {
+async function showCartInq(page = 1) {
   const cartInq = await getCartInquiries();
+  const itemsPerPage = 10;
+  const totalItems = cartInq.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // start and end index for the current page
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
 
   const cartContainer = document.getElementById('cartContainer');
   cartContainer.innerHTML = '';
@@ -1153,6 +1202,7 @@ async function showCartInq() {
     <table>
       <thead>
         <tr>
+          <th>Sr. No.</th>
           <th>Cart ID</th>
           <th>Name</th>
           <th>Created At</th>
@@ -1161,23 +1211,49 @@ async function showCartInq() {
       </thead>
       <tbody>
         ${cartInq
-      .map(
-        (item) => `
+          .slice(startIndex, endIndex)
+          .map(
+            (item, index) => `
           <tr data-cart-id="${item.cart_inq_id}" class="cart-row">
+            <td>${startIndex + index + 1}</td>
             <td>${item.cart_inq_id}</td>
             <td>${item.first_address.fname1} ${item.first_address.lname1}</td>
             <td>${new Date(item.createdAt.seconds * 1000).toLocaleString()}</td>
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-      )
-      .join('')}
+          )
+          .join('')}
       </tbody>
     </table>
   </div>
   `;
 
   cartContainer.innerHTML = summaryTable;
+
+  const paginationControls = document.createElement('div');
+  paginationControls.className = 'pagination-controls';
+
+  if (page > 1) {
+    const prevButton = document.createElement('button');
+    prevButton.innerHTML =
+      '<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>';
+    prevButton.onclick = () => showCartInq(page - 1);
+    paginationControls.appendChild(prevButton);
+  }
+  const pagebtn = document.createElement('div');
+  pagebtn.innerText = 'page ' + page + ' of ' + totalPages;
+  paginationControls.appendChild(pagebtn);
+
+  if (page < totalPages) {
+    const nextButton = document.createElement('button');
+    nextButton.innerHTML =
+      '<i class="fa fa-chevron-circle-right" aria-hidden="true"></i>';
+    nextButton.onclick = () => showCartInq(page + 1);
+    paginationControls.appendChild(nextButton);
+  }
+
+  cartContainer.appendChild(paginationControls);
 
   const cartRows = document.querySelectorAll('.cart-row');
   cartRows.forEach((row) => {
@@ -1189,11 +1265,13 @@ async function showCartInq() {
 }
 
 async function showCartDetails(cartInqId, cartInq) {
-  console.log(cartInq, cartInqId)
+  console.log(cartInq, cartInqId);
   const cartContainer = document.getElementById('cartContainer');
   cartContainer.innerHTML = '';
 
-  const selectedCartInq = cartInq.find((item) => item.cart_inq_id === cartInqId);
+  const selectedCartInq = cartInq.find(
+    (item) => item.cart_inq_id === cartInqId
+  );
   if (!selectedCartInq) {
     console.error('Cart inquiry not found');
     return;
@@ -1224,8 +1302,8 @@ async function showCartDetails(cartInqId, cartInq) {
       <div class="cart-item-top">
         <h6>Cart ID: ${selectedCartInq.cart_inq_id}</h6>
         <p style="font-size: 0.7rem;">Created At: ${new Date(
-    selectedCartInq.createdAt.seconds * 1000
-  ).toLocaleString()}</p>
+          selectedCartInq.createdAt.seconds * 1000
+        ).toLocaleString()}</p>
       </div>
       <div class="cart-item-table">
         <h4>Products:</h4>
@@ -1243,12 +1321,14 @@ async function showCartDetails(cartInqId, cartInq) {
       </div>
       <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${selectedCartInq.first_address.lname1
-    }</p>
+        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${
+    selectedCartInq.first_address.lname1
+  }</p>
         <p><span>Email :</span>${selectedCartInq.first_address.email1}</p>
         <p><span>Phone :</span>${selectedCartInq.first_address.phone1}</p>
-        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${selectedCartInq.first_address.city1
-    }, ${selectedCartInq.first_address.country1}</p>
+        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${
+    selectedCartInq.first_address.city1
+  }, ${selectedCartInq.first_address.country1}</p>
         <p><span>Post Code :</span>${selectedCartInq.first_address.post1}</p>
       </div> 
       <div class="cart-item-note">
@@ -1256,8 +1336,9 @@ async function showCartDetails(cartInqId, cartInq) {
         <p style="font-size: 0.9rem;">${selectedCartInq.order_note}</p>
       </div>
       <div class="cart-inquiry-button">
-        <button id='cart-${selectedCartInq.cart_inq_id
-    }' class='dealExcelReceiptBtn'>
+        <button id='cart-${
+          selectedCartInq.cart_inq_id
+        }' class='dealExcelReceiptBtn'>
           Excel <i class="fa fa-download"></i>
         </button>
         <button id='cart-${selectedCartInq.cart_inq_id}' class='dealReceiptBtn'>
@@ -1385,8 +1466,9 @@ async function getCartInquiryPDF(receiptData, company) {
     counterY
   );
   doc.text(
-    `Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() ||
-    '..................'
+    `Date: ${
+      new Date(createdAt.seconds * 1000).toLocaleDateString() ||
+      '..................'
     }`,
     rightAlignX,
     counterY
@@ -1395,7 +1477,8 @@ async function getCartInquiryPDF(receiptData, company) {
   // Customer details (First Address)
   counterY += 7;
   doc.text(
-    `Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'
+    `Customer Name: ${
+      first_address.fname1 + first_address.lname1 || '..................'
     }`,
     leftAlignX,
     counterY
@@ -1486,8 +1569,8 @@ async function generateCartInqExcel(inqid, company) {
   let companyName = '';
   let total = 0;
 
-  products.forEach((p) => total = total + (p.quantity * p.price))
-  console.log(total)
+  products.forEach((p) => (total = total + p.quantity * p.price));
+  console.log(total);
 
   if (company.toLowerCase() == 'neha') {
     companyName = 'Neha Music Science Center';

@@ -21,14 +21,15 @@ import {
 
 // new paid
 const firebaseConfig = {
-  apiKey: "AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI",
-  authDomain: "nsc-project-b2648.firebaseapp.com",
-  databaseURL: "https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "nsc-project-b2648",
-  storageBucket: "nsc-project-b2648.firebasestorage.app",
-  messagingSenderId: "208868373512",
-  appId: "1:208868373512:web:b4b1c9922dcd9ef8e2cdbd",
-  measurementId: "G-7TXJZD0N70"
+  apiKey: 'AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI',
+  authDomain: 'nsc-project-b2648.firebaseapp.com',
+  databaseURL:
+    'https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'nsc-project-b2648',
+  storageBucket: 'nsc-project-b2648.firebasestorage.app',
+  messagingSenderId: '208868373512',
+  appId: '1:208868373512:web:b4b1c9922dcd9ef8e2cdbd',
+  measurementId: 'G-7TXJZD0N70',
 };
 
 // Initialize Firebase
@@ -57,7 +58,7 @@ const storage = getStorage(app);
 
 const urlParams = new URLSearchParams(window.location.search);
 const cartId = urlParams.get('id');
-if(!cartId){
+if (!cartId) {
   window.location.href = `shop.html`;
 }
 console.log(cartId);
@@ -223,7 +224,7 @@ function renderCartItems(cart) {
     const itemRow = document.createElement('tr');
     itemRow.innerHTML = `
     <td class="images">
-      <img src="${item.image}" alt="${item.name}" />
+      <img src="${item.imageUrl}" alt="${item.name}" />
     </td>
     <td class="product">
         <ul>

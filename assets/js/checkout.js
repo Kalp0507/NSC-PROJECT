@@ -16,17 +16,17 @@ import {
   getDownloadURL,
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
 
-
 // new paid
 const firebaseConfig = {
-  apiKey: "AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI",
-  authDomain: "nsc-project-b2648.firebaseapp.com",
-  databaseURL: "https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "nsc-project-b2648",
-  storageBucket: "nsc-project-b2648.firebasestorage.app",
-  messagingSenderId: "208868373512",
-  appId: "1:208868373512:web:b4b1c9922dcd9ef8e2cdbd",
-  measurementId: "G-7TXJZD0N70"
+  apiKey: 'AIzaSyAKg9FA7txJeEegbJQq-FkfBO8Vwy6TbTI',
+  authDomain: 'nsc-project-b2648.firebaseapp.com',
+  databaseURL:
+    'https://nsc-project-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'nsc-project-b2648',
+  storageBucket: 'nsc-project-b2648.firebasestorage.app',
+  messagingSenderId: '208868373512',
+  appId: '1:208868373512:web:b4b1c9922dcd9ef8e2cdbd',
+  measurementId: 'G-7TXJZD0N70',
 };
 
 // Initialize Firebase
@@ -54,7 +54,11 @@ const storage = getStorage(app);
 // ----------------------------------------------------------
 const urlParams = new URLSearchParams(window.location.search);
 const cartId = urlParams.get('id');
-if(!cartId){
+
+const continueShoppingLink = document.getElementById('continueShoppingLink');
+continueShoppingLink.href = `shop.html?id=${cartId}`;
+
+if (!cartId) {
   window.location.href = `shop.html`;
 }
 console.log(cartId);
@@ -93,14 +97,22 @@ function renderCartItems(cart) {
     cartContainer.innerHTML = '<p>Your cart is empty.</p>';
     return;
   }
-  cart.forEach((item) => {
-    const itemElement = document.createElement('div');
+
+  const orderedList = document.createElement('ol');
+
+  cart.forEach((item, index) => {
+    const itemElement = document.createElement('li');
     itemElement.className = 'cart-item';
     itemElement.innerHTML = `
-              <p>${item.name} X ${item.quantity}<p>
-          `;
-    cartContainer.appendChild(itemElement);
+    <div class="checkout-page-cart-list">
+      <div>${index + 1 + '. '}${item.name + ' :'}</div>
+      <div>${item.quantity + ' pcs.'}</div>
+    </div>
+  `;
+    orderedList.appendChild(itemElement);
   });
+
+  cartContainer.appendChild(orderedList);
 }
 $(document).ready(async function () {
   await getCart(cartId);

@@ -209,7 +209,7 @@ $(document).ready(async function () {
       'physics-lab': 'Physics Lab Equipment',
       'biology-lab': 'Biology Lab Equipment',
       'chemistry-lab': 'Chemistry Lab Equipment',
-      'microscopes': 'Microscopes',
+      microscopes: 'Microscopes',
       'educational-charts': 'Educational Charts',
       'mechanical-lab': 'Mechanical Engineering Lab Equipment',
       'civil-lab': 'Surveying & Civil Engineering Equipment',
@@ -227,7 +227,28 @@ $(document).ready(async function () {
     };
     // Add the heading for the selected type
     const heading = typeToIdMapping[selectedTypeId] || 'Products';
-    const headingElement = `<h2 style="width:100%">${heading}</h2>`;
+    const headingElement = `
+    <div class="shop-header-container">
+      <h2 style="width:100%">${heading}</h2>
+      <div class="header-search-form">
+        <form id="searchForm">
+          <div class="search-form-elements">
+            <div>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search here..."
+                id="searchInput"
+              />
+            </div>
+            <div>
+              <button type="submit"><i class="fi flaticon-search"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    `;
     productContainer.innerHTML += headingElement;
 
     // Loop through filtered products and create product cards
@@ -283,9 +304,11 @@ $(document).ready(async function () {
     <div class="cart-items">
     ${cart
       .map(
-        (item) => `
-            <div class="cart-item">
-            <h5>${item.name}</h5>
+        (item, index) => `
+            <div class="miniCart-item">
+            <div style="margin:0px"><strong>${index + 1 + '. '}</strong>${
+          item.name
+        }</div>
             </div>
             `
       )
