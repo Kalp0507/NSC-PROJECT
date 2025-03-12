@@ -56,6 +56,33 @@ const storage = getStorage(app);
 // open funcitons
 // ----------------------------------------------------------
 
+class Popup {
+  constructor(popupId, overlayId) {
+    this.popup = document.getElementById(popupId);
+    this.overlay = document.getElementById(overlayId);
+    this.closeButton = document.getElementById('closePopup');
+
+    this.closeButton.addEventListener('click', () => this.hide());
+    this.overlay.addEventListener('click', () => this.hide());
+  }
+
+  show(message) {
+    this.popup.style.display = 'block';
+    this.overlay.style.display = 'block';
+    this.setContent(message);
+  }
+
+  hide() {
+    this.popup.style.display = 'none';
+    this.overlay.style.display = 'none';
+  }
+
+  setContent(message) {
+    const contentDiv = document.getElementById('popupContent');
+    contentDiv.innerText = message;
+  }
+}
+
 //Fetching all products
 async function getAllProducts() {
   console.log('fetching all products');
@@ -75,7 +102,9 @@ async function getAllProducts() {
 
 async function getSearchedProducts(term, allProdOfType) {
   if (term === '') {
-    alert('There is nothing to search for');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('There is nothing to search for!');
+    // alert('There is nothing to search for');
     return []; // Return empty array if no search term
   }
 
@@ -246,12 +275,16 @@ $(document).ready(function () {
 
     // Validate that no fields are empty
     if (!name || !price || !description || !type || !imageFile) {
-      alert('All fields are required. Please fill in all fields.');
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('All fields are required. Please fill in all fields.');
+      // alert('All fields are required. Please fill in all fields.');
       return;
     }
 
     if (imageFile.length > 1) {
-      alert('Please select only one image');
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Please select only one image.');
+      // alert('Please select only one image');
       return;
     }
 
@@ -273,12 +306,15 @@ $(document).ready(function () {
         imageUrl: imageUrl, // Store image URL
         createdAt: new Date(),
       });
-
-      alert('Product added successfully! ID: ' + docRef.id);
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Product added successfully!');
+      // alert('Product added successfully! ID: ' + docRef.id);
       $('#product-form')[0].reset(); // Reset form
     } catch (error) {
       console.error('Error adding document: ', error);
-      alert('Error adding product!');
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Error adding Product!');
+      // alert('Error adding product!');
     }
   });
 
@@ -609,11 +645,15 @@ async function editProducts(id) {
       });
     } else {
       console.log('No such document!');
-      alert('Product not found.');
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Product not found.');
+      // alert('Product not found.');
     }
   } catch (error) {
     console.error('Error editing product:', error);
-    alert('Failed to edit product. Please try again.');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Failed to edit product. Please try again.');
+    // alert('Failed to edit product. Please try again.');
   }
 }
 
@@ -667,7 +707,9 @@ async function updateProduct(e, productData, docRef) {
     // Update the product document in Firestore
     await updateDoc(docRef, updatedData);
   } else {
-    alert('No changes detected.');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('No changes detected.');
+    // alert('No changes detected.');
   }
 }
 
@@ -676,10 +718,14 @@ async function deleteProduct(id) {
     const docRef = doc(db, 'products', id); // Direct reference to the document by id
     await deleteDoc(docRef); // Delete the document
     showProducts();
-    alert('Product successfully deleted!');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Product successfully deleted!');
+    // alert('Product successfully deleted!');
   } catch (error) {
     console.error('Error deleting product:', error);
-    alert('Failed to delete product. Please try again.');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Failed to delete product. Please try again.');
+    // alert('Failed to delete product. Please try again.');
   }
 }
 
@@ -710,7 +756,9 @@ async function generateProductsReceipt() {
     });
     console.log(productsToPrint);
   } else {
-    alert('Select atleast one product!!');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Select atleast one Product!');
+    // alert('Select atleast one product!!');
     return;
   }
 
@@ -832,7 +880,9 @@ async function generateProductsReceipt() {
 
   // Handle image loading errors
   img.onerror = function () {
-    alert('Failed to load the logo image.');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Failed to load the logo image.');
+    // alert('Failed to load the logo image.');
   };
 }
 
@@ -854,7 +904,9 @@ async function generateProductsExcel() {
     });
   } else {
     // If selectedProducts is empty, add all products
-    alert('There is nothing selected');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('No product selected, select atleast one product!');
+    // alert('There is nothing selected');
     return;
   }
 
@@ -1181,7 +1233,9 @@ async function getInquiryPDF(data) {
 
   // Handle image loading errors
   img.onerror = function () {
-    alert('Failed to load the logo image.');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Failed to load the logo image.');
+    // alert('Failed to load the logo image.');
   };
 }
 
@@ -1351,13 +1405,17 @@ async function showCartDetails(cartInqId, cartInq) {
         </button>
         <div id="companyModal" class="modal2">
           <div class="modal-content2">
-            <span class="close2">&times;</span>
-            <h2>Select a Company</h2>
-            <select id="companySelect2">
-              <option value="neha-sangeet-vigyan-kendra">Neha Sangeet Vigyan Kendra</option>
-              <option value="niharika-scientific-center">Niharika Scientific Center</option>
-            </select>
+            <div> 
+              <span class="close2">&times;</span>
+              <h2>Select a Company</h2>
+            <div>
+            <div class="modal-content2-options">
+              <select id="companySelect2">
+                <option value="neha-sangeet-vigyan-kendra">Neha Sangeet Vigyan Kendra</option>
+                <option value="niharika-scientific-center">Niharika Scientific Center</option>
+              </select>
             <button class="confirmSelection">Confirm</button>
+            <div>
           </div>
         </div>
       </div>
@@ -1758,6 +1816,10 @@ async function showCurrentAnnouncement() {
   updateAnnouncementBtn.addEventListener('click', async () => {
     if (inputAnnouncement.value !== '')
       await updateAnnouncement(inputAnnouncement.value);
-    else alert('Enter new annoucement');
+    else {
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Enter new announcement.');
+      // alert('Enter new annoucement');
+    }
   });
 }

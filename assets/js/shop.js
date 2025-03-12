@@ -54,6 +54,32 @@ const storage = getStorage(app);
 // ----------------------------------------------------------
 // open funcitons
 // ----------------------------------------------------------
+class Popup {
+  constructor(popupId, overlayId) {
+    this.popup = document.getElementById(popupId);
+    this.overlay = document.getElementById(overlayId);
+    this.closeButton = document.getElementById('closePopup');
+
+    this.closeButton.addEventListener('click', () => this.hide());
+    this.overlay.addEventListener('click', () => this.hide());
+  }
+
+  show(message) {
+    this.popup.style.display = 'block';
+    this.overlay.style.display = 'block';
+    this.setContent(message);
+  }
+
+  hide() {
+    this.popup.style.display = 'none';
+    this.overlay.style.display = 'none';
+  }
+
+  setContent(message) {
+    const contentDiv = document.getElementById('popupContent');
+    contentDiv.innerText = message;
+  }
+}
 
 const urlParams = new URLSearchParams(window.location.search);
 let cartId = urlParams.get('id') ?? null;
@@ -119,7 +145,9 @@ async function postNewCart() {
 
 async function updateCart(updatedCart) {
   if (updatedCart.length < 1) {
-    alert('Your cart is empty !!!... please add products from shop');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Your cart is empty!');
+    // alert('Your cart is empty !!!... please add products from shop');
   } else {
     try {
       const docRef = doc(db, 'carts', cartId);
@@ -130,7 +158,9 @@ async function updateCart(updatedCart) {
         products: updatedCart,
       });
 
-      alert('Cart updated successfully !!!');
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Cart updated successfully!');
+      // alert('Cart updated successfully !!!');
     } catch (error) {
       console.log('Error updating cart:', error);
     }
@@ -287,7 +317,9 @@ $(document).ready(async function () {
 
     if (existingProduct) {
       // If the product is already in the cart, alert the user
-      alert('This product is already in your cart!');
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('This product is already in your cart!');
+      // alert('This product is already in your cart!');
       return; // Exit the function to prevent adding the product again
     }
     // allProducts has all products with product id (pid)
@@ -333,7 +365,9 @@ $(document).ready(async function () {
   cartSubmitbtn.forEach((button) => {
     button.addEventListener('click', async () => {
       if (cart.length < 1) {
-        alert('Your cart is empty!!');
+        const myPopup = new Popup('popup', 'popupOverlay');
+        myPopup.show('Your cart is empty!!');
+        // alert('Your cart is empty!!');
         return;
       }
       try {

@@ -55,6 +55,32 @@ const storage = getStorage(app);
 // ----------------------------------------------------------
 // open funcitons
 // ----------------------------------------------------------
+class Popup {
+  constructor(popupId, overlayId) {
+    this.popup = document.getElementById(popupId);
+    this.overlay = document.getElementById(overlayId);
+    this.closeButton = document.getElementById('closePopup');
+
+    this.closeButton.addEventListener('click', () => this.hide());
+    this.overlay.addEventListener('click', () => this.hide());
+  }
+
+  show(message) {
+    this.popup.style.display = 'block';
+    this.overlay.style.display = 'block';
+    this.setContent(message);
+  }
+
+  hide() {
+    this.popup.style.display = 'none';
+    this.overlay.style.display = 'none';
+  }
+
+  setContent(message) {
+    const contentDiv = document.getElementById('popupContent');
+    contentDiv.innerText = message;
+  }
+}
 
 const urlParams = new URLSearchParams(window.location.search);
 const cartId = urlParams.get('id');
@@ -94,7 +120,9 @@ async function deleteCart(id) {
     const docRef = doc(db, 'carts', id); // Direct reference to the document by id
     await deleteDoc(docRef); // Delete the document
 
-    alert('cart deleted successfully', id);
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Cart deleted successfully!');
+    // alert('cart deleted successfully', id);
   } catch (error) {
     console.log('Error in deleting cart:', error);
   }
@@ -106,7 +134,9 @@ async function updateCart(updatedCart) {
 
   // if current cart has no prod.... delete cart from db ---> we cant
   if (updatedCart.length < 1) {
-    alert('Your cart is empty !!!... please add products from shop');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Your cart is empty... Please add atleast one product!!');
+    // alert('Your cart is empty !!!... please add products from shop');
   } else {
     // else change db with current card
     // how??? => just change the products with new product array ?
@@ -119,7 +149,9 @@ async function updateCart(updatedCart) {
         products: updatedCart,
       });
 
-      alert('Cart updated successfully !!!');
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Cart updated successfully!');
+      // alert('Cart updated successfully !!!');
       renderCartItems(updatedCart);
     } catch (error) {
       console.log('Error updating cart:', error);
@@ -144,7 +176,9 @@ const checkoutBtn = document.getElementById('checkoutBtn');
 
 updateCartbtn.addEventListener('click', () => {
   if (areCartsEqual(cart, currentCart)) {
-    alert('Cart is the same');
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('Cart is same!');
+    // alert('Cart is the same');
   } else {
     updateCart(currentCart);
   }

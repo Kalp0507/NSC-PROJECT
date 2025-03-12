@@ -52,12 +52,38 @@ const storage = getStorage(app);
 // ----------------------------------------------------------
 // open funcitons
 // ----------------------------------------------------------
+
+class Popup {
+  constructor(popupId, overlayId) {
+    this.popup = document.getElementById(popupId);
+    this.overlay = document.getElementById(overlayId);
+    this.closeButton = document.getElementById('closePopup');
+
+    this.closeButton.addEventListener('click', () => this.hide());
+    this.overlay.addEventListener('click', () => this.hide());
+  }
+
+  show(message) {
+    this.popup.style.display = 'block';
+    this.overlay.style.display = 'block';
+    this.setContent(message);
+  }
+
+  hide() {
+    this.popup.style.display = 'none';
+    this.overlay.style.display = 'none';
+  }
+
+  setContent(message) {
+    const contentDiv = document.getElementById('popupContent');
+    contentDiv.innerText = message;
+  }
+}
+
 const urlParams = new URLSearchParams(window.location.search);
 const cartId = urlParams.get('id');
 let cartInqSubmitted = false;
 const continueShoppingLink = document.getElementById('continueShoppingLink');
-
-
 
 if (!cartId) {
   window.location.href = `shop.html`;
@@ -154,7 +180,7 @@ $(document).ready(function () {
 
     // products in cart
     const products = [...cart];
-    console.log(country1)
+    console.log(country1);
 
     // Validation function for name fields (must be only alphabets)
     const isValidName = (name) => /^[a-zA-Z]+$/.test(name);
@@ -163,19 +189,26 @@ $(document).ready(function () {
     const isValidPhone = (phone) => /^[0-9]{10}$/.test(phone);
 
     // Validation function for email (must end with @gmail.com)
-    const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
+    const isValidEmail = (email) =>
+      /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 
     // Validation for pincode/postcode (must be a number)
     const isValidPost = (post) => /^[0-9]+$/.test(post);
 
     // Function to display error messages
     const showError = (message) => {
-      $('#statusMessage').html(`<span style="color:red;">${message}</span>`).fadeIn().delay(3000).fadeOut();
+      $('#statusMessage')
+        .html(`<span style="color:red;">${message}</span>`)
+        .fadeIn()
+        .delay(3000)
+        .fadeOut();
     };
 
     // Function to display success message
     const showSuccess = (message) => {
-      $('#statusMessage').html(`<span style="color:green;">${message}</span>`).fadeIn();
+      $('#statusMessage')
+        .html(`<span style="color:green;">${message}</span>`)
+        .fadeIn();
     };
 
     // Validate first address fields
@@ -204,7 +237,9 @@ $(document).ready(function () {
       return;
     }
     if (!email1 || !isValidEmail(email1)) {
-      showError('Email is invalid or empty. Must be a valid @gmail.com address.');
+      showError(
+        'Email is invalid or empty. Must be a valid @gmail.com address.'
+      );
       return;
     }
     if (!phone1 || !isValidPhone(phone1)) {
@@ -239,7 +274,9 @@ $(document).ready(function () {
         return;
       }
       if (!email2 || !isValidEmail(email2)) {
-        showError('Email (Address 2) is invalid or empty. Must be a valid @gmail.com address.');
+        showError(
+          'Email (Address 2) is invalid or empty. Must be a valid @gmail.com address.'
+        );
         return;
       }
       if (!phone2 || !isValidPhone(phone2)) {
@@ -265,15 +302,15 @@ $(document).ready(function () {
         order_note: order_note,
         second_address: is_address2
           ? {
-            fname2: fname2,
-            lname2: lname2,
-            country2: country2,
-            city2: city2,
-            address2: address2,
-            post2: post2,
-            email2: email2,
-            phone2: phone2,
-          }
+              fname2: fname2,
+              lname2: lname2,
+              country2: country2,
+              city2: city2,
+              address2: address2,
+              post2: post2,
+              email2: email2,
+              phone2: phone2,
+            }
           : {},
         cartId: cartId,
         createdAt: new Date(),
@@ -283,20 +320,25 @@ $(document).ready(function () {
       const cartInqSubmitbtn = document.getElementById('sendCartInqbtn');
       cartInqSubmitted = true;
       $('#checkoutForm')[0].reset(); // Reset form
-      cartInqSubmitbtn.style.display= 'none'
+      cartInqSubmitbtn.style.display = 'none';
     } catch (error) {
       showError('Error in adding cart-inquiry: ' + error.message);
     }
   });
-
 });
-
 
 continueShoppingLink.addEventListener('click', () => {
   if (!cartInqSubmitted) {
     window.location.href = `shop.html?id=${cartId}`;
-  }
-  else {
+  } else {
     window.location.href = `shop.html`;
   }
-})
+});
+
+continueShoppingLink.addEventListener('click', () => {
+  if (!cartInqSubmitted) {
+    window.location.href = `shop.html?id=${cartId}`;
+  } else {
+    window.location.href = `shop.html`;
+  }
+});
