@@ -547,9 +547,10 @@ async function editProducts(id) {
   try {
     const docRef = doc(db, 'products', id);
     const docSnap = await getDoc(docRef);
-
+    
     if (docSnap.exists()) {
       const productData = docSnap.data();
+      console.log(productData)
       let editFormHtml = ``;
       //form to edit the product details
       editFormHtml = `
@@ -596,6 +597,7 @@ async function editProducts(id) {
       // Close the modal when the close button is clicked
       closeButton.addEventListener('click', () => {
         modal.style.display = 'none';
+        modal.remove();
       });
 
       let editFormSubmitbtn = document.getElementById('editFormSubmit');
@@ -603,6 +605,7 @@ async function editProducts(id) {
         await updateProduct(e, productData, docRef);
         modal.style.display = 'none';
         showProducts();
+        modal.remove();
       });
     } else {
       console.log('No such document!');
@@ -782,7 +785,7 @@ async function generateProductsReceipt() {
       doc.setFont('helvetica', 'bold');
       doc.text('Sr. No.', 20, currentY);
       doc.text('Name', 40, currentY);
-      doc.text('Price', 80, currentY); // Adjusting the position to give more room to "Description"
+      doc.text('Price', 150, currentY); // Adjusting the position to give more room to "Description"
       // doc.text('Description', 100, currentY); // Starting "Description" earlier for wider space
 
       currentY += 10; // Move Y for the table content
@@ -795,14 +798,14 @@ async function generateProductsReceipt() {
         // const description = product.description || 'N/A';
 
         // Wrap name and price if necessary, with column width constraints
-        const nameText = doc.splitTextToSize(name, 25); // Narrow width for Name
-        const priceText = doc.splitTextToSize(price, 20); // Narrow width for Price
+        const nameText = doc.splitTextToSize(name, 80); // Narrow width for Name
+        const priceText = doc.splitTextToSize(price, 40); // Narrow width for Price
         // const descriptionText = doc.splitTextToSize(description, 90); // Widened description area
 
         doc.setFont('helvetica', 'normal');
-        doc.text(srNo, 20, currentY);
+        doc.text(srNo, 25, currentY);
         doc.text(nameText, 40, currentY);
-        doc.text(priceText, 80, currentY);
+        doc.text(priceText, 152, currentY);
         // doc.text(descriptionText, 100, currentY);
 
         currentY += 10; // Move Y for the next product row, adjust for wrapped text
@@ -909,6 +912,8 @@ async function showDealInq(page = 1) {
   // start and end index for the current page
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+  console.log(page)
 
   const dealContainer = document.getElementById('dealContainer');
   dealContainer.innerHTML = ''; // Clear the container before appending new content
@@ -1017,7 +1022,7 @@ async function showDealerDetails(dealId, dealInq) {
   `;
 
   // Add event listener for the back button
-  document.getElementById('backButton').addEventListener('click', showDealInq);
+  document.getElementById('backButton').addEventListener('click',()=>showDealInq(1));
 }
 
 async function makeReceipt(itemId, company) {
@@ -1404,7 +1409,7 @@ async function showCartDetails(cartInqId, cartInq) {
     });
   });
 
-  document.getElementById('backButton').addEventListener('click', showCartInq);
+  document.getElementById('backButton').addEventListener('click',()=>showCartInq());
 }
 
 async function getCartInquiryPDF(receiptData, company) {
