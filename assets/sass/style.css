@@ -8789,12 +8789,12 @@ wpo-hero-slider-s4
 .cart-area .cart-wrap tr:nth-child(even) {
   background: #fcfcfc;
 }
-.cart-area .cart-wrap .quantity {
+.quantity {
   position: relative;
   max-width: 110px;
   margin: 0 auto;
 }
-.cart-area .quantity input {
+.quantity input {
   width: 105px;
   padding: 0px 35px;
   text-align: center;
@@ -8804,7 +8804,7 @@ wpo-hero-slider-s4
   border: none;
   border-radius: 40px;
 }
-.cart-area .quantity .qtybutton {
+.quantity .qtybutton {
   position: absolute;
   top: 0;
   left: 0px;
@@ -8819,17 +8819,17 @@ wpo-hero-slider-s4
   border-radius: 30px;
   z-index: 1;
 }
-.cart-area .cart-wrap .quantity .qtybutton {
+.quantity .qtybutton {
   top: 50%;
   left: 5px;
   transform: translateY(-51%);
   -webkit-transform: translateY(-51%);
   -moz-transform: translateY(-51%);
 }
-.cart-area .cart-wrap .quantity .qtybutton.decreaseQuan {
+.quantity .qtybutton.decreaseQuan {
   border-left: none;
 }
-.cart-area .cart-wrap .quantity .qtybutton.increaseQuan {
+.quantity .qtybutton.increaseQuan {
   right: 5px;
   left: auto;
   border-right: none;
@@ -9438,6 +9438,7 @@ wpo-hero-slider-s4
   padding: 15px;
   margin-top: 20px;
   justify-content: space-between;
+  width: 100%;
 }
 
 .wpo-shop-section .details h3 {
@@ -9466,6 +9467,11 @@ wpo-hero-slider-s4
 }
 
 /* ---- Add to Cart Button ---- */
+.wpo-shop-section .addtocartbtn-container-shop {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .wpo-shop-section #addToCart {
   margin-top: auto; /* Ensures button stays at bottom */
   font-family: 'Mulish', sans-serif;
@@ -9477,11 +9483,8 @@ wpo-hero-slider-s4
   display: inline-block;
   border-radius: 50px;
   text-decoration: none;
+  width: 75%;
 }
-/* 
-.wpo-shop-section #addToCart a {
-  
-} */
 
 @media (max-width: 767px) {
   .wpo-shop-section #addToCart {
@@ -12901,4 +12904,10 @@ textarea:focus {
   cursor: pointer;
   color: red;
   margin-top: 10px;
+}
+
+/* delete cart product button in shop page */
+.deleteCartProduct {
+  margin-top: 10px;
+  cursor: pointer;
 }

@@ -255,6 +255,7 @@ $(document).ready(async function () {
       'soda-glassware': 'Soda Glassware',
       'electronic-apparatus': 'Electronic Apparatus',
     };
+
     // Add the heading for the selected type
     const heading = typeToIdMapping[selectedTypeId] || 'Products';
     const headingElement = `
@@ -283,6 +284,10 @@ $(document).ready(async function () {
 
     // Loop through filtered products and create product cards
     filteredProducts.forEach((item) => {
+      if (item.quantity === undefined || item.quantity < 1) {
+        item.quantity = 1;
+      }
+
       const productCard = `
         <div class="product-card" pid="${item.pid}">
           <div class="img-holder">
@@ -290,24 +295,112 @@ $(document).ready(async function () {
           </div>
           <div class="details">
             <h3>${item.name}</h3>
-            <button id="addToCart" pid="${item.pid}" class="add-to-cart">
-              Add to Cart <i class="ti-shopping-cart"></i
-             ></button>
+            <div class="quantity cart-plus-minus" style="display: ${
+              item.quantity > 1 ? 'block' : 'none'
+            };">
+              <div class='qtybutton decreaseQuan' pid='${item.pid}'>-</div>
+              <input type="text" value="${item.quantity}" pid='${
+        item.pid
+      }' class='updateQuantityinput'/>
+              <div class='increaseQuan qtybutton' pid='${item.pid}'>+</div>
+            </div>
+            <div
+              pid='${item.pid}'
+              class='deleteCartProduct'
+              title="Remove from Cart"
+              style="display: ${item.quantity > 1 ? 'block' : 'none'};"
+            >
+              <i class="fi ti-trash"></i>
+            </div>
+            <div class="addtocartbtn-container-shop">
+            <button id="addToCart" pid="${
+              item.pid
+            }" class="add-to-cart" style="display: ${
+        item.quantity > 1 ? 'none' : 'block'
+      };">
+              Add to Cart <i class="ti-shopping-cart"></i>
+            </button>
+            </div>
           </div>
         </div>
       `;
       productContainer.innerHTML += productCard;
     });
 
-    // Add event listeners to "Add to Cart" buttons
+    const updateQuantityinput = document.querySelectorAll(
+      '.updateQuantityinput'
+    );
+
+    const decreaseQuan = document.querySelectorAll('.decreaseQuan');
+    decreaseQuan.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        let clickedProduct = btn.getAttribute('pid');
+        updateQuantityinput.forEach((input) => {
+          if (input.getAttribute('pid') === clickedProduct) {
+            // Decrease quantity
+            input.value = Math.max(1, input.value - 1);
+            updateQuantity(clickedProduct, input.value);
+            toggleButtons(clickedProduct, input.value);
+          }
+        });
+      });
+    });
+
+    const increaseQuan = document.querySelectorAll('.increaseQuan');
+    increaseQuan.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        let clickedProduct = btn.getAttribute('pid');
+        updateQuantityinput.forEach((input) => {
+          if (input.getAttribute('pid') === clickedProduct) {
+            input.value++;
+            updateQuantity(clickedProduct, input.value);
+            toggleButtons(clickedProduct, input.value);
+          }
+        });
+      });
+    });
+
     const cartButtons = document.querySelectorAll('.add-to-cart');
     cartButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const pid = button.getAttribute('pid');
         console.log('pid', pid);
         addToCart(pid);
+        toggleButtons(pid, 1);
       });
     });
+
+    const deleteButtons = document.querySelectorAll('.deleteCartProduct');
+    deleteButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const pid = button.getAttribute('pid');
+        removeFromCart(pid);
+      });
+    });
+
+    function removeFromCart(pid) {
+      // Logic to remove the product from the cart
+      console.log(`Removing product with pid: ${pid}`);
+      toggleButtons(pid, 0);
+    }
+
+    function toggleButtons(pid, quantity) {
+      const productCard = document.querySelector(`.product-card[pid='${pid}']`);
+      const quantityControls = productCard.querySelector('.cart-plus-minus');
+      const addToCartButton = productCard.querySelector('.add-to-cart');
+      const deleteCartProductButton =
+        productCard.querySelector('.deleteCartProduct');
+
+      if (quantity > 0) {
+        quantityControls.style.display = 'block';
+        deleteCartProductButton.style.display = 'block';
+        addToCartButton.style.display = 'none';
+      } else {
+        quantityControls.style.display = 'none';
+        deleteCartProductButton.style.display = 'none';
+        addToCartButton.style.display = 'block';
+      }
+    }
   }
 
   // Function to add products to cart

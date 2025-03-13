@@ -84,6 +84,14 @@ class Popup {
 
 const urlParams = new URLSearchParams(window.location.search);
 const cartId = urlParams.get('id');
+
+// document
+//   .querySelectorAll('productsLink')
+//   .addEventListener('click', function (event) {
+//     event.preventDefault();
+//     window.location.href = `shop.html?id=${cartId}`;
+//   });
+
 if (!cartId) {
   window.location.href = `shop.html`;
 }
@@ -332,3 +340,7 @@ function renderCartItems(cart) {
     });
   });
 }
+
+// productsLink.addEventListener('click', () => {
+//   window.location.href = `shop.html?id=${cartId}`;
+// });

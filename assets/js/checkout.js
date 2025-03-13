@@ -84,6 +84,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const cartId = urlParams.get('id');
 let cartInqSubmitted = false;
 const continueShoppingLink = document.getElementById('continueShoppingLink');
+const productsLink = document.querySelector('a[href="shop.html"]');
 
 if (!cartId) {
   window.location.href = `shop.html`;
@@ -335,7 +336,8 @@ continueShoppingLink.addEventListener('click', () => {
   }
 });
 
-continueShoppingLink.addEventListener('click', () => {
+productsLink.addEventListener('click', (event) => {
+  event.preventDefault();
   if (!cartInqSubmitted) {
     window.location.href = `shop.html?id=${cartId}`;
   } else {
