@@ -105,7 +105,7 @@ async function getSearchedProducts(term, allProdOfType) {
     const myPopup = new Popup('popup', 'popupOverlay');
     myPopup.show('There is nothing to search for!');
     // alert('There is nothing to search for');
-    return []; // Return empty array if no search term
+    return allProdOfType;// Return empty array if no search term
   }
 
   // Convert term to lowercase for case-insensitive search
@@ -253,6 +253,7 @@ $(document).ready(() => {
   logOutBtn.addEventListener('click', () => {
     // localStorage.removeItem('admin');
     localStorage.setItem('isAuth', false);
+    localStorage.removeItem('admin')
     window.location.href = 'login.html';
   });
 });
@@ -429,9 +430,10 @@ function printProducts(products, type) {
   products.forEach((item, index) => {
     const isChecked = selectedProducts.includes(item.pid) ? 'checked' : ''; // Check if product is selected
     const productCard = document.createElement('tr');
+    productCard.classList.add('productRow');
+    productCard.setAttribute('pid', item.pid)
     productCard.innerHTML = `
-      <td class="s1"><input type="checkbox" class="row-checkbox selectProdBox" pid='${
-        item.pid
+      <td class="s1" ><input type="checkbox" class="row-checkbox selectProdBox" pid='${item.pid
       }' ${isChecked}></td>
       <td class="s1">${index + 1}</td>
       <td class="s1">${item.name}</td>
@@ -474,33 +476,17 @@ function printProducts(products, type) {
       showAllProdbtn.style.display = 'block';
 
       const searchedPrducts = await getSearchedProducts(searchTerm, products);
-      const prodContainer = document.querySelector('.product-list tbody');
-      prodContainer.innerHTML = '';
+      let productRows = document.querySelectorAll('.productRow');
 
-      if (searchedPrducts.empty) {
-        const productCard = document.createElement('tr');
-        productCard.innerHTML = '<p>There is no product with this name</p>';
+      console.log(productRows)
+      productRows.forEach((row) => {
+        row.style.display = 'none';
+        searchedPrducts.forEach((p) => {
+          if (p.pid === row.getAttribute('pid'))
+            row.style.display = 'flex';
+        })
+      })
 
-        prodContainer.appendChild(productCard);
-      } else {
-        searchedPrducts.forEach((item) => {
-          const productCard = document.createElement('tr');
-          const isChecked = selectedProducts.includes(item.pid)
-            ? 'checked'
-            : ''; // Check if product is selected
-          productCard.innerHTML = `
-        <td class="s1"><input type="checkbox" class="row-checkbox selectProdBox" pid='${item.pid}' ${isChecked}></td>
-        <td class="s1">${item.name}</td>
-        <td class="s1">${item.price}</td>
-        <td class="s2">${item.description}</td>
-        <td class="product-buttons s3">
-          <button pid='${item.pid}' class='editProduct'>Edit</button>
-          <button pid='${item.pid}' class='deleteProduct'>Delete</button>
-        </td>
-      `;
-          prodContainer.appendChild(productCard);
-        });
-      }
     });
 
     editProductBtns.forEach((btn) => {
@@ -583,7 +569,7 @@ async function editProducts(id) {
   try {
     const docRef = doc(db, 'products', id);
     const docSnap = await getDoc(docRef);
-    
+
     if (docSnap.exists()) {
       const productData = docSnap.data();
       console.log(productData)
@@ -984,9 +970,9 @@ async function showDealInq(page = 1) {
       </thead>
       <tbody>
         ${dealInq
-          .slice(startIndex, endIndex)
-          .map(
-            (item, index) => `
+      .slice(startIndex, endIndex)
+      .map(
+        (item, index) => `
           <tr data-deal-id="${item.deal_id}" class="dealer-row">
             <td>${startIndex + index + 1}</td>
             <td>${item.person_name}</td>
@@ -995,8 +981,8 @@ async function showDealInq(page = 1) {
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-          )
-          .join('')}
+      )
+      .join('')}
       </tbody>
     </table>
   </div>
@@ -1074,7 +1060,7 @@ async function showDealerDetails(dealId, dealInq) {
   `;
 
   // Add event listener for the back button
-  document.getElementById('backButton').addEventListener('click',()=>showDealInq(1));
+  document.getElementById('backButton').addEventListener('click', () => showDealInq(1));
 }
 
 async function makeReceipt(itemId, company) {
@@ -1270,9 +1256,9 @@ async function showCartInq(page = 1) {
       </thead>
       <tbody>
         ${cartInq
-          .slice(startIndex, endIndex)
-          .map(
-            (item, index) => `
+      .slice(startIndex, endIndex)
+      .map(
+        (item, index) => `
           <tr data-cart-id="${item.cart_inq_id}" class="cart-row">
             <td>${startIndex + index + 1}</td>
             <td>${item.cart_inq_id}</td>
@@ -1281,8 +1267,8 @@ async function showCartInq(page = 1) {
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-          )
-          .join('')}
+      )
+      .join('')}
       </tbody>
     </table>
   </div>
@@ -1361,8 +1347,8 @@ async function showCartDetails(cartInqId, cartInq) {
       <div class="cart-item-top">
         <h6>Cart ID: ${selectedCartInq.cart_inq_id}</h6>
         <p style="font-size: 0.7rem;">Created At: ${new Date(
-          selectedCartInq.createdAt.seconds * 1000
-        ).toLocaleString()}</p>
+    selectedCartInq.createdAt.seconds * 1000
+  ).toLocaleString()}</p>
       </div>
       <div class="cart-item-table">
         <h4>Products:</h4>
@@ -1380,14 +1366,12 @@ async function showCartDetails(cartInqId, cartInq) {
       </div>
       <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${
-    selectedCartInq.first_address.lname1
-  }</p>
+        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${selectedCartInq.first_address.lname1
+    }</p>
         <p><span>Email :</span>${selectedCartInq.first_address.email1}</p>
         <p><span>Phone :</span>${selectedCartInq.first_address.phone1}</p>
-        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${
-    selectedCartInq.first_address.city1
-  }, ${selectedCartInq.first_address.country1}</p>
+        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${selectedCartInq.first_address.city1
+    }, ${selectedCartInq.first_address.country1}</p>
         <p><span>Post Code :</span>${selectedCartInq.first_address.post1}</p>
       </div> 
       <div class="cart-item-note">
@@ -1395,9 +1379,8 @@ async function showCartDetails(cartInqId, cartInq) {
         <p style="font-size: 0.9rem;">${selectedCartInq.order_note}</p>
       </div>
       <div class="cart-inquiry-button">
-        <button id='cart-${
-          selectedCartInq.cart_inq_id
-        }' class='dealExcelReceiptBtn'>
+        <button id='cart-${selectedCartInq.cart_inq_id
+    }' class='dealExcelReceiptBtn'>
           Excel <i class="fa fa-download"></i>
         </button>
         <button id='cart-${selectedCartInq.cart_inq_id}' class='dealReceiptBtn'>
@@ -1467,7 +1450,7 @@ async function showCartDetails(cartInqId, cartInq) {
     });
   });
 
-  document.getElementById('backButton').addEventListener('click',()=>showCartInq());
+  document.getElementById('backButton').addEventListener('click', () => showCartInq());
 }
 
 async function getCartInquiryPDF(receiptData, company) {
@@ -1529,9 +1512,8 @@ async function getCartInquiryPDF(receiptData, company) {
     counterY
   );
   doc.text(
-    `Date: ${
-      new Date(createdAt.seconds * 1000).toLocaleDateString() ||
-      '..................'
+    `Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() ||
+    '..................'
     }`,
     rightAlignX,
     counterY
@@ -1540,8 +1522,7 @@ async function getCartInquiryPDF(receiptData, company) {
   // Customer details (First Address)
   counterY += 7;
   doc.text(
-    `Customer Name: ${
-      first_address.fname1 + first_address.lname1 || '..................'
+    `Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'
     }`,
     leftAlignX,
     counterY
@@ -1809,17 +1790,74 @@ async function showCurrentAnnouncement() {
   const currentAnnouncement = document.getElementById('curremtAnnouncement');
   const inputAnnouncement = document.querySelector('#admin-announcement');
   const updateAnnouncementBtn = document.getElementById('updateAnnouncement');
+  const currentPassword = document.getElementById('curremtPassword');
+  const inputPassword = document.querySelector('#admin-password');
+  const updatePasswordBtn = document.getElementById('updatePassword');
+  const adminId = localStorage.getItem('admin');
 
   const curAnn = await getAnnouncement();
+  const admin = await getAdmin(adminId);
+  console.log(admin)
   currentAnnouncement.innerText = curAnn.announcement;
+  currentPassword.innerText = admin.password;
 
   updateAnnouncementBtn.addEventListener('click', async () => {
-    if (inputAnnouncement.value !== '')
+    if (inputAnnouncement.value !== '') {
       await updateAnnouncement(inputAnnouncement.value);
-    else {
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Announcement updated successfully!');
+    } else {
       const myPopup = new Popup('popup', 'popupOverlay');
       myPopup.show('Enter new announcement.');
       // alert('Enter new annoucement');
     }
   });
+
+  updatePasswordBtn.addEventListener('click', async () => {
+    if (inputPassword.value !== '') {
+      await updatePassword(inputPassword.value, adminId);
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Password changed successfully!');
+    }
+    else {
+      const myPopup = new Popup('popup', 'popupOverlay');
+      myPopup.show('Enter new password.');
+      // alert('Enter new annoucement');
+    }
+  });
+
+
+}
+
+// for admin
+async function getAdmin(aid) {
+  try {
+    console.log(aid);
+    const docRef = doc(db, 'admin', aid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.log('No such document!');
+      return {};
+    }
+  } catch (error) {
+    console.log("Error fetching admin: ", error);
+  }
+}
+
+async function updatePassword(newPassword, docId) {
+  try {
+    const docRef = doc(db, 'admin', docId);
+    await updateDoc(docRef, {
+      password: newPassword
+    });
+    showCurrentAnnouncement();
+    const inputPassword = document.querySelector('#admin-password');
+    inputPassword.value = '';
+    console.log('Password updated successfully');
+  } catch (error) {
+    console.error('Error updating password:', error);
+  }
 }

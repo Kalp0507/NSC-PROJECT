@@ -400,6 +400,22 @@
                 <button id="updateAnnouncement">Update</button>
               </div>
             </div>
+
+            <!-- for admin -->
+            <div class="adminPage-heading"><h1>Admin Information</h1></div>
+            <div class="adminInfo">
+              <div>
+                <h6>Current Password :</h6>
+                <p style="font-size: 0.9rem" id="curremtPassword"></p>
+              </div>
+              <div>
+                <h6>Change Password :</h6>
+                <input type="text" id="admin-password" name="admin-password" />
+              </div>
+              <div class="update-password-button">
+                <button id="updatePassword">Update</button>
+              </div>
+            </div>
           </section>
         </div>
       </div>
@@ -432,50 +448,50 @@
     <script>
       function showSection1(sectionId) {
         // Hide all sections
-        document.querySelectorAll('.admin-section').forEach((section) => {
-          section.style.display = 'none';
+        document.querySelectorAll(".admin-section").forEach((section) => {
+          section.style.display = "none";
         });
 
         // Show the selected section
-        document.getElementById(sectionId).style.display = 'block';
+        document.getElementById(sectionId).style.display = "block";
       }
     </script>
     <script>
-      const dropdownButton = document.querySelector('.dropdown-button');
-      const dropdownContent = document.querySelector('.dropdown-content');
-      const selectedCategory = document.querySelector('.selected-category');
+      const dropdownButton = document.querySelector(".dropdown-button");
+      const dropdownContent = document.querySelector(".dropdown-content");
+      const selectedCategory = document.querySelector(".selected-category");
 
-      dropdownButton.addEventListener('click', () => {
-        dropdownButton.classList.toggle('active');
-        dropdownContent.classList.toggle('show');
+      dropdownButton.addEventListener("click", () => {
+        dropdownButton.classList.toggle("active");
+        dropdownContent.classList.toggle("show");
       });
 
       // Close dropdown when clicking outside
-      document.addEventListener('click', (event) => {
-        if (!event.target.closest('.mobile-dropdown2')) {
-          dropdownContent.classList.remove('show');
-          dropdownButton.classList.remove('active');
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".mobile-dropdown2")) {
+          dropdownContent.classList.remove("show");
+          dropdownButton.classList.remove("active");
         }
       });
 
       // Show section function
       function showSection(sectionId) {
         // Hide all sections
-        const sections = document.querySelectorAll('.product-category');
+        const sections = document.querySelectorAll(".product-category");
         sections.forEach((section) => {
-          section.style.display = 'none';
+          section.style.display = "none";
         });
 
         // Show selected section
         const selectedSection = document.getElementById(sectionId);
         if (selectedSection) {
-          selectedSection.style.display = 'block';
+          selectedSection.style.display = "block";
         }
 
         // Update active states
-        const sidebarItems = document.querySelectorAll('.sidebar-list li');
+        const sidebarItems = document.querySelectorAll(".sidebar-list li");
         sidebarItems.forEach((item) => {
-          item.classList.remove('active');
+          item.classList.remove("active");
         });
 
         // Update selected category text in dropdown
@@ -483,18 +499,18 @@
           `[onclick="showSection('${sectionId}')"]`
         );
         if (clickedItem) {
-          clickedItem.classList.add('active');
+          clickedItem.classList.add("active");
           selectedCategory.textContent = clickedItem.textContent;
         }
 
         // Close dropdown on mobile
-        dropdownContent.classList.remove('show');
-        dropdownButton.classList.remove('active');
+        dropdownContent.classList.remove("show");
+        dropdownButton.classList.remove("active");
       }
 
       // Initialize first section
-      document.addEventListener('DOMContentLoaded', () => {
-        showSection('physics-lab-section');
+      document.addEventListener("DOMContentLoaded", () => {
+        showSection("physics-lab-section");
       });
     </script>
   </body>
