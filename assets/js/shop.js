@@ -158,8 +158,8 @@ async function updateCart(updatedCart) {
         products: updatedCart,
       });
 
-      const myPopup = new Popup('popup', 'popupOverlay');
-      myPopup.show('Cart updated successfully!');
+      // const myPopup = new Popup('popup', 'popupOverlay');
+      // myPopup.show('Cart updated successfully!');
       // alert('Cart updated successfully !!!');
     } catch (error) {
       console.log('Error updating cart:', error);
@@ -295,11 +295,13 @@ $(document).ready(async function () {
           </div>
           <div class="details">
             <h3>${item.name}</h3>
-            <div class="quantity cart-plus-minus" style="display: ${item.quantity > 1 ? 'block' : 'none'
-        };">
+            <div class="quantity cart-plus-minus" style="display: ${
+              item.quantity > 1 ? 'block' : 'none'
+            };">
               <div class='qtybutton decreaseQuan' pid='${item.pid}'>-</div>
-              <input type="text" value="${item.quantity}" pid='${item.pid
-        }' class='updateQuantityinput'/>
+              <input type="text" value="${item.quantity}" pid='${
+        item.pid
+      }' class='updateQuantityinput'/>
               <div class='increaseQuan qtybutton' pid='${item.pid}'>+</div>
             </div>
             <div
@@ -311,9 +313,11 @@ $(document).ready(async function () {
               <i class="fi ti-trash"></i>
             </div>
             <div class="addtocartbtn-container-shop">
-            <button id="addToCart" pid="${item.pid
-        }" class="add-to-cart" style="display: ${item.quantity > 1 ? 'none' : 'block'
-        };">
+            <button id="addToCart" pid="${
+              item.pid
+            }" class="add-to-cart" style="display: ${
+        item.quantity > 1 ? 'none' : 'block'
+      };">
               Add to Cart <i class="ti-shopping-cart"></i>
             </button>
             </div>
@@ -412,18 +416,16 @@ $(document).ready(async function () {
         product.name.toLowerCase().includes(searchTerm)
       );
 
-      console.log(searchResult)
+      console.log(searchResult);
 
-      let productCards = document.querySelectorAll('.product-card')
+      let productCards = document.querySelectorAll('.product-card');
       productCards.forEach((card) => {
-        card.style.display = 'none'
-        searchResult.forEach((r)=>{
-          if(r.pid === card.getAttribute('pid'))
-            card.style.display='block'
-        })
-      })
-    })
-
+        card.style.display = 'none';
+        searchResult.forEach((r) => {
+          if (r.pid === card.getAttribute('pid')) card.style.display = 'block';
+        });
+      });
+    });
   }
 
   // Function to add products to cart
@@ -451,15 +453,17 @@ $(document).ready(async function () {
     let cartHTML = `
     <div class="cart-items">
     ${cart
-        .map(
-          (item, index) => `
+      .map(
+        (item, index) => `
             <div class="miniCart-item">
+
             <div style="margin:0px"><strong>${index + 1 + '. '}</strong>${item.name
             } x ${item.quantity}</div>
+
             </div>
             `
-        )
-        .join('')}
+      )
+      .join('')}
         </div>
         `;
     cartContainer.forEach((container) => {
@@ -513,5 +517,4 @@ $(document).ready(async function () {
       }
     });
   });
-
 });

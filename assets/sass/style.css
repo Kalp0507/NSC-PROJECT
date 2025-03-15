@@ -12463,6 +12463,36 @@ textarea:focus {
   box-shadow: 0px 4px 10px 3px rgba(21, 3, 131, 0.05);
 }
 
+.update-password-button {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+.update-password-button button {
+  background: rgb(0, 41, 127);
+  color: #fff;
+  border-style: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 140px;
+  margin-right: 5px;
+  padding: 0px 15px 0px 15px;
+}
+
+.update-password-button button:hover {
+  background: rgb(12, 60, 165);
+}
+
+#admin-password {
+  padding: 8px;
+  margin: 10px 0px;
+  font-size: 0.9rem;
+  width: 60%;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px 3px rgba(21, 3, 131, 0.05);
+}
 /* Modal Styles */
 #editProductModal .modal {
   display: none;
