@@ -378,10 +378,16 @@ $(document).ready(async function () {
       });
     });
 
-    function removeFromCart(pid) {
+    function removeFromCart(clickedProd) {
       // Logic to remove the product from the cart
-      console.log(`Removing product with pid: ${pid}`);
-      toggleButtons(pid, 0);
+      updateQuantityinput.forEach((ip)=>{
+        if (ip.getAttribute('pid') === clickedProd) {
+          ip.value=1
+        }
+      })
+      cart = cart.filter((p)=>p.pid !== clickedProd)
+      displayCart(cart)
+      toggleButtons(clickedProd, 0);
     }
 
     function toggleButtons(pid, quantity) {
@@ -450,9 +456,10 @@ $(document).ready(async function () {
       .map(
         (item, index) => `
             <div class="miniCart-item">
-            <div style="margin:0px"><strong>${index + 1 + '. '}</strong>${
-          item.name
-        }</div>
+
+            <div style="margin:0px"><strong>${index + 1 + '. '}</strong>${item.name
+            } x ${item.quantity}</div>
+
             </div>
             `
       )
@@ -470,6 +477,16 @@ $(document).ready(async function () {
     cartCountElements.forEach((cartCountElement) => {
       cartCountElement.textContent = count;
     });
+  }
+
+  function updateQuantity(prod , newQuant){
+    console.log(prod,newQuant)
+    cart.forEach((p)=>{
+      if(p.pid === prod){
+        p.quantity = newQuant
+      }
+    })
+    displayCart(cart)
   }
   const cartSubmitbtn = document.querySelectorAll('.cartSubmitbtn');
   console.log(cartSubmitbtn);
