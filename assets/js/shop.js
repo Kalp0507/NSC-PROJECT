@@ -295,13 +295,11 @@ $(document).ready(async function () {
           </div>
           <div class="details">
             <h3>${item.name}</h3>
-            <div class="quantity cart-plus-minus" style="display: ${
-              item.quantity > 1 ? 'block' : 'none'
-            };">
+            <div class="quantity cart-plus-minus" style="display: ${item.quantity > 1 ? 'block' : 'none'
+        };">
               <div class='qtybutton decreaseQuan' pid='${item.pid}'>-</div>
-              <input type="text" value="${item.quantity}" pid='${
-        item.pid
-      }' class='updateQuantityinput'/>
+              <input type="text" value="${item.quantity}" pid='${item.pid
+        }' class='updateQuantityinput'/>
               <div class='increaseQuan qtybutton' pid='${item.pid}'>+</div>
             </div>
             <div
@@ -313,11 +311,9 @@ $(document).ready(async function () {
               <i class="fi ti-trash"></i>
             </div>
             <div class="addtocartbtn-container-shop">
-            <button id="addToCart" pid="${
-              item.pid
-            }" class="add-to-cart" style="display: ${
-        item.quantity > 1 ? 'none' : 'block'
-      };">
+            <button id="addToCart" pid="${item.pid
+        }" class="add-to-cart" style="display: ${item.quantity > 1 ? 'none' : 'block'
+        };">
               Add to Cart <i class="ti-shopping-cart"></i>
             </button>
             </div>
@@ -401,6 +397,27 @@ $(document).ready(async function () {
         addToCartButton.style.display = 'block';
       }
     }
+
+    $('#searchForm').submit((e) => {
+      e.preventDefault();
+      let searchTerm = document.getElementById('searchInput').value.trim();
+
+      const searchResult = filteredProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm)
+      );
+
+      console.log(searchResult)
+
+      let productCards = document.querySelectorAll('.product-card')
+      productCards.forEach((card) => {
+        card.style.display = 'none'
+        searchResult.forEach((r)=>{
+          if(r.pid === card.getAttribute('pid'))
+            card.style.display='block'
+        })
+      })
+    })
+
   }
 
   // Function to add products to cart
@@ -428,16 +445,15 @@ $(document).ready(async function () {
     let cartHTML = `
     <div class="cart-items">
     ${cart
-      .map(
-        (item, index) => `
+        .map(
+          (item, index) => `
             <div class="miniCart-item">
-            <div style="margin:0px"><strong>${index + 1 + '. '}</strong>${
-          item.name
-        }</div>
+            <div style="margin:0px"><strong>${index + 1 + '. '}</strong>${item.name
+            }</div>
             </div>
             `
-      )
-      .join('')}
+        )
+        .join('')}
         </div>
         `;
     cartContainer.forEach((container) => {
@@ -481,41 +497,5 @@ $(document).ready(async function () {
       }
     });
   });
-  // viewCartBtn.addEventListener('click', () => alert('clicked'))
 
-  // console.log(viewCartBtn, checkoutBtn)
-
-  // $('#viewCartBtn').click(async function () {
-  //     console.log("View Cart clicked!");
-  //     if (cart.length < 1) {
-  //         alert('Your cart is empty!!');
-  //         return;
-  //     }
-  //     try {
-  //         const docRef = await addDoc(collection(db, "carts"), {
-  //             products: [...cart],
-  //             createdAt: new Date(),
-  //         });
-  //         await setDoc(docRef, { cartId: docRef.id }, { merge: true });
-  //     } catch (error) {
-  //         console.log("Error storing cart: ", error);
-  //     }
-  // });
-
-  // $('#checkoutBtn').click(async function () {
-  //     console.log("Checkout clicked!");
-  //     if (cart.length < 1) {
-  //         alert('Your cart is empty!!');
-  //         return;
-  //     }
-  //     try {
-  //         const docRef = await addDoc(collection(db, "carts"), {
-  //             products: [...cart],
-  //             createdAt: new Date(),
-  //         });
-  //         await setDoc(docRef, { cartId: docRef.id }, { merge: true });
-  //     } catch (error) {
-  //         console.log("Error storing cart: ", error);
-  //     }
-  // });
 });

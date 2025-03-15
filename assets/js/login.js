@@ -106,6 +106,7 @@ $(document).ready(function () {
           // alert("Login successful!");
           // localStorage.setItem("admin", JSON.stringify(adminData));
           localStorage.setItem('isAuth', true);
+          localStorage.setItem('admin',doc.id)
           window.location.href = 'admin.html';
         } else {
           const myPopup = new Popup('popup', 'popupOverlay');
