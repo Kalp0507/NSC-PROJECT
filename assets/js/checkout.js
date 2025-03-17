@@ -105,10 +105,7 @@ async function getCart() {
       const cartData = doc.data();
       if (cartData.products) {
         cartData.products.forEach((product) => {
-          cart.push({
-            name: product.name,
-            quantity: product.quantity,
-          });
+          cart.push(product);
         });
       }
     });
@@ -303,21 +300,45 @@ $(document).ready(function () {
         order_note: order_note,
         second_address: is_address2
           ? {
-              fname2: fname2,
-              lname2: lname2,
-              country2: country2,
-              city2: city2,
-              address2: address2,
-              post2: post2,
-              email2: email2,
-              phone2: phone2,
-            }
+            fname2: fname2,
+            lname2: lname2,
+            country2: country2,
+            city2: city2,
+            address2: address2,
+            post2: post2,
+            email2: email2,
+            phone2: phone2,
+          }
           : {},
         cartId: cartId,
         createdAt: new Date(),
       });
 
       showSuccess('Cart-inquiry added successfully!');
+
+      let total = 0;
+      products.forEach((p)=>total = total + (p.price*p.quantity))
+
+      console.log(total ,products)
+
+      // Now send the email using EmailJS
+      const emailParams = {
+        order_id: docRef.id,
+        products: products,
+        cost: total,
+        email: email1,
+        fname:fname1+' '+lname1,
+      };
+
+      emailjs.send('service_ja5pwdm', 'template_d152tmd', emailParams)
+        .then(function (response) {
+          console.log('Email sent successfully!', response.status, response.text);
+        }, function (error) {
+          console.error('Failed to send email:', error);
+        });
+
+
+
       const cartInqSubmitbtn = document.getElementById('sendCartInqbtn');
       cartInqSubmitted = true;
       $('#checkoutForm')[0].reset(); // Reset form

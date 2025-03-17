@@ -770,6 +770,19 @@
     <script src="assets/js/modernizr.custom.js"></script>
     <script src="assets/js/jquery.dlmenu.js"></script>
     <script src="assets/js/jquery-plugin-collection.js"></script>
+    <!-- For emails -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+      (function () {
+        emailjs.init({
+          publicKey: "PVGiC5fXVVk1kLb2X",
+        });
+      })();
+    </script>
+
     <!-- Custom script for this template -->
     <script src="assets/js/checkout.js" type="module"></script>
     <script src="assets/js/script.js"></script>
