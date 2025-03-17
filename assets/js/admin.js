@@ -150,6 +150,7 @@ async function getCartInquiries(id) {
       }
     }
 
+    cartInquiries.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
     console.log(cartInquiries);
     return cartInquiries;
   } catch (error) {
@@ -184,6 +185,9 @@ async function getDealerInquiries(id) {
     snapshot.forEach((doc) =>
       dealerInquiries.push({ ...doc.data(), deal_id: doc.id })
     );
+
+    dealerInquiries.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
+
     return dealerInquiries;
   } catch (error) {
     console.log('Error fetching dealer inquiries: ', error);
@@ -940,8 +944,8 @@ async function generateProductsExcel() {
 // for Dealer inq
 // ----------------------------------------------------------
 
+let dealInq = await getDealerInquiries();
 async function showDealInq(page = 1) {
-  const dealInq = await getDealerInquiries();
   console.log(dealInq);
   const itemsPerPage = 10;
   const totalItems = dealInq.length;
@@ -1021,6 +1025,41 @@ async function showDealInq(page = 1) {
       await showDealerDetails(dealId, dealInq);
     });
   });
+
+  $('#SearchFormDealer').submit(async (e) => {
+    e.preventDefault();
+    const dealerInqSearchTerm = document.getElementById('SearchFormDealer').lastElementChild.getElementsByTagName('input')[0].value;
+    const dealerInqShowAll = document.getElementById('SearchFormDealer').lastElementChild.getElementsByTagName('button')[1];
+    dealInq = await getSearchedDealerInq(dealerInqSearchTerm, dealInq);
+    dealerInqShowAll.style.display = 'block'
+
+    showDealInq();
+    console.log(dealInq)
+
+    dealerInqShowAll.addEventListener('click', async () => {
+      dealInq = await getDealerInquiries();
+      document.getElementById('SearchFormDealer').reset();
+      dealerInqShowAll.style.display = 'none'
+      showDealInq();
+    })
+  })
+}
+
+function getSearchedDealerInq(searchTerm, inq) {
+  if (searchTerm === '') {
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('There is nothing to search for!');
+    return inq;
+  }
+
+  searchTerm = searchTerm.toLowerCase();
+
+  const filteredInq = inq.filter((i) =>
+    i.person_name.toLowerCase().includes(searchTerm)
+  );
+
+  console.log(filteredInq);
+  return filteredInq;
 }
 
 async function showDealerDetails(dealId, dealInq) {
@@ -1084,8 +1123,7 @@ async function getInquiryPDF(data) {
   const doc = new jsPDF();
 
   // Logo URL or base64 data
-  const logoUrl =
-    'https://images.unsplash.com/photo-1717328728300-a077e51e7a14?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fE4lMjBzeW1ib2x8ZW58MHx8MHx8fDA%3D'; // Replace with your logo URL
+  const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/nsc-project-b2648.firebasestorage.app/o/logo.png?alt=media&token=b4959a79-bd37-4953-a76a-0ab486bf264c';
   const logoWidth = 50; // Adjust as necessary
   const logoHeight = 20; // Adjust as necessary
 
@@ -1107,7 +1145,7 @@ async function getInquiryPDF(data) {
 
   img.onload = function () {
     // Insert logo image at the top
-    // doc.addImage(img, 'PNG', 20, 10, logoWidth, logoHeight); // Adjust X, Y, width, height accordingly
+    doc.addImage(img, 'PNG', 20, 10, logoWidth, logoHeight); // Adjust X, Y, width, height accordingly
 
     // Add header text
     doc.setFontSize(20);
@@ -1217,20 +1255,14 @@ async function getInquiryPDF(data) {
     doc.save('receipt.pdf');
   };
 
-  // Handle image loading errors
-  img.onerror = function () {
-    const myPopup = new Popup('popup', 'popupOverlay');
-    myPopup.show('Failed to load the logo image.');
-    // alert('Failed to load the logo image.');
-  };
 }
 
 // ----------------------------------------------------------
 // for cart inq
 // ----------------------------------------------------------
 
+let cartInq = await getCartInquiries();
 async function showCartInq(page = 1) {
-  const cartInq = await getCartInquiries();
   const itemsPerPage = 10;
   const totalItems = cartInq.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -1255,10 +1287,8 @@ async function showCartInq(page = 1) {
         </tr>
       </thead>
       <tbody>
-        ${cartInq
-      .slice(startIndex, endIndex)
-      .map(
-        (item, index) => `
+      ${cartInq.slice(startIndex, endIndex).map(
+    (item, index) => `
           <tr data-cart-id="${item.cart_inq_id}" class="cart-row">
             <td>${startIndex + index + 1}</td>
             <td>${item.cart_inq_id}</td>
@@ -1267,7 +1297,7 @@ async function showCartInq(page = 1) {
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-      )
+  )
       .join('')}
       </tbody>
     </table>
@@ -1307,6 +1337,42 @@ async function showCartInq(page = 1) {
       await showCartDetails(cartInqId, cartInq);
     });
   });
+
+
+  $('#SearchFormCart').submit(async (e) => {
+    e.preventDefault();
+    const cartInqSearchTerm = document.getElementById('SearchFormCart').lastElementChild.getElementsByTagName('input')[0].value;
+    const cartInqShowAll = document.getElementById('SearchFormCart').lastElementChild.getElementsByTagName('button')[1];
+    cartInq = await getSearchedCartInq(cartInqSearchTerm, cartInq);
+    cartInqShowAll.style.display = 'block'
+
+    showCartInq();
+    console.log(cartInq)
+
+    cartInqShowAll.addEventListener('click', async () => {
+      cartInq = await getCartInquiries();
+      document.getElementById('SearchFormCart').reset();
+      cartInqShowAll.style.display = 'none'
+      showCartInq();
+    })
+  })
+}
+
+function getSearchedCartInq(searchTerm, inq) {
+  if (searchTerm === '') {
+    const myPopup = new Popup('popup', 'popupOverlay');
+    myPopup.show('There is nothing to search for!');
+    return inq;
+  }
+
+  searchTerm = searchTerm.toLowerCase();
+
+  const filteredInq = inq.filter((i) =>
+    (i.first_address.fname1 + ' ' + i.first_address.lname1).toLowerCase().includes(searchTerm)
+  );
+
+  console.log(filteredInq);
+  return filteredInq;
 }
 
 async function showCartDetails(cartInqId, cartInq) {
@@ -1453,13 +1519,23 @@ async function showCartDetails(cartInqId, cartInq) {
   document.getElementById('backButton').addEventListener('click', () => showCartInq());
 }
 
+async function fetchImageAsFile(url) {
+  // Fetch the image as a blob
+  const response = await fetch(url);
+  const blob = await response.blob();
+
+  // Convert the blob to a file (name it as you prefer)
+  const file = new File([blob], 'logo.png', { type: blob.type });
+
+  return file;
+}
+
 async function getCartInquiryPDF(receiptData, company) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
   console.log(receiptData, company);
 
-  // Example data structure from the second image (replace it with your actual prop data)
   const {
     cart_id,
     first_address,
@@ -1472,131 +1548,99 @@ async function getCartInquiryPDF(receiptData, company) {
   const products = await getCart(receiptData[0].cartId);
   console.log(products);
 
-  // Company Header Section
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(40, 116, 166); // Dark blue color
-  if (company.toLowerCase() == 'neha') {
-    doc.text('Neha Music Science Center', 105, 20, null, null, 'center'); // Business Name
-  } else {
-    doc.text('Niharika Scientific Center', 105, 20, null, null, 'center'); // Business Name
-  }
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(0, 0, 0); // Black color
-  if (company.toLowerCase() == 'neha') {
-    doc.text('Vyayampath Chowk, Janakpurdham', 105, 30, null, null, 'center');
-  } else {
-    doc.text(
-      '(An autherized supplier for science & music equipments)',
-      105,
-      30,
-      null,
-      null,
-      'center'
-    );
-    doc.text('Kyampas Chowk, Janakpurdham', 105, 35, null, null, 'center');
-  }
-  // Fields for Invoice Number, Date, etc.
-  const leftAlignX = 20;
-  const rightAlignX = 150;
-  let counterY = 45;
+  // Correct URL for Firebase storage (ensure it's a public URL)
+  // const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/nsc-project-b2648.firebasestorage.app/o/logo.png?alt=media&token=b4959a79-bd37-4953-a76a-0ab486bf264c';
+  
+  // Get the base64 encoded image from URL
+  // const logoImage = await fetchImageAsFile(logoUrl); 
 
-  doc.line(20, counterY, 190, counterY);
-  counterY += 7;
+  try {
+    // Company Header Section
+    // doc.addImage(logoImage, 'PNG', 20, 10, 50, 20); // Adjust X, Y, width, height accordingly
 
-  doc.setFontSize(10);
-  doc.text(
-    `Invoice No: ${cart_id || '..................'}`,
-    leftAlignX,
-    counterY
-  );
-  doc.text(
-    `Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() ||
-    '..................'
-    }`,
-    rightAlignX,
-    counterY
-  );
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(40, 116, 166); // Dark blue color
+    if (company.toLowerCase() === 'neha') {
+      doc.text('Neha Music Science Center', 105, 20, null, null, 'center'); // Business Name
+    } else {
+      doc.text('Niharika Scientific Center', 105, 20, null, null, 'center'); // Business Name
+    }
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0); // Black color
+    if (company.toLowerCase() === 'neha') {
+      doc.text('Vyayampath Chowk, Janakpurdham', 105, 30, null, null, 'center');
+    } else {
+      doc.text('(An authorized supplier for science & music equipment)', 105, 30, null, null, 'center');
+      doc.text('Kyampas Chowk, Janakpurdham', 105, 35, null, null, 'center');
+    }
 
-  // Customer details (First Address)
-  counterY += 7;
-  doc.text(
-    `Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'
-    }`,
-    leftAlignX,
-    counterY
-  );
-  doc.text(
-    `Phone: ${first_address.phone1 || '..................'}`,
-    rightAlignX,
-    counterY
-  );
-  counterY += 7;
-  doc.text(
-    `Customer Address: ${first_address.address1 || '..................'}`,
-    leftAlignX,
-    counterY
-  );
-  doc.text(
-    `Email: ${first_address.email || '..................'}`,
-    rightAlignX,
-    counterY
-  );
+    // Rest of your PDF generation logic here...
+    const leftAlignX = 20;
+    const rightAlignX = 150;
+    let counterY = 45;
 
-  // Add Line for Separation
-  counterY += 5;
-  doc.line(20, counterY, 190, counterY);
+    doc.line(20, counterY, 190, counterY);
+    counterY += 7;
 
-  // Table Header for Products
-  counterY += 10;
-  doc.text('S.No', 20, counterY);
-  doc.text('Name', 40, counterY);
-  doc.text('Quantity', 120, counterY);
-  doc.text('Unit Price', 140, counterY);
-  doc.text('Total Price', 160, counterY);
+    doc.setFontSize(10);
+    doc.text(`Invoice No: ${cart_id || '..................'}`, leftAlignX, counterY);
+    doc.text(`Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() || '..................'}`, rightAlignX, counterY);
 
-  counterY += 10;
-  // Table Content - Products List
-  products.forEach((product, index) => {
-    doc.text(`${index + 1}`, 20, counterY);
-    doc.text(`${product.name || '..............'}`, 40, counterY);
-    doc.text(`${product.quantity || '........'}`, 120, counterY);
-    doc.text(`${product.price || '........'}`, 140, counterY);
-    doc.text(
-      `${product.quantity * product.price || '........'}`,
-      160,
-      counterY
-    );
+    counterY += 7;
+    doc.text(`Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'}`, leftAlignX, counterY);
+    doc.text(`Phone: ${first_address.phone1 || '..................'}`, rightAlignX, counterY);
+
+    counterY += 7;
+    doc.text(`Customer Address: ${first_address.address1 || '..................'}`, leftAlignX, counterY);
+    doc.text(`Email: ${first_address.email || '..................'}`, rightAlignX, counterY);
+
+    // Add Line for Separation
     counterY += 5;
-  });
+    doc.line(20, counterY, 190, counterY);
 
-  // Total Price
-  doc.line(20, counterY, 190, counterY);
-  counterY += 10;
-  doc.setFontSize(12);
-  const totalPrice = products.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  doc.setFont('helvetica', 'bold');
-  doc.text(`Total Amount: ${totalPrice || '........'}`, 140, counterY);
-  doc.setFont('helvetica', 'normal');
-  counterY += 5;
-  doc.line(20, counterY, 190, counterY);
+    // Table Header for Products
+    counterY += 10;
+    doc.text('S.No', 20, counterY);
+    doc.text('Name', 40, counterY);
+    doc.text('Quantity', 120, counterY);
+    doc.text('Unit Price', 140, counterY);
+    doc.text('Total Price', 160, counterY);
 
-  // Add Order Notes if Available
-  if (order_note) {
-    counterY += 20;
-    doc.text(`Order Note: ${order_note}`, 20, counterY);
+    counterY += 10;
+    products.forEach((product, index) => {
+      doc.text(`${index + 1}`, 20, counterY);
+      doc.text(`${product.name || '..............'}`, 40, counterY);
+      doc.text(`${product.quantity || '........'}`, 120, counterY);
+      doc.text(`${product.price || '........'}`, 140, counterY);
+      doc.text(`${product.quantity * product.price || '........'}`, 160, counterY);
+      counterY += 5;
+    });
+
+    // Total Price
+    doc.line(20, counterY, 190, counterY);
+    counterY += 10;
+    doc.setFontSize(12);
+    const totalPrice = products.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Total Amount: ${totalPrice || '........'}`, 140, counterY);
+
+    // Order Notes
+    if (order_note) {
+      counterY += 20;
+      doc.text(`Order Note: ${order_note}`, 20, counterY);
+    }
+
+    // Signature Area
+    counterY += 30;
+    doc.text('Authorized Signature', 150, counterY);
+
+    // Save the PDF
+    doc.save('receipt.pdf');
+  } catch (error) {
+    console.error('Error loading image or generating PDF: ', error);
   }
-
-  // Add signature area
-  counterY += 30;
-  doc.text('Authorized Signature', 150, counterY);
-
-  // Save the PDF
-  doc.save('receipt.pdf');
 }
 
 async function generateCartInqExcel(inqid, company) {
