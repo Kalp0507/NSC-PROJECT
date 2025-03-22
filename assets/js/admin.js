@@ -211,6 +211,26 @@ async function getAllCart() {
   }
 }
 
+async function deleteInq(type, inqId) {
+  try {
+    if (type === 'cart') {
+      const docRef = doc(db, 'cartInquiries', inqId); // Direct reference to the document by id
+      await deleteDoc(docRef);
+      cartInq = await getCartInquiries();
+      showCartInq();
+    } else if (type === 'deal') {
+      const docRef = doc(db, 'dealerInquiries', inqId); // Direct reference to the document by id
+      await deleteDoc(docRef);
+      dealInq = await getDealerInquiries();
+      showDealInq();
+    } else {
+      console.log('No typw defined')
+    }
+  } catch (error) {
+    console.log("Error deleting wnquiry: ", error);
+  }
+}
+
 //Fetching cart from db
 async function getCart(id) {
   console.log('Fetching cart', id);
@@ -1095,11 +1115,22 @@ async function showDealerDetails(dealId, dealInq) {
         <p><span>Company's business:</span> ${selectedDealInq.business}</p>
         <p><span>Dealer's inquiry:</span> ${selectedDealInq.inquiry}</p>
       </div>
+      <button id='deal-${selectedDealInq.deal_id}' class='dealDeleteBtn'>
+        Delete <i class="fa fa-trash"></i>
+      </button>
     </div>
   `;
 
   // Add event listener for the back button
   document.getElementById('backButton').addEventListener('click', () => showDealInq(1));
+
+  const deleteInqbtn = document.getElementsByClassName('dealDeleteBtn')[0];
+  console.log('btn', deleteInqbtn)
+  deleteInqbtn.addEventListener('click', () => {
+    let dealInqId = deleteInqbtn.getAttribute('id').split('-')[1];
+
+    deleteInq('deal', dealInqId);
+  })
 }
 
 async function makeReceipt(itemId, company) {
@@ -1445,12 +1476,14 @@ async function showCartDetails(cartInqId, cartInq) {
         <p style="font-size: 0.9rem;">${selectedCartInq.order_note}</p>
       </div>
       <div class="cart-inquiry-button">
-        <button id='cart-${selectedCartInq.cart_inq_id
-    }' class='dealExcelReceiptBtn'>
+        <button id='cart-${selectedCartInq.cart_inq_id}' class='dealExcelReceiptBtn'>
           Excel <i class="fa fa-download"></i>
         </button>
         <button id='cart-${selectedCartInq.cart_inq_id}' class='dealReceiptBtn'>
           receipt <i class="fa fa-download"></i>
+        </button>
+        <button id='cart-${selectedCartInq.cart_inq_id}' class='dealDeleteBtn'>
+          Delete <i class="fa fa-trash"></i>
         </button>
         <div id="companyModal" class="modal2">
           <div class="modal-content2">
@@ -1517,6 +1550,15 @@ async function showCartDetails(cartInqId, cartInq) {
   });
 
   document.getElementById('backButton').addEventListener('click', () => showCartInq());
+
+  const deleteInqbtn = document.getElementsByClassName('dealDeleteBtn')[0];
+  console.log('btn', deleteInqbtn)
+  deleteInqbtn.addEventListener('click', () => {
+    let cartInqId = deleteInqbtn.getAttribute('id').split('-')[1];
+
+    deleteInq('cart', cartInqId);
+  })
+
 }
 
 async function fetchImageAsFile(url) {
@@ -1550,7 +1592,7 @@ async function getCartInquiryPDF(receiptData, company) {
 
   // Correct URL for Firebase storage (ensure it's a public URL)
   // const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/nsc-project-b2648.firebasestorage.app/o/logo.png?alt=media&token=b4959a79-bd37-4953-a76a-0ab486bf264c';
-  
+
   // Get the base64 encoded image from URL
   // const logoImage = await fetchImageAsFile(logoUrl); 
 
