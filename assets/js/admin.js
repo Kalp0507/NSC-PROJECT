@@ -105,7 +105,7 @@ async function getSearchedProducts(term, allProdOfType) {
     const myPopup = new Popup('popup', 'popupOverlay');
     myPopup.show('There is nothing to search for!');
     // alert('There is nothing to search for');
-    return allProdOfType;// Return empty array if no search term
+    return allProdOfType; // Return empty array if no search term
   }
 
   // Convert term to lowercase for case-insensitive search
@@ -224,10 +224,10 @@ async function deleteInq(type, inqId) {
       dealInq = await getDealerInquiries();
       showDealInq();
     } else {
-      console.log('No typw defined')
+      console.log('No typw defined');
     }
   } catch (error) {
-    console.log("Error deleting wnquiry: ", error);
+    console.log('Error deleting wnquiry: ', error);
   }
 }
 
@@ -277,7 +277,7 @@ $(document).ready(() => {
   logOutBtn.addEventListener('click', () => {
     // localStorage.removeItem('admin');
     localStorage.setItem('isAuth', false);
-    localStorage.removeItem('admin')
+    localStorage.removeItem('admin');
     window.location.href = 'login.html';
   });
 });
@@ -455,9 +455,10 @@ function printProducts(products, type) {
     const isChecked = selectedProducts.includes(item.pid) ? 'checked' : ''; // Check if product is selected
     const productCard = document.createElement('tr');
     productCard.classList.add('productRow');
-    productCard.setAttribute('pid', item.pid)
+    productCard.setAttribute('pid', item.pid);
     productCard.innerHTML = `
-      <td class="s1" ><input type="checkbox" class="row-checkbox selectProdBox" pid='${item.pid
+      <td class="s1" ><input type="checkbox" class="row-checkbox selectProdBox" pid='${
+        item.pid
       }' ${isChecked}></td>
       <td class="s1">${index + 1}</td>
       <td class="s1">${item.name}</td>
@@ -502,15 +503,13 @@ function printProducts(products, type) {
       const searchedPrducts = await getSearchedProducts(searchTerm, products);
       let productRows = document.querySelectorAll('.productRow');
 
-      console.log(productRows)
+      console.log(productRows);
       productRows.forEach((row) => {
         row.style.display = 'none';
         searchedPrducts.forEach((p) => {
-          if (p.pid === row.getAttribute('pid'))
-            row.style.display = 'flex';
-        })
-      })
-
+          if (p.pid === row.getAttribute('pid')) row.style.display = 'flex';
+        });
+      });
     });
 
     editProductBtns.forEach((btn) => {
@@ -596,7 +595,7 @@ async function editProducts(id) {
 
     if (docSnap.exists()) {
       const productData = docSnap.data();
-      console.log(productData)
+      console.log(productData);
       let editFormHtml = ``;
       //form to edit the product details
       editFormHtml = `
@@ -975,7 +974,7 @@ async function showDealInq(page = 1) {
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
 
-  console.log(page)
+  console.log(page);
 
   const dealContainer = document.getElementById('dealContainer');
   dealContainer.innerHTML = ''; // Clear the container before appending new content
@@ -994,9 +993,9 @@ async function showDealInq(page = 1) {
       </thead>
       <tbody>
         ${dealInq
-      .slice(startIndex, endIndex)
-      .map(
-        (item, index) => `
+          .slice(startIndex, endIndex)
+          .map(
+            (item, index) => `
           <tr data-deal-id="${item.deal_id}" class="dealer-row">
             <td>${startIndex + index + 1}</td>
             <td>${item.person_name}</td>
@@ -1005,8 +1004,8 @@ async function showDealInq(page = 1) {
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-      )
-      .join('')}
+          )
+          .join('')}
       </tbody>
     </table>
   </div>
@@ -1048,21 +1047,25 @@ async function showDealInq(page = 1) {
 
   $('#SearchFormDealer').submit(async (e) => {
     e.preventDefault();
-    const dealerInqSearchTerm = document.getElementById('SearchFormDealer').lastElementChild.getElementsByTagName('input')[0].value;
-    const dealerInqShowAll = document.getElementById('SearchFormDealer').lastElementChild.getElementsByTagName('button')[1];
+    const dealerInqSearchTerm = document
+      .getElementById('SearchFormDealer')
+      .lastElementChild.getElementsByTagName('input')[0].value;
+    const dealerInqShowAll = document
+      .getElementById('SearchFormDealer')
+      .lastElementChild.getElementsByTagName('button')[1];
     dealInq = await getSearchedDealerInq(dealerInqSearchTerm, dealInq);
-    dealerInqShowAll.style.display = 'block'
+    dealerInqShowAll.style.display = 'block';
 
     showDealInq();
-    console.log(dealInq)
+    console.log(dealInq);
 
     dealerInqShowAll.addEventListener('click', async () => {
       dealInq = await getDealerInquiries();
       document.getElementById('SearchFormDealer').reset();
-      dealerInqShowAll.style.display = 'none'
+      dealerInqShowAll.style.display = 'none';
       showDealInq();
-    })
-  })
+    });
+  });
 }
 
 function getSearchedDealerInq(searchTerm, inq) {
@@ -1115,22 +1118,26 @@ async function showDealerDetails(dealId, dealInq) {
         <p><span>Company's business:</span> ${selectedDealInq.business}</p>
         <p><span>Dealer's inquiry:</span> ${selectedDealInq.inquiry}</p>
       </div>
-      <button id='deal-${selectedDealInq.deal_id}' class='dealDeleteBtn'>
-        Delete <i class="fa fa-trash"></i>
-      </button>
+      <div class="dealer-delete-btn-container">
+        <button id='deal-${selectedDealInq.deal_id}' class='dealDeleteBtn'>
+          Delete <i class="fa fa-trash"></i>
+        </button>
+      </div>
     </div>
   `;
 
   // Add event listener for the back button
-  document.getElementById('backButton').addEventListener('click', () => showDealInq(1));
+  document
+    .getElementById('backButton')
+    .addEventListener('click', () => showDealInq(1));
 
   const deleteInqbtn = document.getElementsByClassName('dealDeleteBtn')[0];
-  console.log('btn', deleteInqbtn)
+  console.log('btn', deleteInqbtn);
   deleteInqbtn.addEventListener('click', () => {
     let dealInqId = deleteInqbtn.getAttribute('id').split('-')[1];
 
     deleteInq('deal', dealInqId);
-  })
+  });
 }
 
 async function makeReceipt(itemId, company) {
@@ -1154,7 +1161,8 @@ async function getInquiryPDF(data) {
   const doc = new jsPDF();
 
   // Logo URL or base64 data
-  const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/nsc-project-b2648.firebasestorage.app/o/logo.png?alt=media&token=b4959a79-bd37-4953-a76a-0ab486bf264c';
+  const logoUrl =
+    'https://firebasestorage.googleapis.com/v0/b/nsc-project-b2648.firebasestorage.app/o/logo.png?alt=media&token=b4959a79-bd37-4953-a76a-0ab486bf264c';
   const logoWidth = 50; // Adjust as necessary
   const logoHeight = 20; // Adjust as necessary
 
@@ -1285,7 +1293,6 @@ async function getInquiryPDF(data) {
     // Save the PDF
     doc.save('receipt.pdf');
   };
-
 }
 
 // ----------------------------------------------------------
@@ -1318,8 +1325,10 @@ async function showCartInq(page = 1) {
         </tr>
       </thead>
       <tbody>
-      ${cartInq.slice(startIndex, endIndex).map(
-    (item, index) => `
+      ${cartInq
+        .slice(startIndex, endIndex)
+        .map(
+          (item, index) => `
           <tr data-cart-id="${item.cart_inq_id}" class="cart-row">
             <td>${startIndex + index + 1}</td>
             <td>${item.cart_inq_id}</td>
@@ -1328,8 +1337,8 @@ async function showCartInq(page = 1) {
             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
           </tr>
         `
-  )
-      .join('')}
+        )
+        .join('')}
       </tbody>
     </table>
   </div>
@@ -1369,24 +1378,27 @@ async function showCartInq(page = 1) {
     });
   });
 
-
   $('#SearchFormCart').submit(async (e) => {
     e.preventDefault();
-    const cartInqSearchTerm = document.getElementById('SearchFormCart').lastElementChild.getElementsByTagName('input')[0].value;
-    const cartInqShowAll = document.getElementById('SearchFormCart').lastElementChild.getElementsByTagName('button')[1];
+    const cartInqSearchTerm = document
+      .getElementById('SearchFormCart')
+      .lastElementChild.getElementsByTagName('input')[0].value;
+    const cartInqShowAll = document
+      .getElementById('SearchFormCart')
+      .lastElementChild.getElementsByTagName('button')[1];
     cartInq = await getSearchedCartInq(cartInqSearchTerm, cartInq);
-    cartInqShowAll.style.display = 'block'
+    cartInqShowAll.style.display = 'block';
 
     showCartInq();
-    console.log(cartInq)
+    console.log(cartInq);
 
     cartInqShowAll.addEventListener('click', async () => {
       cartInq = await getCartInquiries();
       document.getElementById('SearchFormCart').reset();
-      cartInqShowAll.style.display = 'none'
+      cartInqShowAll.style.display = 'none';
       showCartInq();
-    })
-  })
+    });
+  });
 }
 
 function getSearchedCartInq(searchTerm, inq) {
@@ -1399,7 +1411,9 @@ function getSearchedCartInq(searchTerm, inq) {
   searchTerm = searchTerm.toLowerCase();
 
   const filteredInq = inq.filter((i) =>
-    (i.first_address.fname1 + ' ' + i.first_address.lname1).toLowerCase().includes(searchTerm)
+    (i.first_address.fname1 + ' ' + i.first_address.lname1)
+      .toLowerCase()
+      .includes(searchTerm)
   );
 
   console.log(filteredInq);
@@ -1444,8 +1458,8 @@ async function showCartDetails(cartInqId, cartInq) {
       <div class="cart-item-top">
         <h6>Cart ID: ${selectedCartInq.cart_inq_id}</h6>
         <p style="font-size: 0.7rem;">Created At: ${new Date(
-    selectedCartInq.createdAt.seconds * 1000
-  ).toLocaleString()}</p>
+          selectedCartInq.createdAt.seconds * 1000
+        ).toLocaleString()}</p>
       </div>
       <div class="cart-item-table">
         <h4>Products:</h4>
@@ -1463,12 +1477,14 @@ async function showCartDetails(cartInqId, cartInq) {
       </div>
       <div class="cart-item-cust-details">
         <h4>Customer Details:</h4>
-        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${selectedCartInq.first_address.lname1
-    }</p>
+        <p><span>Name :</span>${selectedCartInq.first_address.fname1} ${
+    selectedCartInq.first_address.lname1
+  }</p>
         <p><span>Email :</span>${selectedCartInq.first_address.email1}</p>
         <p><span>Phone :</span>${selectedCartInq.first_address.phone1}</p>
-        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${selectedCartInq.first_address.city1
-    }, ${selectedCartInq.first_address.country1}</p>
+        <p><span>Address :</span>${selectedCartInq.first_address.address1}, ${
+    selectedCartInq.first_address.city1
+  }, ${selectedCartInq.first_address.country1}</p>
         <p><span>Post Code :</span>${selectedCartInq.first_address.post1}</p>
       </div> 
       <div class="cart-item-note">
@@ -1476,7 +1492,9 @@ async function showCartDetails(cartInqId, cartInq) {
         <p style="font-size: 0.9rem;">${selectedCartInq.order_note}</p>
       </div>
       <div class="cart-inquiry-button">
-        <button id='cart-${selectedCartInq.cart_inq_id}' class='dealExcelReceiptBtn'>
+        <button id='cart-${
+          selectedCartInq.cart_inq_id
+        }' class='dealExcelReceiptBtn'>
           Excel <i class="fa fa-download"></i>
         </button>
         <button id='cart-${selectedCartInq.cart_inq_id}' class='dealReceiptBtn'>
@@ -1549,16 +1567,17 @@ async function showCartDetails(cartInqId, cartInq) {
     });
   });
 
-  document.getElementById('backButton').addEventListener('click', () => showCartInq());
+  document
+    .getElementById('backButton')
+    .addEventListener('click', () => showCartInq());
 
   const deleteInqbtn = document.getElementsByClassName('dealDeleteBtn')[0];
-  console.log('btn', deleteInqbtn)
+  console.log('btn', deleteInqbtn);
   deleteInqbtn.addEventListener('click', () => {
     let cartInqId = deleteInqbtn.getAttribute('id').split('-')[1];
 
     deleteInq('cart', cartInqId);
-  })
-
+  });
 }
 
 async function fetchImageAsFile(url) {
@@ -1594,7 +1613,7 @@ async function getCartInquiryPDF(receiptData, company) {
   // const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/nsc-project-b2648.firebasestorage.app/o/logo.png?alt=media&token=b4959a79-bd37-4953-a76a-0ab486bf264c';
 
   // Get the base64 encoded image from URL
-  // const logoImage = await fetchImageAsFile(logoUrl); 
+  // const logoImage = await fetchImageAsFile(logoUrl);
 
   try {
     // Company Header Section
@@ -1614,7 +1633,14 @@ async function getCartInquiryPDF(receiptData, company) {
     if (company.toLowerCase() === 'neha') {
       doc.text('Vyayampath Chowk, Janakpurdham', 105, 30, null, null, 'center');
     } else {
-      doc.text('(An authorized supplier for science & music equipment)', 105, 30, null, null, 'center');
+      doc.text(
+        '(An authorized supplier for science & music equipment)',
+        105,
+        30,
+        null,
+        null,
+        'center'
+      );
       doc.text('Kyampas Chowk, Janakpurdham', 105, 35, null, null, 'center');
     }
 
@@ -1627,16 +1653,45 @@ async function getCartInquiryPDF(receiptData, company) {
     counterY += 7;
 
     doc.setFontSize(10);
-    doc.text(`Invoice No: ${cart_id || '..................'}`, leftAlignX, counterY);
-    doc.text(`Date: ${new Date(createdAt.seconds * 1000).toLocaleDateString() || '..................'}`, rightAlignX, counterY);
+    doc.text(
+      `Invoice No: ${cart_id || '..................'}`,
+      leftAlignX,
+      counterY
+    );
+    doc.text(
+      `Date: ${
+        new Date(createdAt.seconds * 1000).toLocaleDateString() ||
+        '..................'
+      }`,
+      rightAlignX,
+      counterY
+    );
 
     counterY += 7;
-    doc.text(`Customer Name: ${first_address.fname1 + first_address.lname1 || '..................'}`, leftAlignX, counterY);
-    doc.text(`Phone: ${first_address.phone1 || '..................'}`, rightAlignX, counterY);
+    doc.text(
+      `Customer Name: ${
+        first_address.fname1 + first_address.lname1 || '..................'
+      }`,
+      leftAlignX,
+      counterY
+    );
+    doc.text(
+      `Phone: ${first_address.phone1 || '..................'}`,
+      rightAlignX,
+      counterY
+    );
 
     counterY += 7;
-    doc.text(`Customer Address: ${first_address.address1 || '..................'}`, leftAlignX, counterY);
-    doc.text(`Email: ${first_address.email || '..................'}`, rightAlignX, counterY);
+    doc.text(
+      `Customer Address: ${first_address.address1 || '..................'}`,
+      leftAlignX,
+      counterY
+    );
+    doc.text(
+      `Email: ${first_address.email || '..................'}`,
+      rightAlignX,
+      counterY
+    );
 
     // Add Line for Separation
     counterY += 5;
@@ -1656,7 +1711,11 @@ async function getCartInquiryPDF(receiptData, company) {
       doc.text(`${product.name || '..............'}`, 40, counterY);
       doc.text(`${product.quantity || '........'}`, 120, counterY);
       doc.text(`${product.price || '........'}`, 140, counterY);
-      doc.text(`${product.quantity * product.price || '........'}`, 160, counterY);
+      doc.text(
+        `${product.quantity * product.price || '........'}`,
+        160,
+        counterY
+      );
       counterY += 5;
     });
 
@@ -1664,7 +1723,10 @@ async function getCartInquiryPDF(receiptData, company) {
     doc.line(20, counterY, 190, counterY);
     counterY += 10;
     doc.setFontSize(12);
-    const totalPrice = products.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const totalPrice = products.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
     doc.setFont('helvetica', 'bold');
     doc.text(`Total Amount: ${totalPrice || '........'}`, 140, counterY);
 
@@ -1883,7 +1945,7 @@ async function showCurrentAnnouncement() {
 
   const curAnn = await getAnnouncement();
   const admin = await getAdmin(adminId);
-  console.log(admin)
+  console.log(admin);
   currentAnnouncement.innerText = curAnn.announcement;
   currentPassword.innerText = admin.password;
 
@@ -1904,15 +1966,12 @@ async function showCurrentAnnouncement() {
       await updatePassword(inputPassword.value, adminId);
       const myPopup = new Popup('popup', 'popupOverlay');
       myPopup.show('Password changed successfully!');
-    }
-    else {
+    } else {
       const myPopup = new Popup('popup', 'popupOverlay');
       myPopup.show('Enter new password.');
       // alert('Enter new annoucement');
     }
   });
-
-
 }
 
 // for admin
@@ -1929,7 +1988,7 @@ async function getAdmin(aid) {
       return {};
     }
   } catch (error) {
-    console.log("Error fetching admin: ", error);
+    console.log('Error fetching admin: ', error);
   }
 }
 
@@ -1937,7 +1996,7 @@ async function updatePassword(newPassword, docId) {
   try {
     const docRef = doc(db, 'admin', docId);
     await updateDoc(docRef, {
-      password: newPassword
+      password: newPassword,
     });
     showCurrentAnnouncement();
     const inputPassword = document.querySelector('#admin-password');
