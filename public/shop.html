@@ -158,43 +158,11 @@
       <!-- end page-title -->
 
       <div class="shop-page-container">
-        <!-- Mobile Dropdown -->
-        <div class="mobile-dropdown">
-          <button class="dropdown-button">
-            <span class="selected-category">Physics Lab Equipment</span>
-          </button>
-          <div class="dropdown-content">
-            <ul class="sidebar-list" id="typeList">
-              <li id="physics-lab-mobile">Physics Lab Equipment</li>
-              <li id="biology-lab-mobile">Biology Lab Equipment</li>
-              <li id="chemistry-lab-mobile">Chemistry Lab Equipment</li>
-              <li id="microscopes-mobile">Microscopes</li>
-              <li id="educational-charts-mobile">Educational Charts</li>
-              <li id="mechanical-lab-mobile">
-                Mechanical Engineering Lab Equipment
-              </li>
-              <li id="civil-lab-mobile">
-                Surveying & Civil Engineering Equipment
-              </li>
-              <li id="anatomical-models-mobile">Anatomical Models</li>
-              <li id="abdos-plasticware-mobile">ABDOS Lab Plasticware</li>
-              <li id="pharmacy-equipment-mobile">Pharmacy Equipment</li>
-              <li id="biotech-medical-mobile">
-                Bio-Technology & Medical Test Equipment
-              </li>
-              <li id="borosilicate-glassware-mobile">Borosilicate Glassware</li>
-              <li id="nursing-products-mobile">Nursing Products (ANM/GNM)</li>
-              <li id="polylab-plasticware-mobile">Polylab Plasticware</li>
-              <li id="prepared-slides-mobile">Prepared Slides</li>
-              <li id="lab-instruments-mobile">Laboratory Instruments</li>
-              <li id="soda-glassware-mobile">Soda Glassware</li>
-              <li id="electronic-apparatus-mobile">Electronic Apparatus</li>
-            </ul>
-          </div>
-        </div>
-
         <!-- Desktop Sidebar -->
         <section class="shop-sidebar-section">
+          <button class="dropdown-button" id="menuToggle">
+            <span id="dropdownText">Physics Lab Equipment</span>
+          </button>
           <ul class="sidebar-list" id="typeListDesktop">
             <li id="physics-lab">Physics Lab Equipment</li>
             <li id="biology-lab">Biology Lab Equipment</li>
@@ -430,13 +398,22 @@
       window.addEventListener('load', setShopSectionHeight);
       window.addEventListener('resize', setShopSectionHeight);
 
-      const dropdownButton = document.querySelector('.dropdown-button');
-      const dropdownContent = document.querySelector('.dropdown-content');
-      const selectedCategory = document.querySelector('.selected-category');
+      document.addEventListener('DOMContentLoaded', function () {
+        const menuToggle = document.getElementById('menuToggle');
+        const typeList = document.getElementById('typeListDesktop');
+        const sidebarItems = typeList.querySelectorAll('li');
+        const dropdownText = document.getElementById('dropdownText');
 
-      dropdownButton.addEventListener('click', () => {
-        dropdownButton.classList.toggle('active');
-        dropdownContent.classList.toggle('show');
+        menuToggle.addEventListener('click', function () {
+          typeList.classList.toggle('show');
+        });
+
+        sidebarItems.forEach((item) => {
+          item.addEventListener('click', function () {
+            dropdownText.textContent = this.textContent;
+            typeList.classList.remove('show');
+          });
+        });
       });
     </script>
   </body>
