@@ -9343,6 +9343,7 @@ wpo-hero-slider-s4
   }
   .shop-sidebar-section .sidebar-list li {
     padding-left: 10px;
+    padding-right: 10px;
   }
   .shop-sidebar-section .sidebar-list.show {
     display: block;
