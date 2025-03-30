@@ -115,6 +115,17 @@ async function getCart() {
   renderCartItems(cart);
 }
 
+async function countDocuments() {
+  try {
+    const snapshot = await getDocs(collection(db,'cartInquiries'));
+    const documentCount = snapshot.size;  // `size` returns the number of documents in the collection
+    return documentCount;
+  } catch (error) {
+    console.error('Error counting documents:', error);
+    return 0;  // return 0 if there's an error
+  }
+}
+
 function renderCartItems(cart) {
   const cartContainer = document.getElementById('cart-container');
   cartContainer.innerHTML = '';
@@ -175,6 +186,7 @@ $(document).ready(function () {
     const post2 = $('#post2').val().trim();
     const email2 = $('#email2').val().trim();
     const phone2 = $('#phone2').val().trim();
+    const cartInqCount = await countDocuments();
 
     // products in cart
     const products = [...cart];
@@ -298,6 +310,7 @@ $(document).ready(function () {
         },
         is_address2: is_address2,
         order_note: order_note,
+        invoiceNo: cartInqCount + 1,
         second_address: is_address2
           ? {
             fname2: fname2,
@@ -317,27 +330,9 @@ $(document).ready(function () {
       showSuccess('Cart-inquiry added successfully!');
 
       let total = 0;
-      products.forEach((p)=>total = total + (p.price*p.quantity))
+      products.forEach((p) => total = total + (p.price * p.quantity))
 
-      console.log(total ,products)
-
-      // Now send the email using EmailJS
-      const emailParams = {
-        order_id: docRef.id,
-        products: products,
-        cost: total,
-        email: email1,
-        fname:fname1+' '+lname1,
-      };
-
-      emailjs.send('service_ja5pwdm', 'template_d152tmd', emailParams)
-        .then(function (response) {
-          console.log('Email sent successfully!', response.status, response.text);
-        }, function (error) {
-          console.error('Failed to send email:', error);
-        });
-
-
+      console.log(total, products, cartInqCount)
 
       const cartInqSubmitbtn = document.getElementById('sendCartInqbtn');
       cartInqSubmitted = true;
